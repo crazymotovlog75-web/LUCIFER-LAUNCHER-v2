@@ -70,6 +70,8 @@ import net.kdt.pojavlaunch.lucifer.ui.components.glass
 fun HomeScreen(vm: LuciferViewModel, embeddedRightPane: @Composable () -> Unit) {
     val currentInstance by vm.currentInstance.collectAsState()
     val progress by vm.launchProgress.collectAsState()
+    val context = LocalContext.current
+    val activity = context as? Activity
 
     Column(
         modifier = Modifier
@@ -132,7 +134,7 @@ fun HomeScreen(vm: LuciferViewModel, embeddedRightPane: @Composable () -> Unit) 
 
             // ── PLAY ────────────────────────────────────────────────────────
             Button(
-                onClick = { (LocalContext.current as? Activity)?.let { vm.play(it) } },
+                onClick = { activity?.let { vm.play(it) } },
                 enabled = progress == null,
                 shape = RoundedCornerShape(14.dp),
                 colors = ButtonDefaults.buttonColors(
@@ -193,7 +195,7 @@ fun HomeScreen(vm: LuciferViewModel, embeddedRightPane: @Composable () -> Unit) 
                 SecondaryActionButton(
                     iconRes = R.drawable.ic_luc_folder,
                     label = "Folder",
-                    onClick = { LaunchBackend.openGameDirectory(LocalContext.current) }
+                    onClick = { LaunchBackend.openGameDirectory(context) }
                 )
             }
         }
@@ -320,6 +322,7 @@ fun ModStoreScreen(vm: LuciferViewModel) {
 
 @Composable
 fun ControlsScreen() {
+    val context = LocalContext.current
     var customControls by remember { mutableStateOf(true) }
     var gamepad by remember { mutableStateOf(true) }
     var touchInput by remember { mutableStateOf(false) }
@@ -332,7 +335,7 @@ fun ControlsScreen() {
             SettingSwitch("Touch character input", "Experimental char sender", touchInput) { touchInput = it }
             Spacer(Modifier.height(8.dp))
             Button(
-                onClick = { LaunchBackend.openControlEditor() },
+                onClick = { LaunchBackend.openControlEditor(context) },
                 shape = RoundedCornerShape(12.dp),
                 colors = ButtonDefaults.buttonColors(containerColor = Color(0x1A00E5FF), contentColor = LucAccent),
                 modifier = Modifier.fillMaxWidth().height(46.dp)
