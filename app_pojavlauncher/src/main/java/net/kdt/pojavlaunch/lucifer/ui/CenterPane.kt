@@ -1,5 +1,6 @@
 package net.kdt.pojavlaunch.lucifer.ui
 
+import android.app.Activity
 import android.content.Intent
 import android.util.Log
 import androidx.compose.foundation.background
@@ -131,7 +132,7 @@ fun HomeScreen(vm: LuciferViewModel, embeddedRightPane: @Composable () -> Unit) 
 
             // ── PLAY ────────────────────────────────────────────────────────
             Button(
-                onClick = { vm.play() },
+                onClick = { (LocalContext.current as? Activity)?.let { vm.play(it) } },
                 enabled = progress == null,
                 shape = RoundedCornerShape(14.dp),
                 colors = ButtonDefaults.buttonColors(
@@ -192,7 +193,7 @@ fun HomeScreen(vm: LuciferViewModel, embeddedRightPane: @Composable () -> Unit) 
                 SecondaryActionButton(
                     iconRes = R.drawable.ic_luc_folder,
                     label = "Folder",
-                    onClick = { LaunchBackend.openGameDirectory() }
+                    onClick = { LaunchBackend.openGameDirectory(LocalContext.current) }
                 )
             }
         }
@@ -209,6 +210,7 @@ fun HomeScreen(vm: LuciferViewModel, embeddedRightPane: @Composable () -> Unit) 
 fun InstancesScreen(vm: LuciferViewModel) {
     val instances by vm.instances.collectAsState()
     val current by vm.currentInstance.collectAsState()
+    val context = LocalContext.current
 
     Column(Modifier.fillMaxSize().verticalScroll(rememberScrollState())) {
         Column(Modifier.glass().padding(16.dp)) {
@@ -218,7 +220,7 @@ fun InstancesScreen(vm: LuciferViewModel) {
                 InstanceCard(
                     instance = instance,
                     active = instance.name.equals(current, ignoreCase = true),
-                    onClick = { vm.selectInstance(instance.name) }
+                    onClick = { vm.selectInstance(context, instance.name) }
                 )
                 Spacer(Modifier.height(8.dp))
             }
@@ -259,7 +261,7 @@ private fun InstanceCard(instance: InstanceInfo, active: Boolean, onClick: () ->
 /* ═══════════════════════ MOD STORE ═══════════════════════ */
 
 @Composable
-fun ModStoreScreen() {
+fun ModStoreScreen(vm: LuciferViewModel) {
     var query by remember { mutableStateOf("") }
     val mods = listOf("Sodium" to "Performance", "Iris" to "Shaders", "Fabric API" to "Library", "Jade" to "HUD")
 
@@ -302,7 +304,7 @@ fun ModStoreScreen() {
                                 fontSize = 10.sp,
                                 letterSpacing = 1.5.sp,
                                 fontWeight = FontWeight.Bold,
-                                modifier = Modifier.clickable { LaunchBackend.openModStore() }
+                                modifier = Modifier.clickable { vm.showNotice(R.string.lucifer_stub_notice) }
                             )
                         }
                     }
@@ -374,7 +376,7 @@ private fun SettingSwitch(
 /* ═══════════════════════ SKINS ═══════════════════════ */
 
 @Composable
-fun SkinsScreen() {
+fun SkinsScreen(vm: LuciferViewModel) {
     Column(Modifier.fillMaxSize().verticalScroll(rememberScrollState())) {
         Column(
             Modifier.glass().padding(16.dp),
@@ -402,12 +404,12 @@ fun SkinsScreen() {
                 SecondaryActionButton(
                     iconRes = R.drawable.ic_luc_shirt,
                     label = "Upload",
-                    onClick = { LaunchBackend.manageSkins() }
+                    onClick = { vm.showNotice(R.string.lucifer_stub_notice) }
                 )
                 SecondaryActionButton(
                     iconRes = R.drawable.ic_luc_edit,
                     label = "Editor",
-                    onClick = { LaunchBackend.manageSkins() }
+                    onClick = { vm.showNotice(R.string.lucifer_stub_notice) }
                 )
             }
         }

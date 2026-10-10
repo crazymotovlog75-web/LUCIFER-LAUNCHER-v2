@@ -1,6 +1,5 @@
 package net.kdt.pojavlaunch.lucifer.ui
 
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -70,10 +69,7 @@ fun RightPane(vm: LuciferViewModel, modifier: Modifier = Modifier) {
             // Scrollable server list
             Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                 servers.forEach { server ->
-                    ServerRow(server = server, onClick = {
-                        // TODO: open server-detail / add-server sheet
-                        Log.i("LuciferUI", "Server tapped: ${server.address} (TODO)")
-                    })
+                    ServerRow(server = server, onClick = { vm.refreshServers() })
                 }
             }
 

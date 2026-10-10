@@ -16,7 +16,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -46,6 +48,7 @@ fun LuciferApp(vm: LuciferViewModel) {
             val backStackEntry by navController.currentBackStackEntryAsState()
             val currentRoute = backStackEntry?.destination?.route ?: NavDestination.HOME.route
             val dialogAction by vm.dialogAction.collectAsState()
+            val notice by vm.notice.collectAsState()
 
             BoxWithConstraints(modifier = Modifier.fillMaxSize()) {
                 val threePane = maxWidth >= 840.dp
@@ -95,7 +98,27 @@ fun LuciferApp(vm: LuciferViewModel) {
             }
 
             dialogAction?.let { action ->
-                QuickActionDialog(action = action, onDismiss = vm::dismissDialog)
+                QuickActionDialog(
+                    action = action,
+                    onRun = { activity -> vm.runQuickAction(action, activity) },
+                    onDismiss = vm::dismissDialog
+                )
+            }
+
+            notice?.let { messageRes ->
+                AlertDialog(
+                    onDismissRequest = vm::dismissNotice,
+                    title = { Text("LUCIFER") },
+                    text = { Text(stringResource(messageRes)) },
+                    confirmButton = {
+                        TextButton(onClick = vm::dismissNotice) {
+                            Text("CLOSE", color = LucAccent)
+                        }
+                    },
+                    containerColor = LucBackground,
+                    titleContentColor = LucAccent,
+                    textContentColor = LucTextMuted
+                )
             }
         }
     }
@@ -118,16 +141,21 @@ private fun CenterNavHost(
             HomeScreen(vm = vm, embeddedRightPane = { embeddedRightPane?.invoke() })
         }
         composable(NavDestination.INSTANCES.route) { InstancesScreen(vm) }
-        composable(NavDestination.MOD_STORE.route) { ModStoreScreen() }
+        composable(NavDestination.MOD_STORE.route) { ModStoreScreen(vm) }
         composable(NavDestination.CONTROLS.route) { ControlsScreen() }
-        composable(NavDestination.SKINS.route) { SkinsScreen() }
+        composable(NavDestination.SKINS.route) { SkinsScreen(vm) }
         composable(NavDestination.SETTINGS.route) { SettingsScreen() }
     }
 }
 
-/** Mock dialog shown when a quick action tile is tapped. */
+/** Mock dialog shown when a quick action tile is tapped; RUN executes the real action where wired. */
 @Composable
-private fun QuickActionDialog(action: QuickAction, onDismiss: () -> Unit) {
+private fun QuickActionDialog(
+    action: QuickAction,
+    onRun: (android.app.Activity) -> Unit,
+    onDismiss: () -> Unit
+) {
+    val activity = LocalContext.current as? android.app.Activity
     AlertDialog(
         onDismissRequest = onDismiss,
         icon = {
@@ -139,12 +167,16 @@ private fun QuickActionDialog(action: QuickAction, onDismiss: () -> Unit) {
         },
         title = { Text(action.label.uppercase()) },
         text = {
-            Text(
-                action.description + "\n\nThis action is a UI stub — wiring lives in LaunchBackend (TODO)."
-            )
+            Text(action.description)
         },
         confirmButton = {
-            TextButton(onClick = onDismiss) { Text("CLOSE", color = LucAccent) }
+            TextButton(
+                enabled = activity != null,
+                onClick = { activity?.let(onRun) }
+            ) { Text("RUN", color = LucAccent) }
+        },
+        dismissButton = {
+            TextButton(onClick = onDismiss) { Text("CLOSE", color = LucTextMuted) }
         },
         containerColor = LucBackground,
         titleContentColor = LucAccent,
