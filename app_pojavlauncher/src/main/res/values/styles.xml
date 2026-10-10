@@ -1,6 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <!-- ── LUCIFER Compose UI (cyberpunk 3-pane home) ─────────────────── -->
+    <style name="Theme.Lucifer.Compose" parent="android:Theme.Material.NoActionBar">
+        <item name="android:windowBackground">#FF0A0F14</item>
+        <item name="android:statusBarColor">#FF0A0F14</item>
+        <item name="android:navigationBarColor">#FF0A0F14</item>
+        <item name="android:windowActionBar">false</item>
+        <item name="android:windowNoTitle">true</item>
+    </style>
+
     <!-- ── Default (Dark) ───────────────────────────────────── -->
     <style name="AppTheme" parent="@style/Theme.Material3.Dark.NoActionBar">
         <item name="windowNoTitle">true</item>

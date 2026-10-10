@@ -40,6 +40,29 @@
 
 <br>
 
+## 🌌 LUCIFER Compose UI (layout overhaul)
+
+The launcher home has been rebuilt in **Jetpack Compose** as a cyberpunk 3-pane
+interface (`net.kdt.pojavlaunch.lucifer`):
+
+| Pane | Content |
+|:---:|:---|
+| Left | LUCIFER logo, glowing profile badge, nav menu (Home / Instances / Mod Store / Controls / Skins / Settings) |
+| Center | Current instance hero card, version + loader pills, neon PLAY button, Edit Profile / Folder actions |
+| Right | Scrollable server list with simulated ping, 2×2 quick actions (Mods / Controls / Logs / Jar), READY footer |
+
+* **Real backend wiring** (`lucifer/backend/LaunchBackend.kt`): PLAY runs the
+  genuine download/launch pipeline (`MinecraftDownloader` +
+  `ContextAwareDoneListener`), instances come from `launcher_profiles.json`,
+  logs/directory/controls/jar actions call the real `Tools` APIs.
+* **Remaining TODO stubs** (classic-UI fragment features): Mod Store search,
+  Skin manager, profile editor — clearly marked in `LaunchBackend.kt`.
+* **Responsive**: 3 panes ≥ 840dp, merged right pane ≥ 600dp, icon rail below.
+* The classic XML UI is untouched and reachable via
+  **Settings → Open classic launcher UI**.
+
+<br>
+
 ## ✨ Features
 
 <div align="center">

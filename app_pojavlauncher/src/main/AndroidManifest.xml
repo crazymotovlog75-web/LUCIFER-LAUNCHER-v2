@@ -73,6 +73,13 @@
             android:screenOrientation="sensorLandscape"
             android:windowSoftInputMode="adjustResize"/>
         <activity
+            android:name=".lucifer.LuciferLauncherActivity"
+            android:label="@string/app_short_name"
+            android:hardwareAccelerated="true"
+            android:configChanges="keyboard|keyboardHidden|orientation|screenSize|smallestScreenSize|screenLayout|uiMode"
+            android:resizeableActivity="true"
+            android:theme="@style/Theme.Lucifer.Compose" />
+        <activity
             android:name=".ImportControlActivity"
             android:configChanges="keyboard|keyboardHidden"
             android:exported="true"

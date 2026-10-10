@@ -671,4 +671,6 @@
     <string name="mp_import_action">Import Modpack</string>
     <string name="mp_paste_code">Paste from Clipboard</string>
 
+    <!-- LUCIFER Compose UI -->
+    <string name="lucifer_stub_notice" translatable="false">This action is not wired yet — see LaunchBackend.kt (TODO).</string>
 </resources>
