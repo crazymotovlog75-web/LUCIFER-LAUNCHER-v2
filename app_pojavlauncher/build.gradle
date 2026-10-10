@@ -1,5 +1,7 @@
 plugins {
     id 'com.android.application' version '8.7.2'
+    id 'org.jetbrains.kotlin.android'
+    id 'org.jetbrains.kotlin.plugin.compose'
 }
 
 static def getDate() { return new Date().format('yyyyMMdd') }
@@ -170,6 +172,11 @@ android {
     buildFeatures {
         prefab true
         buildConfig true
+        compose true
+    }
+
+    kotlinOptions {
+        jvmTarget = '1.8'
     }
 
     buildToolsVersion = '34.0.0'
@@ -182,6 +189,21 @@ afterEvaluate {
 }
 
 dependencies {
+    // ── LUCIFER Compose UI ────────────────────────────────────────────────
+    def composeBom = platform('androidx.compose:compose-bom:2024.06.00')
+    implementation composeBom
+    implementation 'androidx.activity:activity-compose:1.9.0'
+    implementation 'androidx.lifecycle:lifecycle-viewmodel-compose:2.8.3'
+    implementation 'androidx.navigation:navigation-compose:2.7.7'
+    implementation 'androidx.compose.foundation:foundation'
+    implementation 'androidx.compose.material3:material3'
+    implementation 'androidx.compose.ui:ui'
+    implementation 'androidx.compose.ui:ui-graphics'
+    implementation 'androidx.compose.ui:ui-tooling-preview'
+    implementation 'io.coil-kt:coil-compose:2.7.0'
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.8.1'
+    debugImplementation 'androidx.compose.ui:ui-tooling'
+
     implementation 'javax.annotation:javax.annotation-api:1.3.2'
     implementation 'commons-codec:commons-codec:1.15'
     // implementation 'com.wu-man:android-bsf-api:3.1.3'
