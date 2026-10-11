@@ -702,7 +702,7 @@
     <string name="lc_server_players">%1$d/%2$d</string>
     <string name="lc_servers_count">%1$d servers · updated %2$s</string>
     <string name="lc_maintenance">Maintenance</string>
-    <string name="lc_servers_sync_note">Everything on this list is written into the selected profile's servers.dat, so the same servers show up in Minecraft Multiplayer.</string>
+    <string name="lc_servers_sync_note">Everything on this list is written into the selected profile\'s servers.dat, so the same servers show up in Minecraft Multiplayer.</string>
     <string name="lc_server_dialog_title">Add a server</string>
     <string name="lc_server_name_hint">Name</string>
     <string name="lc_server_addr_hint">play.example.net</string>

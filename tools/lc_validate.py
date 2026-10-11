@@ -75,6 +75,9 @@ def collect_resource_names():
         names["anim"].add(os.path.splitext(f)[0])
     for f in os.listdir(os.path.join(RES, "layout")) + os.listdir(os.path.join(RES, "layout-land")):
         names["layout"].add(os.path.splitext(f)[0])
+    # ids are declared inside layouts with @+id/…, not in values/
+    for lp in glob.glob(os.path.join(RES, "layout*", "*.xml")):
+        names["id"].update(re.findall(r'@\+id/([A-Za-z0-9_]+)', open(lp, encoding="utf-8").read()))
     for vf in glob.glob(os.path.join(RES, "values*", "*.xml")):
         try:
             doc = xml.dom.minidom.parse(vf)
@@ -153,6 +156,68 @@ for layout in new_layouts:
         key = "%s:%s" % (ns, attr)
         if key not in known:
             warnings.append("%s uses attribute not seen elsewhere: %s" % (layout, key))
+
+# ── 5. string escaping (aapt2 rejects these) ─────────────────────────────────
+# aapt2 fails a release build on an unescaped apostrophe inside <string> ("Invalid unicode
+# escape sequence in string") and on malformed \uXXXX escapes. Both used to only show up
+# three minutes into CI, so they are checked here instead.
+STRING_RE = re.compile(r'<string name="([^"]+)"([^>]*)>(.*?)</string>', re.S)
+for vf in sorted(glob.glob(os.path.join(RES, "values*", "strings.xml"))):
+    src = open(vf, encoding="utf-8").read()
+    rel = os.path.relpath(vf, RES)
+    for name, attrs, body in STRING_RE.findall(src):
+        if 'translatable="false"' in attrs:
+            pass
+        # aapt2 accepts apostrophes inside a string that is wrapped in double quotes
+        quoted = body.startswith('"') and body.endswith('"')
+        for idx, ch in enumerate(body):
+            if quoted:
+                break
+            if ch == "'" and (idx == 0 or body[idx - 1] != "\\"):
+                errors.append("%s: string/%s has an unescaped apostrophe (use \\')" % (rel, name))
+                break
+        for mm in re.finditer(r"\\u", body):
+            if not re.fullmatch(r"[0-9a-fA-F]{4}", body[mm.start() + 2:mm.start() + 6]):
+                errors.append("%s: string/%s has a malformed \\u escape" % (rel, name))
+        subs = re.findall(r"%(?!%)", body)
+        if len(subs) > 1 and "%1$" not in body:
+            # aapt2 only warns about this for pre-existing strings, so keep it non-fatal
+            warnings.append("%s: string/%s has multiple non-positional substitutions" % (rel, name))
+
+# ── 6. duplicate resource names inside one values folder ─────────────────────
+# aapt2 hard-fails with "duplicate value for resource" long before javac runs.
+for folder in sorted(glob.glob(os.path.join(RES, "values*"))):
+    declared = {}
+    for vf in glob.glob(os.path.join(folder, "*.xml")):
+        try:
+            doc = xml.dom.minidom.parse(vf)
+        except Exception:                             # noqa: BLE001
+            continue
+        for tag in ("color", "dimen", "string", "style", "integer", "bool", "array", "attr"):
+            for node in doc.getElementsByTagName(tag):
+                nm = node.getAttribute("name")
+                if nm:
+                    declared.setdefault((tag, nm), []).append(os.path.basename(vf))
+        for node in doc.getElementsByTagName("item"):
+            ntype, nm = node.getAttribute("type"), node.getAttribute("name")
+            if ntype and nm:
+                declared.setdefault((ntype, nm), []).append(os.path.basename(vf))
+    for (ntype, nm), files in declared.items():
+        if len(files) > 1 and not (ntype == "attr" and nm == "seekBarIncrement"):
+            errors.append("%s: duplicate %s/%s (%s)" % (os.path.relpath(folder, RES), ntype, nm, files))
+
+# ── 7. R.* references in the touched Java files ──────────────────────────────
+# (?!android\.) keeps android.R.id.content from being read as an app resource
+RREF_RE = re.compile(r"(?<!android\.)\bR\.(drawable|color|dimen|string|style|id|anim|layout|mipmap|array|bool|integer)\.([A-Za-z0-9_]+)")
+for rel_java in java_targets:
+    path = os.path.join(MAIN, rel_java)
+    if not os.path.exists(path):
+        continue
+    src = open(path, encoding="utf-8").read()
+    for kind, name in RREF_RE.findall(src):
+        if name not in RESOURCES[kind]:
+            # library / resValue-provided names are not visible offline, so warn only
+            warnings.append("%s → R.%s.%s not found locally" % (rel_java, kind, name))
 
 # ── report ───────────────────────────────────────────────────────────────────
 print("checked %d java files, %d layouts, %d drawables"
