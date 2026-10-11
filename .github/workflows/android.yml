@@ -85,10 +85,23 @@ jobs:
                           -PsigningKeyPassword=$KEY_PASSWORD \
                           -PsigningStorePassword=$STORE_PASSWORD"
           fi
+          set +e
           ./gradlew :app_pojavlauncher:assembleRelease $SIGNING_ARGS \
             -Pandroid.enableR8.fullMode=true \
             --no-daemon \
-            --stacktrace
+            --stacktrace 2>&1 | tee "$RUNNER_TEMP/release-gradle.log"
+          GRADLE_STATUS=${PIPESTATUS[0]}
+          set -e
+          if [ "$GRADLE_STATUS" -ne 0 ]; then
+            FAILURE_DETAILS=$(grep -E 'FAILURE:|What went wrong:|Execution failed for task|error:|AAPT:|Could not resolve|Could not find|SDK location not found|Exception' "$RUNNER_TEMP/release-gradle.log" | tail -n 25 || true)
+            if [ -z "$FAILURE_DETAILS" ]; then FAILURE_DETAILS=$(tail -n 35 "$RUNNER_TEMP/release-gradle.log"); fi
+            FAILURE_DETAILS=$(printf '%s' "$FAILURE_DETAILS" | tr '\n' ' ' | cut -c1-10000)
+            FAILURE_DETAILS=${FAILURE_DETAILS//'%'/'%25'}
+            FAILURE_DETAILS=${FAILURE_DETAILS//$'\r'/'%0D'}
+            FAILURE_DETAILS=${FAILURE_DETAILS//$'\n'/'%0A'}
+            echo "::error title=Gradle release build failed::$FAILURE_DETAILS"
+            exit "$GRADLE_STATUS"
+          fi
 
           RELEASE_APK=$(find app_pojavlauncher/build/outputs/apk/release -name "*.apk" | head -n 1)
           if [ -n "$RELEASE_APK" ]; then
