@@ -295,10 +295,10 @@ public class MinecraftDownloader {
                 versionJsonFile = createGameJsonPath(versionName);
             }
         }
-        Log.d("CS_LAUNCHER", "Version JSON path: " + versionJsonFile.getAbsolutePath());
+        Log.d("LUCIFER_LAUNCHER", "Version JSON path: " + versionJsonFile.getAbsolutePath());
         if(!versionJsonFile.exists() || versionJsonFile.length() == 0) {
             String message = "Failed to load version: " + versionName + ". Please re-install the version.";
-            Log.e("CS_LAUNCHER", message);
+            Log.e("LUCIFER_LAUNCHER", message);
             new Handler(Looper.getMainLooper()).post(() -> {
                 if(activity != null && !activity.isFinishing()) {
                     Toast.makeText(activity, message, Toast.LENGTH_LONG).show();

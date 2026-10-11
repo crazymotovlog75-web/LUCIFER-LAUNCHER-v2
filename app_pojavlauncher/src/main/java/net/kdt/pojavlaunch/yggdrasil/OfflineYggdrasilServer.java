@@ -38,7 +38,7 @@ public class OfflineYggdrasilServer {
     private volatile boolean running = false;
 
     public OfflineYggdrasilServer() {
-        this("CS Launcher", "drasl", "1.4");
+        this("Lucifer Launcher", "drasl", "1.4");
     }
 
     public OfflineYggdrasilServer(String serverName, String implName, String implVersion) {

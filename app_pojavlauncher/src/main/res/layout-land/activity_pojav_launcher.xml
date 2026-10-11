@@ -2,227 +2,165 @@
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="false"
-    android:background="@color/bg_launcher_dark">
+    android:background="@drawable/bg_lucifer_scene">
 
-    <!-- ══════════════ SINGLE TOP BAR: Logo + Title + Nav Icons + Account + Settings ══════════════ -->
+    <!-- Lucifer's floating glass navigation ribbon. Navigation stays horizontal on every page. -->
     <LinearLayout
         android:id="@+id/header_bar"
         android:layout_width="0dp"
-        android:layout_height="@dimen/_52sdp"
+        android:layout_height="@dimen/_58sdp"
         android:orientation="horizontal"
         android:gravity="center_vertical"
-        android:paddingStart="@dimen/_10sdp"
+        android:paddingStart="@dimen/_8sdp"
         android:paddingEnd="@dimen/_8sdp"
-        android:background="@drawable/bg_header_bar"
+        android:background="@drawable/bg_lucifer_header"
+        android:elevation="8dp"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
-        <!-- CS Logo (clickable → home) -->
         <FrameLayout
             android:id="@+id/btn_home_logo"
-            android:layout_width="@dimen/_36sdp"
+            android:layout_width="@dimen/_34sdp"
             android:layout_height="match_parent"
             android:background="?android:attr/selectableItemBackground"
             android:clickable="true"
             android:focusable="true"
-            android:gravity="center">
-
+            android:contentDescription="Lucifer Launcher home">
             <ImageView
                 android:id="@+id/iv_cs_logo"
                 android:layout_width="@dimen/_28sdp"
                 android:layout_height="@dimen/_28sdp"
                 android:layout_gravity="center"
-                android:src="@mipmap/ic_launcher_round"
+                android:src="@drawable/ic_lucifer_mark"
                 android:scaleType="fitCenter"
-                android:contentDescription="CS Logo" />
-
+                android:contentDescription="Lucifer Launcher" />
         </FrameLayout>
 
-        <!-- CS LAUNCHER v2 (clickable → home) -->
         <TextView
             android:id="@+id/tv_launcher_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/_8sdp"
+            android:layout_marginStart="@dimen/_4sdp"
             android:text="@string/cs_launcher_title"
-            android:textSize="@dimen/_14ssp"
+            android:textSize="@dimen/_12ssp"
             android:textStyle="bold"
-            android:textColor="@color/neon_green"
-            android:letterSpacing="0.04"
+            android:textColor="@color/lucifer_cyan"
+            android:letterSpacing="0.055"
+            android:maxLines="1"
             android:background="?android:attr/selectableItemBackground"
             android:clickable="true"
             android:focusable="true"
-            android:paddingHorizontal="@dimen/_6sdp"
+            android:paddingHorizontal="@dimen/_5sdp"
             android:paddingVertical="@dimen/_4sdp" />
 
-        <!-- Nav Download Mods -->
-        <FrameLayout
-            android:id="@+id/nav_mod_store"
-            android:layout_width="@dimen/_38sdp"
-            android:layout_height="match_parent"
-            android:background="?android:attr/selectableItemBackground"
-            android:clickable="true"
-            android:focusable="true">
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="center"
-                android:orientation="vertical">
-                <ImageView
-                    android:id="@+id/nav_mod_store_icon"
-                    android:layout_width="@dimen/_20sdp"
-                    android:layout_height="@dimen/_20sdp"
-                    android:src="@drawable/ic_download_box"
-                    android:contentDescription="@string/mcl_button_mod_store" />
-                <View
-                    android:id="@+id/nav_mod_store_indicator"
-                    android:layout_width="14dp"
-                    android:layout_height="2dp"
-                    android:background="@color/neon_green"
-                    android:visibility="invisible" />
-            </LinearLayout>
-        </FrameLayout>
+        <View
+            android:layout_width="1dp"
+            android:layout_height="@dimen/_26sdp"
+            android:layout_marginHorizontal="@dimen/_6sdp"
+            android:background="#4287B9C9" />
 
-        <!-- Nav Custom Controls -->
-        <FrameLayout
-            android:id="@+id/nav_custom_controls"
-            android:layout_width="@dimen/_38sdp"
+        <HorizontalScrollView
+            android:id="@+id/nav_scroll"
+            android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:background="?android:attr/selectableItemBackground"
-            android:clickable="true"
-            android:focusable="true">
+            android:layout_weight="1"
+            android:fillViewport="false"
+            android:overScrollMode="never"
+            android:scrollbars="none">
             <LinearLayout
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:gravity="center"
-                android:orientation="vertical">
-                <ImageView
-                    android:id="@+id/nav_controls_icon"
-                    android:layout_width="@dimen/_20sdp"
-                    android:layout_height="@dimen/_20sdp"
-                    android:src="@drawable/ic_menu_custom_controls"
-                    android:contentDescription="@string/mcl_option_customcontrol" />
-                <View
-                    android:id="@+id/nav_controls_indicator"
-                    android:layout_width="14dp"
-                    android:layout_height="2dp"
-                    android:background="@color/neon_green"
-                    android:visibility="invisible" />
-            </LinearLayout>
-        </FrameLayout>
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
 
-        <!-- Nav Cursor -->
-        <FrameLayout
-            android:id="@+id/nav_cursor"
-            android:layout_width="@dimen/_38sdp"
-            android:layout_height="match_parent"
-            android:background="?android:attr/selectableItemBackground"
-            android:clickable="true"
-            android:focusable="true">
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="center"
-                android:orientation="vertical">
-                <ImageView
-                    android:id="@+id/nav_cursor_icon"
-                    android:layout_width="@dimen/_20sdp"
-                    android:layout_height="@dimen/_20sdp"
-                    android:src="@drawable/ic_mouse_pointer"
-                    android:contentDescription="@string/cursor_customization_title" />
-                <View
-                    android:id="@+id/nav_cursor_indicator"
-                    android:layout_width="14dp"
-                    android:layout_height="2dp"
-                    android:background="@color/neon_green"
-                    android:visibility="invisible" />
-            </LinearLayout>
-        </FrameLayout>
+                <LinearLayout
+                    android:id="@+id/nav_home"
+                    style="@style/LuciferTopNavItem"
+                    android:selected="true"
+                    android:contentDescription="Home">
+                    <ImageView android:id="@+id/nav_home_icon" style="@style/LuciferTopNavIcon" android:src="@drawable/ic_home" />
+                    <TextView android:id="@+id/nav_home_label" style="@style/LuciferTopNavLabel" android:text="Home" />
+                </LinearLayout>
 
-        <!-- Client Features Toggle Button (Minimalist Pill) -->
+                <LinearLayout
+                    android:id="@+id/nav_instances"
+                    style="@style/LuciferTopNavItem"
+                    android:contentDescription="Instances">
+                    <ImageView android:id="@+id/nav_instances_icon" style="@style/LuciferTopNavIcon" android:src="@drawable/ic_folder_managed" />
+                    <TextView android:id="@+id/nav_instances_label" style="@style/LuciferTopNavLabel" android:text="Instances" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/nav_servers"
+                    style="@style/LuciferTopNavItem"
+                    android:contentDescription="Server hub">
+                    <ImageView android:id="@+id/nav_servers_icon" style="@style/LuciferTopNavIcon" android:src="@drawable/ic_mc_block" />
+                    <TextView android:id="@+id/nav_servers_label" style="@style/LuciferTopNavLabel" android:text="Servers" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/nav_mod_store"
+                    style="@style/LuciferTopNavItem"
+                    android:contentDescription="Mod library">
+                    <ImageView android:id="@+id/nav_mod_store_icon" style="@style/LuciferTopNavIcon" android:src="@drawable/ic_download_box" />
+                    <TextView android:id="@+id/nav_mod_store_label" style="@style/LuciferTopNavLabel" android:text="Mods" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/nav_custom_controls"
+                    style="@style/LuciferTopNavItem"
+                    android:contentDescription="Custom controls">
+                    <ImageView android:id="@+id/nav_controls_icon" style="@style/LuciferTopNavIcon" android:src="@drawable/ic_menu_custom_controls" />
+                    <TextView android:id="@+id/nav_controls_label" style="@style/LuciferTopNavLabel" android:text="Controls" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/nav_cursor"
+                    style="@style/LuciferTopNavItem"
+                    android:contentDescription="Cursor Studio">
+                    <ImageView android:id="@+id/nav_cursor_icon" style="@style/LuciferTopNavIcon" android:src="@drawable/ic_mouse_pointer" />
+                    <TextView android:id="@+id/nav_cursor_label" style="@style/LuciferTopNavLabel" android:text="Cursor" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/nav_skin"
+                    style="@style/LuciferTopNavItem"
+                    android:contentDescription="Skins and capes">
+                    <ImageView android:id="@+id/nav_skin_icon" style="@style/LuciferTopNavIcon" android:src="@drawable/ic_manage_skin" />
+                    <TextView android:id="@+id/nav_skin_label" style="@style/LuciferTopNavLabel" android:text="Skins" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/nav_about"
+                    style="@style/LuciferTopNavItem"
+                    android:contentDescription="About Lucifer Launcher">
+                    <ImageView android:id="@+id/nav_about_icon" style="@style/LuciferTopNavIcon" android:src="@drawable/ic_menu_news" />
+                    <TextView android:id="@+id/nav_about_label" style="@style/LuciferTopNavLabel" android:text="About" />
+                </LinearLayout>
+            </LinearLayout>
+        </HorizontalScrollView>
+
         <Button
             android:id="@+id/btn_client_features"
-            android:layout_width="@dimen/_38sdp"
-            android:layout_height="@dimen/_38sdp"
-            android:layout_marginHorizontal="@dimen/_4sdp"
-            android:text="✦"
-            android:textSize="18sp"
-            android:textColor="#B39DDB"
-            android:background="@drawable/bg_client_features_btn"
-            android:padding="0dp"
-            android:layout_gravity="center_vertical" />
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/_36sdp"
+            android:layout_marginHorizontal="@dimen/_3sdp"
+            android:minWidth="@dimen/_40sdp"
+            android:text="✦ Pro"
+            android:textSize="@dimen/_9ssp"
+            android:textStyle="bold"
+            android:textColor="@color/lucifer_cyan"
+            android:background="@drawable/bg_lucifer_nav_item"
+            android:paddingHorizontal="@dimen/_8sdp"
+            android:contentDescription="Client features" />
 
-        <!-- Nav Skin -->
-        <FrameLayout
-            android:id="@+id/nav_skin"
-            android:layout_width="@dimen/_38sdp"
-            android:layout_height="match_parent"
-            android:background="?android:attr/selectableItemBackground"
-            android:clickable="true"
-            android:focusable="true">
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="center"
-                android:orientation="vertical">
-                <ImageView
-                    android:id="@+id/nav_skin_icon"
-                    android:layout_width="@dimen/_20sdp"
-                    android:layout_height="@dimen/_20sdp"
-                    android:src="@drawable/ic_manage_skin"
-                    android:contentDescription="Manage Skin" />
-                <View
-                    android:id="@+id/nav_skin_indicator"
-                    android:layout_width="14dp"
-                    android:layout_height="2dp"
-                    android:background="@color/neon_green"
-                    android:visibility="invisible" />
-            </LinearLayout>
-        </FrameLayout>
-
-        <!-- Spacer -->
-        <View
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_weight="1" />
-
-        <!-- Nav Home (right side) -->
-        <FrameLayout
-            android:id="@+id/nav_home"
-            android:layout_width="@dimen/_38sdp"
-            android:layout_height="match_parent"
-            android:background="?android:attr/selectableItemBackground"
-            android:clickable="true"
-            android:focusable="true">
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="center"
-                android:orientation="vertical">
-                <ImageView
-                    android:id="@+id/nav_home_icon"
-                    android:layout_width="@dimen/_20sdp"
-                    android:layout_height="@dimen/_20sdp"
-                    android:src="@drawable/ic_home"
-                    android:contentDescription="@string/mcl_tab_home" />
-                <View
-                    android:id="@+id/nav_home_indicator"
-                    android:layout_width="14dp"
-                    android:layout_height="2dp"
-                    android:background="@color/neon_green"
-                    android:visibility="visible" />
-            </LinearLayout>
-        </FrameLayout>
-
-        <!-- Account Spinner -->
         <com.kdt.mcgui.mcAccountSpinner
             android:id="@+id/account_spinner"
-            android:layout_width="@dimen/_150sdp"
+            android:layout_width="@dimen/_136sdp"
             android:layout_height="@dimen/_38sdp"
             android:dropDownWidth="wrap_content"
             android:dropDownVerticalOffset="@dimen/_40sdp"
@@ -230,7 +168,6 @@
             android:paddingStart="@dimen/_6sdp"
             android:paddingEnd="@dimen/_6sdp" />
 
-        <!-- Settings Button -->
         <ImageButton
             android:id="@+id/setting_button"
             android:layout_width="@dimen/_38sdp"
@@ -243,24 +180,22 @@
             android:contentDescription="Settings"
             android:clickable="true"
             android:focusable="true" />
-
     </LinearLayout>
 
-    <!-- ══════════════ FRAGMENT CONTAINER ══════════════ -->
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/container_fragment"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:layout_marginTop="@dimen/_4sdp"
+        android:layout_marginBottom="@dimen/_4sdp"
         app:layout_constraintTop_toBottomOf="@+id/header_bar"
-        android:layout_marginBottom="8dp"
         app:layout_constraintBottom_toBottomOf="parent" />
 
-    <!-- ══════════════ PROGRESS BAR ══════════════ -->
     <com.kdt.mcgui.ProgressLayout
         android:id="@+id/progress_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:elevation="8dp"
+        android:elevation="10dp"
         android:layout_marginStart="@dimen/padding_large"
         android:layout_marginEnd="@dimen/padding_large"
         android:layout_marginTop="4dp"

@@ -117,6 +117,7 @@ public class LauncherActivity extends BaseActivity {
         public void onFragmentResumed(@NonNull FragmentManager fm, @NonNull Fragment f) {
             mSettingsButton.setImageDrawable(ContextCompat.getDrawable(getBaseContext(), f instanceof MainMenuFragment
                     ? R.drawable.ic_menu_settings : R.drawable.ic_menu_home));
+            updateNavigationForFragment(f);
         }
     };
 
@@ -331,7 +332,6 @@ public class LauncherActivity extends BaseActivity {
         android.widget.Button btnClientFeatures = findViewById(R.id.btn_client_features);
         if (btnClientFeatures != null) {
             updateClientFeaturesButton(btnClientFeatures, mClientFeaturesManager.isEnabled());
-            startPremiumButtonPulse(btnClientFeatures);
         }
     }
 
@@ -484,26 +484,40 @@ public class LauncherActivity extends BaseActivity {
 
     /** Wire up the landscape header bar navigation buttons. */
     private void setupNavButtons() {
-        View navModStore       = findViewById(R.id.nav_mod_store);
-        View navCustomControls  = findViewById(R.id.nav_custom_controls);
-        View navCursor          = findViewById(R.id.nav_cursor);
-        View navHome            = findViewById(R.id.nav_home);
-        View btnHomeLogo        = findViewById(R.id.btn_home_logo);
-        View tvLauncherTitle    = findViewById(R.id.tv_launcher_title);
+        View navHome = findViewById(R.id.nav_home);
+        View navInstances = findViewById(R.id.nav_instances);
+        View navServers = findViewById(R.id.nav_servers);
+        View navModStore = findViewById(R.id.nav_mod_store);
+        View navCustomControls = findViewById(R.id.nav_custom_controls);
+        View navCursor = findViewById(R.id.nav_cursor);
+        View navSkin = findViewById(R.id.nav_skin);
+        View navAbout = findViewById(R.id.nav_about);
+        View btnHomeLogo = findViewById(R.id.btn_home_logo);
+        View tvLauncherTitle = findViewById(R.id.tv_launcher_title);
         final android.widget.Button btnClientFeatures = findViewById(R.id.btn_client_features);
 
         View.OnClickListener homeListener = v -> {
-            // Always pop to ROOT when clicking home
             getSupportFragmentManager().popBackStackImmediate("ROOT", 0);
             Fragment frag = getVisibleFragment("ROOT");
             if (frag instanceof MainMenuFragment) {
                 ((MainMenuFragment) frag).refreshHomeState();
             }
+            setNavigationSelection(R.id.nav_home);
         };
 
-        if (navHome != null)         navHome.setOnClickListener(homeListener);
-        if (btnHomeLogo != null)     btnHomeLogo.setOnClickListener(homeListener);
+        if (navHome != null) navHome.setOnClickListener(homeListener);
+        if (btnHomeLogo != null) btnHomeLogo.setOnClickListener(homeListener);
         if (tvLauncherTitle != null) tvLauncherTitle.setOnClickListener(homeListener);
+
+        if (navInstances != null) navInstances.setOnClickListener(v ->
+                openRightPaneDestination(net.kdt.pojavlaunch.fragments.InstancePickerFragment.class,
+                        net.kdt.pojavlaunch.fragments.InstancePickerFragment.TAG, R.id.nav_instances));
+        if (navServers != null) navServers.setOnClickListener(v ->
+                openRightPaneDestination(net.kdt.pojavlaunch.fragments.ServerHubFragment.class,
+                        net.kdt.pojavlaunch.fragments.ServerHubFragment.TAG, R.id.nav_servers));
+        if (navAbout != null) navAbout.setOnClickListener(v ->
+                openRightPaneDestination(net.kdt.pojavlaunch.fragments.AboutFragment.class,
+                        net.kdt.pojavlaunch.fragments.AboutFragment.TAG, R.id.nav_about));
 
         if (btnClientFeatures != null) {
             updateClientFeaturesButton(btnClientFeatures, mClientFeaturesManager.isEnabled());
@@ -511,46 +525,71 @@ public class LauncherActivity extends BaseActivity {
                 Tools.swapFragment(this, ClientFeaturesFragment.class, ClientFeaturesFragment.TAG, null,
                         R.anim.slide_in_right, R.anim.slide_out_left,
                         R.anim.slide_in_left, R.anim.slide_out_right);
+                setNavigationSelection(R.id.btn_client_features);
             });
-            startPremiumButtonPulse(btnClientFeatures);
         }
 
-        if (navModStore != null) {
-            navModStore.setOnClickListener(v -> {
-                Fragment frag = getVisibleFragment("ROOT");
-                if (frag instanceof MainMenuFragment) {
-                    ((MainMenuFragment) frag).openChildPane(
-                            ModsSearchFragment.class, ModsSearchFragment.TAG, null);
-                } else {
-                    Tools.swapFragment(this, ModsSearchFragment.class, ModsSearchFragment.TAG, null);
-                }
-            });
-        }
+        if (navModStore != null) navModStore.setOnClickListener(v ->
+                openRightPaneDestination(ModsSearchFragment.class, ModsSearchFragment.TAG, R.id.nav_mod_store));
 
         if (navCustomControls != null) {
-            navCustomControls.setOnClickListener(v ->
-                    startActivity(new Intent(this, CustomControlsActivity.class)));
-        }
-
-        if (navCursor != null) {
-            navCursor.setOnClickListener(v ->
-                    Tools.swapFragment(this, CursorCustomizationFragment.class,
-                            CursorCustomizationFragment.TAG, null));
-        }
-
-        View navSkin = findViewById(R.id.nav_skin);
-        if (navSkin != null) {
-            navSkin.setOnClickListener(v -> {
-                Fragment frag = getVisibleFragment("ROOT");
-                if (frag instanceof MainMenuFragment) {
-                    ((MainMenuFragment) frag).openChildPane(
-                            SkinManagerFragment.class, SkinManagerFragment.TAG, null);
-                } else {
-                    Tools.swapFragment(this, SkinManagerFragment.class, SkinManagerFragment.TAG, null);
-                }
+            navCustomControls.setOnClickListener(v -> {
+                setNavigationSelection(R.id.nav_custom_controls);
+                startActivity(new Intent(this, CustomControlsActivity.class));
             });
         }
+
+        if (navCursor != null) navCursor.setOnClickListener(v ->
+                openRightPaneDestination(CursorCustomizationFragment.class,
+                        CursorCustomizationFragment.TAG, R.id.nav_cursor));
+
+        if (navSkin != null) navSkin.setOnClickListener(v ->
+                openRightPaneDestination(SkinManagerFragment.class, SkinManagerFragment.TAG, R.id.nav_skin));
+
         updateNavSkinIcon();
+    }
+
+    private void openRightPaneDestination(Class<? extends Fragment> fragmentClass, String tag, int navId) {
+        Fragment root = getVisibleFragment("ROOT");
+        if (root instanceof MainMenuFragment) {
+            ((MainMenuFragment) root).openChildPane(fragmentClass, tag, null);
+        } else {
+            Tools.swapFragment(this, fragmentClass, tag, null);
+        }
+        setNavigationSelection(navId);
+    }
+
+    private void setNavigationSelection(int selectedId) {
+        int[] ids = {R.id.nav_home, R.id.nav_instances, R.id.nav_servers, R.id.nav_mod_store,
+                R.id.nav_custom_controls, R.id.nav_cursor, R.id.nav_skin, R.id.nav_about,
+                R.id.btn_client_features};
+        for (int id : ids) {
+            View item = findViewById(id);
+            if (item != null) item.setSelected(id == selectedId);
+        }
+    }
+
+    private void updateNavigationForFragment(Fragment fragment) {
+        int activeId = R.id.nav_home;
+        if (fragment instanceof net.kdt.pojavlaunch.fragments.InstancePickerFragment ||
+                fragment instanceof net.kdt.pojavlaunch.fragments.ProfileTypeSelectFragment ||
+                fragment instanceof net.kdt.pojavlaunch.fragments.ProfileEditorFragment) {
+            activeId = R.id.nav_instances;
+        } else if (fragment instanceof net.kdt.pojavlaunch.fragments.ServerHubFragment) {
+            activeId = R.id.nav_servers;
+        } else if (fragment instanceof ModsSearchFragment ||
+                fragment instanceof net.kdt.pojavlaunch.fragments.ManageModsFragment) {
+            activeId = R.id.nav_mod_store;
+        } else if (fragment instanceof CursorCustomizationFragment) {
+            activeId = R.id.nav_cursor;
+        } else if (fragment instanceof net.kdt.pojavlaunch.fragments.SkinManagerFragment) {
+            activeId = R.id.nav_skin;
+        } else if (fragment instanceof net.kdt.pojavlaunch.fragments.AboutFragment) {
+            activeId = R.id.nav_about;
+        } else if (fragment instanceof ClientFeaturesFragment) {
+            activeId = R.id.btn_client_features;
+        }
+        setNavigationSelection(activeId);
     }
 
     public void updateNavSkinIcon() {
@@ -562,36 +601,11 @@ public class LauncherActivity extends BaseActivity {
     }
 
     private void updateClientFeaturesButton(android.widget.Button btn, boolean enabled) {
-        if (enabled) {
-            btn.setText("✦");
-            btn.setBackgroundResource(R.drawable.bg_client_features_btn_filled);
-            btn.setTextColor(0xFF0D0D0D);
-        } else {
-            btn.setText("✦");
-            btn.setBackgroundResource(R.drawable.bg_client_features_btn);
-            btn.setTextColor(0xFF39FF14);
-        }
-    }
-
-    private void startPremiumButtonPulse(View btn) {
-        if (btn == null) return;
-        android.view.animation.Animation pulse = android.view.animation.AnimationUtils.loadAnimation(this, R.anim.pulse_animation);
-        btn.startAnimation(pulse);
-        btn.setOnTouchListener((v, event) -> {
-            switch (event.getAction()) {
-                case android.view.MotionEvent.ACTION_DOWN:
-                    v.clearAnimation();
-                    v.animate().scaleX(0.92f).scaleY(0.92f).setDuration(80).start();
-                    break;
-                case android.view.MotionEvent.ACTION_UP:
-                case android.view.MotionEvent.ACTION_CANCEL:
-                    v.animate().scaleX(1.0f).scaleY(1.0f).setDuration(120).withEndAction(() -> {
-                        v.startAnimation(pulse);
-                    }).start();
-                    break;
-            }
-            return false;
-        });
+        btn.setText(enabled ? "✦ Pro ✓" : "✦ Pro");
+        btn.setBackgroundResource(R.drawable.bg_lucifer_nav_item);
+        btn.setTextColor(ContextCompat.getColor(this, R.color.lucifer_cyan));
+        btn.setSelected(enabled);
+        // Avoid an infinite pulse on the header: it causes unnecessary redraws and battery use.
     }
 
     public ClientFeaturesManager getClientFeaturesManager() {

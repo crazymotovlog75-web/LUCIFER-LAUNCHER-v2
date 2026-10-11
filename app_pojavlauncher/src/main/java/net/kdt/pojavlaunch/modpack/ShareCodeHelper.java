@@ -32,7 +32,7 @@ public class ShareCodeHelper {
             throws IOException, ShareCodeException {
 
         String filename = (modpackName != null ? sanitizeFilename(modpackName) : "modpack") + ".json";
-        String description = "CS Launcher Modpack: " + (modpackName != null ? modpackName : "Untitled");
+        String description = "Lucifer Launcher Modpack: " + (modpackName != null ? modpackName : "Untitled");
 
         // Build request body
         JSONObject body;

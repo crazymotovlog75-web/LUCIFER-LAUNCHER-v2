@@ -114,7 +114,7 @@ import java.util.Map;
 public final class Tools {
     public  static final float BYTE_TO_MB = 1024 * 1024;
     public static final Handler MAIN_HANDLER = new Handler(Looper.getMainLooper());
-    public static String APP_NAME = "CS Launcher";
+    public static String APP_NAME = "LUCIFER LAUNCHER";
 
     public static final Gson GLOBAL_GSON = new GsonBuilder().setPrettyPrinting().create();
 
@@ -789,13 +789,22 @@ public final class Tools {
             }
         }
 
-        return JSONUtils.insertJSONValueList(
+        String[] resolvedArgs = JSONUtils.insertJSONValueList(
                 splitAndFilterEmpty(
                         versionInfo.minecraftArguments == null ?
                                 fromStringArray(minecraftArgs.toArray(new String[0])):
                                 versionInfo.minecraftArguments
                 ), varArgMap
         );
+
+        // A server hub request is consumed once. Keeping the Quick Play parameters in the
+        // argument list (rather than a shell string) avoids quoting/injection issues.
+        String quickPlayAddress = QuickPlayManager.consumePendingAddress(versionInfo);
+        if (quickPlayAddress == null) return resolvedArgs;
+        List<String> argsWithQuickPlay = new ArrayList<>(Arrays.asList(resolvedArgs));
+        argsWithQuickPlay.add("--quickPlayMultiplayer");
+        argsWithQuickPlay.add(quickPlayAddress);
+        return argsWithQuickPlay.toArray(new String[0]);
     }
 
     public static String fromStringArray(String[] strArr) {

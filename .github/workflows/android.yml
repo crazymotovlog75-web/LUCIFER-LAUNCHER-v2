@@ -1,4 +1,4 @@
-name: CS Launcher V2 CI
+name: Lucifer Launcher V2 CI
 
 on:
   pull_request:
@@ -6,6 +6,12 @@ on:
       - 'l10n_v3_openjdk'
     types: [opened, reopened]
   workflow_dispatch:
+    inputs:
+      publish_release:
+        description: "Publish the signed APKs as a GitHub Release"
+        required: false
+        type: boolean
+        default: false
 
 jobs:
   build:
@@ -50,7 +56,7 @@ jobs:
 
       # ── Signing keystore ─────────────────────────────────────────────────────
       - name: Decode signing keystore
-        if: github.event_name == 'workflow_dispatch'
+        if: github.event_name == 'workflow_dispatch' && inputs.publish_release == true
         run: |
           echo "${{ secrets.SIGNING_KEYSTORE_BASE64 }}" | base64 --decode > keystore.jks
           echo "KEYSTORE_PATH=${{ github.workspace }}/keystore.jks" >> $GITHUB_ENV
@@ -82,9 +88,9 @@ jobs:
 
           RELEASE_APK=$(find app_pojavlauncher/build/outputs/apk/release -name "*.apk" | head -n 1)
           if [ -n "$RELEASE_APK" ]; then
-            cp "$RELEASE_APK" out/CS-LAUNCHER-V2.apk
-            md5sum  out/CS-LAUNCHER-V2.apk > out/CS-LAUNCHER-V2.md5
-            sha256sum out/CS-LAUNCHER-V2.apk > out/CS-LAUNCHER-V2.sha256
+            cp "$RELEASE_APK" out/LUCIFER-LAUNCHER-V2.apk
+            md5sum  out/LUCIFER-LAUNCHER-V2.apk > out/LUCIFER-LAUNCHER-V2.md5
+            sha256sum out/LUCIFER-LAUNCHER-V2.apk > out/LUCIFER-LAUNCHER-V2.sha256
           else
             echo "ERROR: Release APK not found" && exit 1
           fi
@@ -97,8 +103,8 @@ jobs:
 
           DEBUG_APK=$(find app_pojavlauncher/build/outputs/apk/debug -name "*.apk" | head -n 1)
           if [ -n "$DEBUG_APK" ]; then
-            cp "$DEBUG_APK" out/CS-LAUNCHER-V2-DEBUG.apk
-            md5sum out/CS-LAUNCHER-V2-DEBUG.apk > out/CS-LAUNCHER-V2-DEBUG.md5
+            cp "$DEBUG_APK" out/LUCIFER-LAUNCHER-V2-DEBUG.apk
+            md5sum out/LUCIFER-LAUNCHER-V2-DEBUG.apk > out/LUCIFER-LAUNCHER-V2-DEBUG.md5
           fi
 
       # ── No-runtime APK ───────────────────────────────────────────────────────
@@ -115,9 +121,9 @@ jobs:
 
           NORUNTIME_APK=$(find app_pojavlauncher/build/outputs/apk/release -name "*.apk" | head -n 1)
           if [ -n "$NORUNTIME_APK" ]; then
-            cp "$NORUNTIME_APK" out/CS-LAUNCHER-V2-NO-RUNTIME.apk
-            md5sum    out/CS-LAUNCHER-V2-NO-RUNTIME.apk > out/CS-LAUNCHER-V2-NO-RUNTIME.md5
-            sha256sum out/CS-LAUNCHER-V2-NO-RUNTIME.apk > out/CS-LAUNCHER-V2-NO-RUNTIME.sha256
+            cp "$NORUNTIME_APK" out/LUCIFER-LAUNCHER-V2-NO-RUNTIME.apk
+            md5sum    out/LUCIFER-LAUNCHER-V2-NO-RUNTIME.apk > out/LUCIFER-LAUNCHER-V2-NO-RUNTIME.md5
+            sha256sum out/LUCIFER-LAUNCHER-V2-NO-RUNTIME.apk > out/LUCIFER-LAUNCHER-V2-NO-RUNTIME.sha256
           fi
 
       # ── APK size report ──────────────────────────────────────────────────────
@@ -135,21 +141,21 @@ jobs:
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: cs-launcher-v2-build-${{ github.run_number }}
+          name: lucifer-launcher-v2-build-${{ github.run_number }}
           path: out/*
           retention-days: 30
 
       # ── GitHub Release (manual only) ─────────────────────────────────────────
       - name: Create GitHub Release
         uses: ncipollo/release-action@v1
-        if: github.event_name == 'workflow_dispatch'
+        if: github.event_name == 'workflow_dispatch' && inputs.publish_release == true
         with:
-          artifacts: "out/CS-LAUNCHER-V2.apk,out/CS-LAUNCHER-V2.md5,out/CS-LAUNCHER-V2.sha256,out/CS-LAUNCHER-V2-NO-RUNTIME.apk,out/CS-LAUNCHER-V2-NO-RUNTIME.md5,out/CS-LAUNCHER-V2-NO-RUNTIME.sha256"
+          artifacts: "out/LUCIFER-LAUNCHER-V2.apk,out/LUCIFER-LAUNCHER-V2.md5,out/LUCIFER-LAUNCHER-V2.sha256,out/LUCIFER-LAUNCHER-V2-NO-RUNTIME.apk,out/LUCIFER-LAUNCHER-V2-NO-RUNTIME.md5,out/LUCIFER-LAUNCHER-V2-NO-RUNTIME.sha256"
           token: ${{ secrets.GITHUB_TOKEN }}
           tag: "v2.${{ github.run_number }}"
-          name: "CS Launcher V2 — Build ${{ github.run_number }}"
+          name: "Lucifer Launcher V2 — Build ${{ github.run_number }}"
           body: |
-            ## CS Launcher V2 — Build ${{ github.run_number }}
+            ## Lucifer Launcher V2 — Build ${{ github.run_number }}
 
             **Branch:** `${{ github.ref_name }}`
             **Commit:** `${{ github.sha }}`
@@ -157,8 +163,8 @@ jobs:
             ### Downloads
             | File | Description |
             |------|-------------|
-            | `CS-LAUNCHER-V2.apk` | ✅ **Recommended** — Signed release build with bundled JRE 8 |
-            | `CS-LAUNCHER-V2-NO-RUNTIME.apk` | Signed release build without bundled runtime (smaller, requires device JRE) |
+            | `LUCIFER-LAUNCHER-V2.apk` | ✅ **Recommended** — Signed release build with bundled JRE 8 |
+            | `LUCIFER-LAUNCHER-V2-NO-RUNTIME.apk` | Signed release build without bundled runtime (smaller, requires device JRE) |
 
             > ℹ️ Verify your download with the `.md5` / `.sha256` checksum files.
           allowUpdates: true

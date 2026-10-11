@@ -158,7 +158,7 @@ public abstract class FabriclikeInstallFragment extends Fragment implements Modl
 
             mSelectedGamePosition = position;
             mSelectedGameVersion = selected.version;
-            Log.d("CSLauncher", "Game Version selected: " + mSelectedGameVersion);
+            Log.d("LuciferLauncher", "Game Version selected: " + mSelectedGameVersion);
 
             ArrayAdapter<FabricVersion> spinnerAdapter = (ArrayAdapter<FabricVersion>) mGameVersionSpinner.getAdapter();
             if (spinnerAdapter == null) {
@@ -190,7 +190,7 @@ public abstract class FabriclikeInstallFragment extends Fragment implements Modl
 
             // CRITICAL: Programmatic setSelection() does NOT fire OnItemSelectedListener.
             // We must explicitly trigger loader version fetch here.
-            Log.d("CSLauncher", "Triggering loader version fetch for: " + mSelectedGameVersion);
+            Log.d("LuciferLauncher", "Triggering loader version fetch for: " + mSelectedGameVersion);
             cancelFutureChecked(mLoaderVersionFuture);
             updateLoaderVersions();
         });
@@ -301,7 +301,7 @@ public abstract class FabriclikeInstallFragment extends Fragment implements Modl
         proxy.attachListener(this);
         setListenerProxy(proxy);
         mStartButton.setEnabled(false);
-        Log.d("CSLauncher", "Installation Started");
+        Log.d("LuciferLauncher", "Installation Started");
         new Thread(fabricDownloadTask).start();
     }
 
@@ -368,7 +368,7 @@ public abstract class FabriclikeInstallFragment extends Fragment implements Modl
         Log.d("FabricInstall", "STEP 6: Installation finished");
         Tools.runOnUiThread(()->{
             if (!isFragmentUiAvailable()) return;
-            Log.d("CSLauncher", "Installation Finished");
+            Log.d("LuciferLauncher", "Installation Finished");
             net.kdt.pojavlaunch.value.launcherprofiles.LauncherProfiles.load();
             ModloaderListenerProxy proxy = getListenerProxy();
             if (proxy != null) proxy.detachListener();
@@ -456,7 +456,7 @@ public abstract class FabriclikeInstallFragment extends Fragment implements Modl
         public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
             if (!isFragmentUiAvailable() || adapterView.getAdapter() == null) return;
             mSelectedLoaderVersion = ((FabricVersion) adapterView.getAdapter().getItem(i)).version;
-            Log.d("CSLauncher", "Selected Loader Version = " + mSelectedLoaderVersion);
+            Log.d("LuciferLauncher", "Selected Loader Version = " + mSelectedLoaderVersion);
             mStartButton.setEnabled(true);
         }
 
@@ -471,28 +471,28 @@ public abstract class FabriclikeInstallFragment extends Fragment implements Modl
     class LoadLoaderVersionsTask implements SelfReferencingFuture.FutureInterface {
         @Override
         public void run(Future<?> myFuture) {
-            Log.i("CSLauncher", "LoadLoaderVersionsTask START for game version: " + mSelectedGameVersion);
+            Log.i("LuciferLauncher", "LoadLoaderVersionsTask START for game version: " + mSelectedGameVersion);
             try {
                 mLoaderVersionArray = mFabriclikeUtils.downloadLoaderVersions(mSelectedGameVersion);
                 if (mLoaderVersionArray != null) {
-                    Log.i("CSLauncher", "LoadLoaderVersionsTask SUCCESS: loaded " + mLoaderVersionArray.length + " loader versions");
+                    Log.i("LuciferLauncher", "LoadLoaderVersionsTask SUCCESS: loaded " + mLoaderVersionArray.length + " loader versions");
                     onFinished(myFuture);
                 } else {
-                    Log.e("CSLauncher", "LoadLoaderVersionsTask FAILED: downloadLoaderVersions returned null");
+                    Log.e("LuciferLauncher", "LoadLoaderVersionsTask FAILED: downloadLoaderVersions returned null");
                     onException(myFuture, null);
                 }
             } catch (IOException e) {
-                Log.e("CSLauncher", "LoadLoaderVersionsTask FAILED with IOException", e);
+                Log.e("LuciferLauncher", "LoadLoaderVersionsTask FAILED with IOException", e);
                 onException(myFuture, e);
             }
         }
         private void onFinished(Future<?> myFuture) {
             Tools.runOnUiThread(()->{
                 if(myFuture.isCancelled() || !isFragmentUiAvailable()) {
-                    Log.w("CSLauncher", "LoadLoaderVersionsTask onFinished: skipped (cancelled or UI unavailable)");
+                    Log.w("LuciferLauncher", "LoadLoaderVersionsTask onFinished: skipped (cancelled or UI unavailable)");
                     return;
                 }
-                Log.d("CSLauncher", "LoadLoaderVersionsTask onFinished: updating loader spinner");
+                Log.d("LuciferLauncher", "LoadLoaderVersionsTask onFinished: updating loader spinner");
                 stopLoading();
                 updateLoaderSpinner();
             });
@@ -507,25 +507,25 @@ public abstract class FabriclikeInstallFragment extends Fragment implements Modl
 
     private void updateLoaderSpinner() {
         if(!isFragmentUiAvailable() || mLoaderVersionArray == null) {
-            Log.w("CSLauncher", "updateLoaderSpinner: skipped (UI unavailable or no loader array)");
+            Log.w("LuciferLauncher", "updateLoaderSpinner: skipped (UI unavailable or no loader array)");
             return;
         }
         mLoaderVersionSpinner.setAlpha(0f);
         ArrayAdapter<FabricVersion> adapter = createAdapter(mLoaderVersionArray, false, true);
         if (adapter == null) {
-            Log.w("CSLauncher", "updateLoaderSpinner: adapter is null");
+            Log.w("LuciferLauncher", "updateLoaderSpinner: adapter is null");
             return;
         }
-        Log.d("CSLauncher", "Game Version = " + mSelectedGameVersion);
-        Log.d("CSLauncher", "updateLoaderSpinner: created adapter with " + adapter.getCount() + " items");
+        Log.d("LuciferLauncher", "Game Version = " + mSelectedGameVersion);
+        Log.d("LuciferLauncher", "updateLoaderSpinner: created adapter with " + adapter.getCount() + " items");
         mLoaderVersionSpinner.setAdapter(adapter);
         mLoaderVersionSpinner.animate().alpha(1f).setDuration(250).start();
         if (mLoaderVerList != null) {
             mLoaderVerList.setAdapter(adapter);
             applyListAnimations(mLoaderVerList);
-            Log.d("CSLauncher", "updateLoaderSpinner: attached adapter to loader ListView");
+            Log.d("LuciferLauncher", "updateLoaderSpinner: attached adapter to loader ListView");
         } else {
-            Log.w("CSLauncher", "updateLoaderSpinner: mLoaderVerList is null!");
+            Log.w("LuciferLauncher", "updateLoaderSpinner: mLoaderVerList is null!");
         }
 
         // Auto-select latest stable loader if available, else first item
@@ -542,11 +542,11 @@ public abstract class FabriclikeInstallFragment extends Fragment implements Modl
             mLoaderVersionSpinner.setSelection(selectedIndex);
             mSelectedLoaderVersion = adapter.getItem(selectedIndex).version;
             mSelectedLoaderPosition = selectedIndex;
-            Log.d("CSLauncher", "updateLoaderSpinner: auto-selected loader " + mSelectedLoaderVersion);
+            Log.d("LuciferLauncher", "updateLoaderSpinner: auto-selected loader " + mSelectedLoaderVersion);
         } else {
             mSelectedLoaderVersion = null;
             mSelectedLoaderPosition = -1;
-            Log.w("CSLauncher", "updateLoaderSpinner: adapter is empty");
+            Log.w("LuciferLauncher", "updateLoaderSpinner: adapter is empty");
         }
 
         if (mLoaderVerList != null && adapter instanceof FabricVersionAdapter) {
@@ -561,7 +561,7 @@ public abstract class FabriclikeInstallFragment extends Fragment implements Modl
         public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
             if (!isFragmentUiAvailable() || adapterView.getAdapter() == null) return;
             mSelectedGameVersion = ((FabricVersion) adapterView.getAdapter().getItem(i)).version;
-            Log.d("CSLauncher", "Selected MC Version = " + mSelectedGameVersion);
+            Log.d("LuciferLauncher", "Selected MC Version = " + mSelectedGameVersion);
             cancelFutureChecked(mLoaderVersionFuture);
             updateLoaderVersions();
         }
@@ -579,28 +579,28 @@ public abstract class FabriclikeInstallFragment extends Fragment implements Modl
     class LoadGameVersionsTask implements SelfReferencingFuture.FutureInterface {
         @Override
         public void run(Future<?> myFuture) {
-            Log.i("CSLauncher", "LoadGameVersionsTask START");
+            Log.i("LuciferLauncher", "LoadGameVersionsTask START");
             try {
                 mGameVersionArray = mFabriclikeUtils.downloadGameVersions();
                 if(mGameVersionArray != null) {
-                    Log.i("CSLauncher", "LoadGameVersionsTask SUCCESS: loaded " + mGameVersionArray.length + " game versions");
+                    Log.i("LuciferLauncher", "LoadGameVersionsTask SUCCESS: loaded " + mGameVersionArray.length + " game versions");
                     onFinished(myFuture);
                 } else {
-                    Log.e("CSLauncher", "LoadGameVersionsTask FAILED: downloadGameVersions returned null");
+                    Log.e("LuciferLauncher", "LoadGameVersionsTask FAILED: downloadGameVersions returned null");
                     onException(myFuture, null);
                 }
             }catch (IOException e) {
-                Log.e("CSLauncher", "LoadGameVersionsTask FAILED with IOException", e);
+                Log.e("LuciferLauncher", "LoadGameVersionsTask FAILED with IOException", e);
                 onException(myFuture, e);
             }
         }
         private void onFinished(Future<?> myFuture) {
             Tools.runOnUiThread(()->{
                 if(myFuture.isCancelled() || !isFragmentUiAvailable()) {
-                    Log.w("CSLauncher", "LoadGameVersionsTask onFinished: skipped (cancelled or UI unavailable)");
+                    Log.w("LuciferLauncher", "LoadGameVersionsTask onFinished: skipped (cancelled or UI unavailable)");
                     return;
                 }
-                Log.d("CSLauncher", "LoadGameVersionsTask onFinished: updating game spinner");
+                Log.d("LuciferLauncher", "LoadGameVersionsTask onFinished: updating game spinner");
                 stopLoading();
                 updateGameSpinner();
             });

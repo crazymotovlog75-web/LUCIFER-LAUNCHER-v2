@@ -98,7 +98,7 @@ public class MainMenuFragment extends Fragment {
     /** Explicitly clears the right pane and resets home UI state */
     public void refreshHomeState() {
         if (getView() == null || !isAdded()) {
-            Log.w("CS_LAUNCHER", "Home state refresh skipped: View not fully inflated yet.");
+            Log.w("LUCIFER_LAUNCHER", "Home state refresh skipped: View not fully inflated yet.");
             return;
         }
         clearRightPane();
@@ -297,7 +297,6 @@ public class MainMenuFragment extends Fragment {
             btnClientFeatures.setOnClickListener(v -> {
                 openPane(ClientFeaturesFragment.class, ClientFeaturesFragment.TAG, null);
             });
-            startPremiumButtonPulse(btnClientFeatures);
         }
 
         // Manage Skin Button
@@ -489,35 +488,9 @@ public class MainMenuFragment extends Fragment {
     }
 
     private void updateClientFeaturesMenuButton(Button btn, boolean enabled) {
-        if (enabled) {
-            btn.setText("✦ Client Features (Enabled)");
-            btn.setBackgroundResource(R.drawable.bg_client_features_btn_filled);
-            btn.setTextColor(0xFF0D0D0D);
-        } else {
-            btn.setText("✦ Enable Client Features");
-            btn.setBackgroundResource(R.drawable.bg_client_features_btn);
-            btn.setTextColor(0xFF39FF14);
-        }
-    }
-
-    private void startPremiumButtonPulse(View btn) {
-        if (btn == null) return;
-        android.view.animation.Animation pulse = android.view.animation.AnimationUtils.loadAnimation(requireContext(), R.anim.pulse_animation);
-        btn.startAnimation(pulse);
-        btn.setOnTouchListener((v, event) -> {
-            switch (event.getAction()) {
-                case android.view.MotionEvent.ACTION_DOWN:
-                    v.clearAnimation();
-                    v.animate().scaleX(0.94f).scaleY(0.94f).alpha(0.85f).setDuration(70).start();
-                    break;
-                case android.view.MotionEvent.ACTION_UP:
-                case android.view.MotionEvent.ACTION_CANCEL:
-                    v.animate().scaleX(1.0f).scaleY(1.0f).alpha(1.0f).setDuration(120).withEndAction(() -> {
-                        if (isAdded()) v.startAnimation(pulse);
-                    }).start();
-                    break;
-            }
-            return false;
-        });
+        btn.setText(enabled ? "✦ Pro ✓" : "✦ Pro");
+        btn.setBackgroundResource(R.drawable.bg_lucifer_nav_item);
+        btn.setTextColor(getResources().getColor(R.color.lucifer_cyan));
+        btn.setSelected(enabled);
     }
 }

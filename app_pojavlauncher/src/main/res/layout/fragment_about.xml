@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:paddingHorizontal="@dimen/_16sdp"
+    android:paddingTop="@dimen/_10sdp"
+    android:paddingBottom="@dimen/_8sdp"
+    android:background="@drawable/bg_lucifer_scene">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:padding="@dimen/_12sdp"
+        android:background="@drawable/bg_lucifer_glass_card">
+        <TextView
+            android:id="@+id/about_back"
+            android:layout_width="@dimen/_38sdp"
+            android:layout_height="@dimen/_36sdp"
+            android:gravity="center"
+            android:text="‹"
+            android:textColor="@color/lucifer_cyan"
+            android:textSize="@dimen/_23ssp"
+            android:background="@drawable/bg_lucifer_nav_item"
+            android:clickable="true"
+            android:focusable="true"
+            android:contentDescription="Back" />
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:paddingStart="@dimen/_10sdp">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="ABOUT LUCIFER LAUNCHER"
+                android:textColor="@color/text_primary_white"
+                android:textSize="@dimen/_17ssp"
+                android:textStyle="bold" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_2sdp"
+                android:text="Minecraft Java Edition on Android · Made in India"
+                android:textColor="@color/text_secondary_light"
+                android:textSize="@dimen/_9ssp" />
+        </LinearLayout>
+        <TextView
+            android:id="@+id/about_version"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/_32sdp"
+            android:gravity="center"
+            android:paddingHorizontal="@dimen/_10sdp"
+            android:background="@drawable/bg_lucifer_nav_item"
+            android:text="v1.1.5"
+            android:textColor="@color/lucifer_cyan"
+            android:textSize="@dimen/_9ssp"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_12sdp"
+        android:layout_marginBottom="@dimen/_6sdp"
+        android:text="EVERYTHING IN YOUR LAUNCHER"
+        android:textColor="@color/lucifer_cyan"
+        android:textSize="@dimen/_9ssp"
+        android:textStyle="bold"
+        android:letterSpacing="0.13" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:fillViewport="true"
+        android:overScrollMode="never"
+        android:scrollbars="none">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <TextView
+                    android:id="@+id/about_instances"
+                    style="@style/LuciferFeatureTile"
+                    android:text="Profile instances\nManage builds and choose your active game profile" />
+                <TextView
+                    android:id="@+id/about_versions"
+                    style="@style/LuciferFeatureTile"
+                    android:text="Version manager\nInstall Minecraft releases, snapshots and loaders" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <TextView
+                    android:id="@+id/about_mods"
+                    style="@style/LuciferFeatureTile"
+                    android:text="Mod management\nBrowse and install with Modrinth or CurseForge" />
+                <TextView
+                    android:id="@+id/about_skins"
+                    style="@style/LuciferFeatureTile"
+                    android:text="Skins &amp; capes\nManage player identity and live skin preview" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <TextView
+                    android:id="@+id/about_performance"
+                    style="@style/LuciferFeatureTile"
+                    android:text="Performance tools\nTune RAM, Java runtime, renderer and resolution" />
+                <TextView
+                    android:id="@+id/about_controls"
+                    style="@style/LuciferFeatureTile"
+                    android:text="Custom controls\nEdit touch layouts and map connected gamepads" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <TextView
+                    android:id="@+id/about_cursor"
+                    style="@style/LuciferFeatureTile"
+                    android:text="Cursor Studio\nImport, draw and tune an in-game pointer" />
+                <TextView
+                    android:id="@+id/about_servers"
+                    style="@style/LuciferFeatureTile"
+                    android:text="Server Hub\nSave Java servers, ping status and Quick Play" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/about_pro"
+                style="@style/LuciferFeatureTile"
+                android:layout_width="match_parent"
+                android:layout_marginEnd="0dp"
+                android:text="✦ Client Features\nEnable the launcher’s optional client feature pack" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_4sdp"
+                android:orientation="horizontal">
+                <TextView
+                    android:id="@+id/about_wiki"
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/_34sdp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:background="@drawable/bg_lucifer_nav_item"
+                    android:text="Wiki"
+                    android:textColor="@color/lucifer_cyan"
+                    android:textSize="@dimen/_9ssp"
+                    android:clickable="true"
+                    android:focusable="true" />
+                <TextView
+                    android:id="@+id/about_discord"
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/_34sdp"
+                    android:layout_weight="1"
+                    android:layout_marginStart="@dimen/_8sdp"
+                    android:gravity="center"
+                    android:background="@drawable/bg_lucifer_nav_item"
+                    android:text="Discord"
+                    android:textColor="@color/lucifer_cyan"
+                    android:textSize="@dimen/_9ssp"
+                    android:clickable="true"
+                    android:focusable="true" />
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

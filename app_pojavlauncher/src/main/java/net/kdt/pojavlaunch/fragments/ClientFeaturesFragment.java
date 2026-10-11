@@ -85,7 +85,7 @@ public class ClientFeaturesFragment extends Fragment {
             try {
                 URL url = new URL("https://api.modrinth.com/v2/project/IpIMaYzj/version");
                 HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-                conn.setRequestProperty("User-Agent", "CSLauncher/1.0 (contact@craftstudio.dev)");
+                conn.setRequestProperty("User-Agent", "LuciferLauncher/1.0 (contact@craftstudio.dev)");
                 
                 InputStream is = conn.getInputStream();
                 String json = Tools.read(is);
@@ -314,7 +314,7 @@ public class ClientFeaturesFragment extends Fragment {
                 // C. Download the Mod Jar
                 URL url = new URL(file.url);
                 HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-                connection.setRequestProperty("User-Agent", "CSLauncher/1.0 (contact@craftstudio.dev)");
+                connection.setRequestProperty("User-Agent", "LuciferLauncher/1.0 (contact@craftstudio.dev)");
                 final int totalBytes = connection.getContentLength();
                 InputStream inputStream = connection.getInputStream();
                 FileOutputStream outputStream = new FileOutputStream(destFile);

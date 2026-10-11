@@ -1,36 +1,52 @@
 package net.kdt.pojavlaunch.fragments;
 
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.ProgressBar;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import net.kdt.pojavlaunch.PojavApplication;
 import net.kdt.pojavlaunch.R;
 import net.kdt.pojavlaunch.Tools;
+import net.kdt.pojavlaunch.extra.ExtraConstants;
+import net.kdt.pojavlaunch.extra.ExtraCore;
 import net.kdt.pojavlaunch.prefs.LauncherPreferences;
-import net.kdt.pojavlaunch.profiles.ProfileAdapter;
-import net.kdt.pojavlaunch.profiles.ProfileAdapterExtra;
+import net.kdt.pojavlaunch.profiles.ProfileIconCache;
 import net.kdt.pojavlaunch.value.launcherprofiles.LauncherProfiles;
 import net.kdt.pojavlaunch.value.launcherprofiles.MinecraftProfile;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
-/**
- * Shown in the right pane (landscape) when the user taps the instance spinner.
- * Uses the same item_version_profile_layout + ProfileAdapter.setView() as the
- * spinner popup, so icon sizing is identical. Adds a "New instance" row at top.
- */
+/** Glass-style instance directory. Profile I/O and icon lookups never block the UI thread. */
 public class InstancePickerFragment extends Fragment {
-
     public static final String TAG = "InstancePickerFragment";
+
+    private RecyclerView mRecyclerView;
+    private EditText mSearchInput;
+    private TextView mCountLabel;
+    private View mEmptyState;
+    private ProgressBar mProgress;
+    private InstanceAdapter mAdapter;
+    private List<Instance> mAllInstances = new ArrayList<>();
 
     public InstancePickerFragment() {
         super(R.layout.fragment_instance_picker);
@@ -38,131 +54,262 @@ public class InstancePickerFragment extends Fragment {
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        // Back button — delegates to activity so the right pane pops correctly
-        view.findViewById(R.id.instance_picker_back)
-                .setOnClickListener(v -> requireActivity().getOnBackPressedDispatcher().onBackPressed());
+        view.findViewById(R.id.instance_picker_back).setOnClickListener(v ->
+                requireActivity().getOnBackPressedDispatcher().onBackPressed());
+        view.findViewById(R.id.instance_picker_add).setOnClickListener(v -> openCreateInstance());
 
-        RecyclerView recycler = view.findViewById(R.id.instance_picker_recycler);
-        recycler.setLayoutManager(new LinearLayoutManager(requireContext()));
+        mRecyclerView = view.findViewById(R.id.instance_picker_recycler);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
+        mRecyclerView.setHasFixedSize(true);
+        mRecyclerView.setItemAnimator(null);
+        mAdapter = new InstanceAdapter();
+        mRecyclerView.setAdapter(mAdapter);
 
-        LauncherProfiles.load();
-        Map<String, MinecraftProfile> profiles = LauncherProfiles.mainProfileJson.profiles;
-        List<String> keys = new ArrayList<>();
-        // Validate profiles — skip null keys, null/empty names
-        if (profiles != null) {
-            for (Map.Entry<String, MinecraftProfile> entry : profiles.entrySet()) {
-                String key = entry.getKey();
-                MinecraftProfile p = entry.getValue();
-                if (key == null || key.isEmpty()) continue;
-                if (p == null) continue;
-                if (p.name == null || p.name.trim().isEmpty()) continue;
-                keys.add(key);
+        mSearchInput = view.findViewById(R.id.instance_picker_search);
+        mCountLabel = view.findViewById(R.id.instance_picker_count);
+        mEmptyState = view.findViewById(R.id.instance_picker_empty);
+        mProgress = view.findViewById(R.id.instance_picker_progress);
+        mProgress.setVisibility(View.VISIBLE);
+        mRecyclerView.setVisibility(View.GONE);
+        mSearchInput.setEnabled(false);
+
+        mSearchInput.addTextChangedListener(new TextWatcher() {
+            @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            @Override public void onTextChanged(CharSequence s, int start, int before, int count) {
+                applySearch(s != null ? s.toString() : "");
             }
-        }
-        String selected = LauncherPreferences.DEFAULT_PREF
-                .getString(LauncherPreferences.PREF_KEY_CURRENT_PROFILE, "");
+            @Override public void afterTextChanged(Editable s) {}
+        });
 
-        ProfileAdapter profileAdapter = new ProfileAdapter(new ProfileAdapterExtra[0]);
-
-        recycler.setAdapter(new InstanceAdapter(keys, profiles, profileAdapter, selected,
-                profileKey -> {
-                    Fragment parentFrag = getParentFragment();
-                    if (parentFrag instanceof MainMenuFragment) {
-                        ((MainMenuFragment) parentFrag).selectInstance(profileKey);
-                    }
-                },
-                () -> {
-                    // "New instance" tapped — open profile type selector in right pane
-                    Fragment parentFrag = getParentFragment();
-                    if (parentFrag instanceof MainMenuFragment) {
-                        ((MainMenuFragment) parentFrag).openChildPane(
-                                ProfileTypeSelectFragment.class,
-                                ProfileTypeSelectFragment.TAG, null);
-                    } else {
-                        Tools.swapFragment(requireActivity(),
-                                ProfileTypeSelectFragment.class,
-                                ProfileTypeSelectFragment.TAG, null);
-                    }
-                }));
+        loadInstances();
     }
 
-    // ── Adapter ──────────────────────────────────────────────────────────────
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        mRecyclerView = null;
+        mSearchInput = null;
+        mCountLabel = null;
+        mEmptyState = null;
+        mProgress = null;
+        mAdapter = null;
+    }
 
-    interface OnInstanceSelected { void onSelected(String profileKey); }
-    interface OnCreateNew        { void onCreate(); }
+    private void loadInstances() {
+        PojavApplication.sExecutorService.execute(() -> {
+            final ArrayList<Instance> instances = new ArrayList<>();
+            Exception failure = null;
+            try {
+                LauncherProfiles.load();
+                Map<String, MinecraftProfile> profiles = LauncherProfiles.mainProfileJson != null
+                        ? LauncherProfiles.mainProfileJson.profiles : null;
+                if (profiles != null) {
+                    for (Map.Entry<String, MinecraftProfile> entry : profiles.entrySet()) {
+                        String key = entry.getKey();
+                        MinecraftProfile profile = entry.getValue();
+                        if (key == null || key.trim().isEmpty() || profile == null ||
+                                profile.name == null || profile.name.trim().isEmpty()) continue;
+                        instances.add(new Instance(key, profile));
+                    }
+                }
+                Collections.sort(instances, (left, right) ->
+                        right.lastUsed.compareTo(left.lastUsed));
+            } catch (Exception error) {
+                failure = error;
+            }
+            final Exception loadError = failure;
+            Tools.runOnUiThread(() -> {
+                if (!isAdded() || mRecyclerView == null) return;
+                mAllInstances = instances;
+                mAdapter.setInstances(instances);
+                mProgress.setVisibility(View.GONE);
+                mCountLabel.setText(getString(R.string.instance_count, instances.size()));
+                mSearchInput.setEnabled(true);
+                mRecyclerView.setVisibility(View.VISIBLE);
+                applySearch(mSearchInput.getText().toString());
+                if (loadError != null) {
+                    Toast.makeText(requireContext(), R.string.instance_load_failed, Toast.LENGTH_LONG).show();
+                }
+            });
+        });
+    }
 
-    static class InstanceAdapter extends RecyclerView.Adapter<InstanceAdapter.VH> {
+    private void applySearch(String query) {
+        if (mAdapter == null || mRecyclerView == null) return;
+        String normalizedQuery = query == null ? "" : query.trim().toLowerCase(Locale.ROOT);
+        ArrayList<Instance> filtered = new ArrayList<>();
+        for (Instance instance : mAllInstances) {
+            if (normalizedQuery.isEmpty() || instance.name.toLowerCase(Locale.ROOT).contains(normalizedQuery) ||
+                    instance.version.toLowerCase(Locale.ROOT).contains(normalizedQuery) ||
+                    instance.key.toLowerCase(Locale.ROOT).contains(normalizedQuery)) {
+                filtered.add(instance);
+            }
+        }
+        mAdapter.setInstances(filtered);
+        boolean noSearchResults = !normalizedQuery.isEmpty() && filtered.isEmpty();
+        if (mEmptyState != null) mEmptyState.setVisibility(noSearchResults ? View.VISIBLE : View.GONE);
+        mRecyclerView.setVisibility(noSearchResults ? View.GONE : View.VISIBLE);
+    }
 
-        private static final int VIEW_TYPE_CREATE   = 0;
-        private static final int VIEW_TYPE_INSTANCE = 1;
+    private void openCreateInstance() {
+        openPane(ProfileTypeSelectFragment.class, ProfileTypeSelectFragment.TAG);
+    }
 
-        private final List<String> mKeys;
-        private final Map<String, MinecraftProfile> mProfiles;
-        private final ProfileAdapter mProfileAdapter; // used for rendering via setView
-        private String mSelectedKey;
-        private final OnInstanceSelected mOnSelect;
-        private final OnCreateNew mOnCreate;
+    private void openPane(Class<? extends Fragment> fragmentClass, String tag) {
+        Fragment parent = getParentFragment();
+        while (parent != null && !(parent instanceof MainMenuFragment)) {
+            parent = parent.getParentFragment();
+        }
+        if (parent instanceof MainMenuFragment) {
+            ((MainMenuFragment) parent).openChildPane(fragmentClass, tag, null);
+        } else {
+            Tools.swapFragment(requireActivity(), fragmentClass, tag, null);
+        }
+    }
 
-        InstanceAdapter(List<String> keys, Map<String, MinecraftProfile> profiles,
-                        ProfileAdapter profileAdapter, String selectedKey,
-                        OnInstanceSelected onSelect, OnCreateNew onCreate) {
-            mKeys           = keys;
-            mProfiles       = profiles;
-            mProfileAdapter = profileAdapter;
-            mSelectedKey    = selectedKey;
-            mOnSelect       = onSelect;
-            mOnCreate       = onCreate;
+    private void selectInstance(String profileKey) {
+        Fragment parent = getParentFragment();
+        while (parent != null && !(parent instanceof MainMenuFragment)) {
+            parent = parent.getParentFragment();
+        }
+        if (parent instanceof MainMenuFragment) {
+            ((MainMenuFragment) parent).selectInstance(profileKey);
+            return;
+        }
+        LauncherPreferences.DEFAULT_PREF.edit()
+                .putString(LauncherPreferences.PREF_KEY_CURRENT_PROFILE, profileKey)
+                .apply();
+        ExtraCore.setValue(ExtraConstants.REFRESH_VERSION_SPINNER, profileKey);
+        Tools.backToMainMenu(requireActivity());
+    }
+
+    private static final class Instance {
+        final String key;
+        final MinecraftProfile profile;
+        final String name;
+        final String version;
+        final String lastUsed;
+
+        Instance(String key, MinecraftProfile profile) {
+            this.key = key;
+            this.profile = profile;
+            this.name = profile.name != null ? profile.name : key;
+            this.version = profile.lastVersionId != null && !profile.lastVersionId.isEmpty()
+                    ? profile.lastVersionId : "Unknown version";
+            this.lastUsed = profile.lastUsed != null ? profile.lastUsed : "";
+        }
+    }
+
+    private final class InstanceAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+        private static final int TYPE_CREATE = 0;
+        private static final int TYPE_INSTANCE = 1;
+        private final ArrayList<Instance> instances = new ArrayList<>();
+        private String selectedKey = "";
+
+        InstanceAdapter() {
+            setHasStableIds(true);
+        }
+
+        void setInstances(List<Instance> values) {
+            instances.clear();
+            instances.addAll(values);
+            selectedKey = LauncherPreferences.DEFAULT_PREF.getString(
+                    LauncherPreferences.PREF_KEY_CURRENT_PROFILE, "");
+            notifyDataSetChanged();
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return position == 0 ? Long.MIN_VALUE : instances.get(position - 1).key.hashCode();
         }
 
         @Override
         public int getItemViewType(int position) {
-            return position == 0 ? VIEW_TYPE_CREATE : VIEW_TYPE_INSTANCE;
+            return position == 0 ? TYPE_CREATE : TYPE_INSTANCE;
         }
 
         @Override
         public int getItemCount() {
-            return mKeys.size() + 1; // +1 for "New instance"
+            return instances.size() + 1;
         }
 
         @NonNull
         @Override
-        public VH onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            // Use the exact same layout the spinner popup uses
-            View v = LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.item_version_profile_layout, parent, false);
-            return new VH(v);
+        public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+            LayoutInflater inflater = LayoutInflater.from(parent.getContext());
+            if (viewType == TYPE_CREATE) {
+                return new CreateHolder(inflater.inflate(R.layout.item_instance_picker_create, parent, false));
+            }
+            return new InstanceHolder(inflater.inflate(R.layout.item_instance_picker_profile, parent, false));
         }
 
         @Override
-        public void onBindViewHolder(@NonNull VH h, int position) {
-            if (getItemViewType(position) == VIEW_TYPE_CREATE) {
-                // Render the "New instance" extra via ProfileAdapter
-                ProfileAdapterExtra extra = new ProfileAdapterExtra(
-                        0,
-                        R.string.create_profile,
-                        h.itemView.getContext().getDrawable(R.drawable.ic_add));
-                mProfileAdapter.setViewExtra(h.itemView, extra);
-                h.itemView.setOnClickListener(v -> mOnCreate.onCreate());
+        public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
+            if (holder instanceof CreateHolder) {
+                holder.itemView.setOnClickListener(v -> openCreateInstance());
                 return;
             }
-
-            String key = mKeys.get(position - 1); // offset by 1 for create row
-            MinecraftProfile p = mProfiles.get(key);
-
-            // Let ProfileAdapter.setView() handle icon + label — identical to spinner popup
-            mProfileAdapter.setView(h.itemView, key, key.equals(mSelectedKey));
-
-            h.itemView.setOnClickListener(v -> {
-                String prev = mSelectedKey;
-                mSelectedKey = key;
-                notifyItemChanged(mKeys.indexOf(prev) + 1);
-                notifyItemChanged(position);
-                mOnSelect.onSelected(key);
-            });
+            Instance item = instances.get(position - 1);
+            InstanceHolder profileHolder = (InstanceHolder) holder;
+            profileHolder.name.setText(item.name);
+            profileHolder.version.setText(item.version);
+            profileHolder.lastUsed.setText(item.lastUsed.isEmpty()
+                    ? "Not launched yet" : "Last played · " + formatDate(item.lastUsed));
+            boolean selected = item.key.equals(selectedKey);
+            profileHolder.active.setVisibility(selected ? View.VISIBLE : View.GONE);
+            profileHolder.root.setBackgroundResource(selected
+                    ? R.drawable.bg_lucifer_nav_item : R.drawable.bg_lucifer_glass_card);
+            bindIcon(profileHolder.icon, item);
+            profileHolder.root.setOnClickListener(v -> selectInstance(item.key));
         }
 
-        static class VH extends RecyclerView.ViewHolder {
-            VH(@NonNull View v) { super(v); }
+        private String formatDate(String timestamp) {
+            return timestamp.length() >= 10 ? timestamp.substring(0, 10) : timestamp;
+        }
+
+        private void bindIcon(ImageView target, Instance instance) {
+            String versionId = instance.version.toLowerCase(Locale.ROOT);
+            int fallbackResource = versionId.contains("fabric") ? R.drawable.ic_fabric
+                    : versionId.contains("quilt") ? R.drawable.ic_quilt : R.drawable.ic_pojav_full;
+            target.setImageResource(fallbackResource);
+            target.setTag(instance.key);
+            final android.content.res.Resources resources = target.getResources();
+            PojavApplication.sExecutorService.execute(() -> {
+                Drawable loaded;
+                try {
+                    loaded = ProfileIconCache.fetchIcon(resources, instance.key, instance.profile.icon);
+                } catch (Exception error) {
+                    loaded = null;
+                }
+                final Drawable result = loaded;
+                if (result == null) return;
+                Tools.runOnUiThread(() -> {
+                    if (instance.key.equals(target.getTag())) target.setImageDrawable(result);
+                });
+            });
+        }
+    }
+
+    private static final class CreateHolder extends RecyclerView.ViewHolder {
+        CreateHolder(@NonNull View itemView) { super(itemView); }
+    }
+
+    private static final class InstanceHolder extends RecyclerView.ViewHolder {
+        final View root;
+        final ImageView icon;
+        final TextView name;
+        final TextView version;
+        final TextView lastUsed;
+        final TextView active;
+
+        InstanceHolder(@NonNull View itemView) {
+            super(itemView);
+            root = itemView;
+            icon = itemView.findViewById(R.id.instance_picker_profile_icon);
+            name = itemView.findViewById(R.id.instance_picker_profile_name);
+            version = itemView.findViewById(R.id.instance_picker_profile_version);
+            lastUsed = itemView.findViewById(R.id.instance_picker_profile_last_used);
+            active = itemView.findViewById(R.id.instance_picker_profile_active);
         }
     }
 }

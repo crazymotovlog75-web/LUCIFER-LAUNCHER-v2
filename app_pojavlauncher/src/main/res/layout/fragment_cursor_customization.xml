@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#121214"
+    android:background="@drawable/bg_lucifer_scene"
     android:animateLayoutChanges="true">
 
     <!-- ═══════════════════════════════════════ -->
@@ -14,7 +14,7 @@
         android:id="@+id/cursor_top_bar"
         android:layout_width="match_parent"
         android:layout_height="56dp"
-        android:background="#1C1C1E"
+        android:background="@drawable/bg_lucifer_header"
         android:paddingHorizontal="16dp"
         app:layout_constraintTop_toTopOf="parent">
 
@@ -25,7 +25,7 @@
             android:background="@drawable/bg_icon_button_round"
             android:src="@drawable/ic_arrow_back_white"
             android:padding="10dp"
-            app:tint="#39FF14"
+            app:tint="@color/lucifer_cyan"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -33,7 +33,7 @@
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="CURSOR CUSTOMIZATION"
+            android:text="CURSOR STUDIO"
             android:textColor="#FFFFFF"
             android:textSize="14sp"
             android:textStyle="bold"
@@ -89,7 +89,7 @@
                     android:id="@+id/cursor_preview_container"
                     android:layout_width="match_parent"
                     android:layout_height="140dp"
-                    android:background="@drawable/bg_cursor_preview"
+                    android:background="@drawable/bg_lucifer_glass_card"
                     android:layout_marginBottom="18dp">
 
                     <ImageView
@@ -99,7 +99,7 @@
                         android:scaleType="centerInside"
                         android:src="@drawable/ic_mouse_pointer"
                         android:padding="6dp"
-                        android:background="@drawable/bg_preview_box"
+                        android:background="@drawable/bg_lucifer_nav_item"
                         android:contentDescription="Current cursor preview"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
@@ -111,10 +111,10 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="DEFAULT"
-                        android:textColor="#39FF14"
+                        android:textColor="@color/lucifer_cyan"
                         android:textSize="9sp"
                         android:textStyle="bold"
-                        android:background="@drawable/bg_size_chip"
+                        android:background="@drawable/bg_lucifer_nav_item"
                         android:paddingHorizontal="8dp"
                         android:paddingVertical="3dp"
                         android:layout_margin="10dp"
@@ -165,7 +165,7 @@
                         android:orientation="vertical"
                         android:gravity="center"
                         android:padding="12dp"
-                        android:background="@drawable/background_card_neon"
+                        android:background="@drawable/bg_lucifer_nav_item"
                         android:clickable="true"
                         android:focusable="true"
                         android:foreground="?attr/selectableItemBackground">
@@ -195,7 +195,7 @@
                         android:orientation="vertical"
                         android:gravity="center"
                         android:padding="12dp"
-                        android:background="@drawable/background_card"
+                        android:background="@drawable/bg_lucifer_glass_card"
                         android:clickable="true"
                         android:focusable="true"
                         android:foreground="?attr/selectableItemBackground">
@@ -225,7 +225,7 @@
                         android:orientation="vertical"
                         android:gravity="center"
                         android:padding="12dp"
-                        android:background="@drawable/background_card"
+                        android:background="@drawable/bg_lucifer_glass_card"
                         android:clickable="true"
                         android:focusable="true"
                         android:foreground="?attr/selectableItemBackground">
@@ -234,7 +234,7 @@
                             android:layout_width="28dp"
                             android:layout_height="28dp"
                             android:src="@drawable/ic_upload"
-                            app:tint="#39FF14"
+                            app:tint="@color/lucifer_cyan"
                             android:layout_marginBottom="6dp"/>
 
                         <TextView
@@ -264,7 +264,7 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/background_card"
+                    android:background="@drawable/bg_lucifer_glass_card"
                     android:orientation="vertical"
                     android:padding="14dp"
                     android:layout_marginBottom="18dp">
@@ -282,7 +282,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:text="CURSOR SCALE"
-                            android:textColor="#39FF14"
+                            android:textColor="@color/lucifer_cyan"
                             android:textSize="10.5sp"
                             android:textStyle="bold"
                             android:letterSpacing="0.05"/>
@@ -304,8 +304,8 @@
                         android:layout_marginVertical="6dp"
                         android:max="300"
                         android:progress="100"
-                        android:progressTint="#39FF14"
-                        android:thumbTint="#39FF14"
+                        android:progressTint="@color/lucifer_cyan"
+                        android:thumbTint="@color/lucifer_cyan"
                         android:progressBackgroundTint="#2C2C2E"/>
 
                     <!-- Hotspot X -->
@@ -322,7 +322,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:text="HOTSPOT X"
-                            android:textColor="#39FF14"
+                            android:textColor="@color/lucifer_cyan"
                             android:textSize="10.5sp"
                             android:textStyle="bold"
                             android:letterSpacing="0.05"/>
@@ -344,8 +344,8 @@
                         android:layout_marginVertical="6dp"
                         android:max="128"
                         android:progress="0"
-                        android:progressTint="#39FF14"
-                        android:thumbTint="#39FF14"
+                        android:progressTint="@color/lucifer_cyan"
+                        android:thumbTint="@color/lucifer_cyan"
                         android:progressBackgroundTint="#2C2C2E"/>
 
                     <!-- Hotspot Y -->
@@ -362,7 +362,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:text="HOTSPOT Y"
-                            android:textColor="#39FF14"
+                            android:textColor="@color/lucifer_cyan"
                             android:textSize="10.5sp"
                             android:textStyle="bold"
                             android:letterSpacing="0.05"/>
@@ -384,8 +384,8 @@
                         android:layout_marginVertical="6dp"
                         android:max="128"
                         android:progress="0"
-                        android:progressTint="#39FF14"
-                        android:thumbTint="#39FF14"
+                        android:progressTint="@color/lucifer_cyan"
+                        android:thumbTint="@color/lucifer_cyan"
                         android:progressBackgroundTint="#2C2C2E"/>
 
                 </LinearLayout>
@@ -406,7 +406,7 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/background_card"
+                    android:background="@drawable/bg_lucifer_glass_card"
                     android:orientation="vertical"
                     android:padding="14dp"
                     android:layout_marginBottom="18dp">
@@ -424,7 +424,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:text="GLOW INTENSITY"
-                            android:textColor="#39FF14"
+                            android:textColor="@color/lucifer_cyan"
                             android:textSize="10.5sp"
                             android:textStyle="bold"
                             android:letterSpacing="0.05"/>
@@ -446,8 +446,8 @@
                         android:layout_marginVertical="6dp"
                         android:max="60"
                         android:progress="0"
-                        android:progressTint="#39FF14"
-                        android:thumbTint="#39FF14"
+                        android:progressTint="@color/lucifer_cyan"
+                        android:thumbTint="@color/lucifer_cyan"
                         android:progressBackgroundTint="#2C2C2E"/>
 
                     <!-- Glow Opacity / Cursor Opacity -->
@@ -464,7 +464,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:text="CURSOR OPACITY"
-                            android:textColor="#39FF14"
+                            android:textColor="@color/lucifer_cyan"
                             android:textSize="10.5sp"
                             android:textStyle="bold"
                             android:letterSpacing="0.05"/>
@@ -486,8 +486,8 @@
                         android:layout_marginVertical="6dp"
                         android:max="100"
                         android:progress="100"
-                        android:progressTint="#39FF14"
-                        android:thumbTint="#39FF14"
+                        android:progressTint="@color/lucifer_cyan"
+                        android:thumbTint="@color/lucifer_cyan"
                         android:progressBackgroundTint="#2C2C2E"/>
 
                     <!-- GLOW COLOR SELECTION -->
@@ -615,7 +615,7 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/background_card"
+                    android:background="@drawable/bg_lucifer_glass_card"
                     android:orientation="vertical"
                     android:padding="14dp"
                     android:layout_marginBottom="24dp">
@@ -638,7 +638,7 @@
                             android:layout_width="24dp"
                             android:layout_height="24dp"
                             android:src="@drawable/ic_upload"
-                            app:tint="#39FF14"
+                            app:tint="@color/lucifer_cyan"
                             android:layout_marginBottom="4dp"/>
 
                         <TextView
@@ -662,9 +662,9 @@
                             android:layout_height="44dp"
                             android:layout_weight="1"
                             android:layout_marginEnd="6dp"
-                            android:background="@drawable/bg_green_gradient_button"
+                            android:background="@drawable/bg_lucifer_action"
                             android:text="IMPORT FILE"
-                            android:textColor="#000000"
+                            android:textColor="@color/text_primary_white"
                             android:textSize="11sp"
                             android:textStyle="bold"
                             android:stateListAnimator="@null"/>
@@ -675,9 +675,9 @@
                             android:layout_height="44dp"
                             android:layout_weight="1"
                             android:layout_marginStart="6dp"
-                            android:background="@drawable/background_card_neon"
+                            android:background="@drawable/bg_lucifer_nav_item"
                             android:text="EXPORT FILE"
-                            android:textColor="#39FF14"
+                            android:textColor="@color/lucifer_cyan"
                             android:textSize="11sp"
                             android:textStyle="bold"
                             android:stateListAnimator="@null"/>
@@ -693,9 +693,9 @@
                     android:id="@+id/btn_save_cursor"
                     android:layout_width="match_parent"
                     android:layout_height="48dp"
-                    android:background="@drawable/bg_save_button_neon"
+                    android:background="@drawable/bg_lucifer_action"
                     android:text="SAVE CHANGES"
-                    android:textColor="#000000"
+                    android:textColor="@color/text_primary_white"
                     android:textSize="12sp"
                     android:textStyle="bold"
                     android:letterSpacing="0.05"

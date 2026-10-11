@@ -1,15 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/card_profile_root"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:minHeight="76dp"
-    android:layout_marginHorizontal="16dp"
-    android:layout_marginVertical="6dp"
-    android:background="@drawable/bg_profile_card"
+    android:layout_width="@dimen/_224sdp"
+    android:layout_height="@dimen/_118sdp"
+    android:layout_marginHorizontal="@dimen/_5sdp"
+    android:layout_marginVertical="@dimen/_5sdp"
+    android:background="@drawable/bg_lucifer_glass_card"
     android:clickable="true"
     android:focusable="true"
-    android:padding="12dp">
+    android:padding="@dimen/_10sdp">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -17,74 +16,70 @@
         android:orientation="horizontal"
         android:gravity="center_vertical">
 
-        <!-- Profile Icon -->
         <ImageView
             android:id="@+id/img_profile_icon"
-            android:layout_width="52dp"
-            android:layout_height="52dp"
+            android:layout_width="@dimen/_42sdp"
+            android:layout_height="@dimen/_42sdp"
+            android:layout_marginEnd="@dimen/_8sdp"
             android:scaleType="fitCenter"
-            android:background="@drawable/bg_profile_icon_rounded" />
+            android:background="@drawable/bg_profile_icon_rounded"
+            android:padding="@dimen/_3sdp"
+            android:contentDescription="Instance icon" />
 
-        <!-- Text block -->
         <LinearLayout
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_weight="1"
-            android:layout_marginStart="12dp"
+            android:gravity="center_vertical"
             android:orientation="vertical">
-
             <TextView
                 android:id="@+id/tv_profile_name"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColor="#FFFFFF"
-                android:textSize="15sp"
+                android:textColor="@color/text_primary_white"
+                android:textSize="@dimen/_11ssp"
                 android:textStyle="bold"
-                android:ellipsize="end"
-                android:maxLines="1" />
-
+                android:maxLines="1"
+                android:ellipsize="end" />
             <TextView
                 android:id="@+id/tv_profile_meta"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColor="#888888"
-                android:textSize="12sp"
-                android:ellipsize="end"
+                android:layout_marginTop="@dimen/_2sdp"
+                android:textColor="@color/text_secondary_light"
+                android:textSize="@dimen/_8ssp"
                 android:maxLines="1"
-                android:layout_marginTop="2dp" />
-
+                android:ellipsize="end" />
             <TextView
                 android:id="@+id/tv_profile_mod_count"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColor="@color/accent_primary"
-                android:textSize="11sp"
-                android:ellipsize="end"
+                android:layout_marginTop="@dimen/_3sdp"
+                android:textColor="@color/lucifer_cyan"
+                android:textSize="@dimen/_8ssp"
                 android:maxLines="1"
-                android:layout_marginTop="2dp"
+                android:ellipsize="end"
                 android:text="Installed Mods: 0" />
-
         </LinearLayout>
 
-        <!-- Play Button -->
         <FrameLayout
             android:id="@+id/btn_profile_play"
-            android:layout_width="44dp"
-            android:layout_height="44dp"
-            android:layout_marginStart="8dp"
-            android:background="@drawable/bg_play_button_green"
+            android:layout_width="@dimen/_58sdp"
+            android:layout_height="@dimen/_34sdp"
+            android:layout_marginStart="@dimen/_7sdp"
+            android:background="@drawable/bg_lucifer_action"
             android:clickable="true"
-            android:focusable="true">
-
-            <ImageView
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:layout_gravity="center"
-                android:src="@drawable/ic_play_arrow"
-                android:tint="#121212" />
-
+            android:focusable="true"
+            android:contentDescription="Launch this instance">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:text="OPEN"
+                android:textColor="@color/text_primary_white"
+                android:textSize="@dimen/_8ssp"
+                android:textStyle="bold"
+                android:letterSpacing="0.08" />
         </FrameLayout>
-
     </LinearLayout>
-
 </FrameLayout>

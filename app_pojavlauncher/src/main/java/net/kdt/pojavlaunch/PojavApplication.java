@@ -40,7 +40,7 @@ public class PojavApplication extends Application {
 			5, TimeUnit.SECONDS,
 			new LinkedBlockingQueue<>(),
 			r -> {
-				Thread t = new Thread(r, "CSL-Worker");
+				Thread t = new Thread(r, "Lucifer-Worker");
 				t.setDaemon(true);
 				return t;
 			});
@@ -56,7 +56,7 @@ public class PojavApplication extends Application {
 				// Write to file, since some devices may not able to show error
 				FileUtils.ensureParentDirectory(crashFile);
 				PrintStream crashStream = new PrintStream(crashFile);
-				crashStream.append("CS Launcher crash report\n");
+				crashStream.append("LUCIFER LAUNCHER crash report\n");
 				crashStream.append(" - Time: ").append(DateFormat.getDateTimeInstance().format(new Date())).append("\n");
 				crashStream.append(" - Device: ").append(Build.PRODUCT).append(" ").append(Build.MODEL).append("\n");
 				crashStream.append(" - Android version: ").append(Build.VERSION.RELEASE).append("\n");
