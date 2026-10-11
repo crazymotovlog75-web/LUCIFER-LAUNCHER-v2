@@ -1,76 +1,426 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+    ══════════════════════════════════════════════════════════════════════════
+    NEXUS HOME  (Liquid Crystal, screen 01)
+      left  : featured server beacon + instance rail
+      centre: player stage + liquid launch orb + version pill
+      right : quick server beacon stack
+    Ids kept from the previous implementation: rv_home_profiles,
+    fab_create_profile, btn_refresh_profiles, right_pane_wallpaper.
+    ══════════════════════════════════════════════════════════════════════════
+-->
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/bg_launcher_dark">
+    android:background="@android:color/transparent">
 
-    <!-- Custom wallpaper — invisible by default, loaded dynamically -->
+    <!-- optional custom wallpaper sits behind the glass -->
     <ImageView
         android:id="@+id/right_pane_wallpaper"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:contentDescription="@null"
         android:scaleType="centerCrop"
-        android:visibility="gone"
-        android:contentDescription="@null" />
+        android:visibility="gone" />
 
-    <!-- Profile Cards -->
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rv_home_profiles"
-        android:layout_width="match_parent"
+    <!-- ══════════ LEFT COLUMN ══════════ -->
+    <LinearLayout
+        android:id="@+id/lc_home_left"
+        android:layout_width="0dp"
         android:layout_height="0dp"
-        android:clipToPadding="false"
-        android:paddingTop="12dp"
-        android:paddingBottom="96dp"
-        android:overScrollMode="never"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent" />
-
-    <!-- Floating "+" Create Profile button (bottom-center, hardware-accelerated) -->
-    <FrameLayout
-        android:id="@+id/fab_create_profile"
-        android:layout_width="64dp"
-        android:layout_height="64dp"
-        android:layout_marginBottom="24dp"
-        android:background="@drawable/bg_fab_create_profile"
-        android:clickable="true"
-        android:focusable="true"
-        android:elevation="8dp"
+        android:layout_marginStart="@dimen/lc_screen_pad"
+        android:layout_marginTop="@dimen/lc_gap"
+        android:layout_marginBottom="@dimen/lc_gap"
+        android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintWidth_percent="0.30">
 
-        <ImageView
-            android:layout_width="32dp"
-            android:layout_height="32dp"
-            android:layout_gravity="center"
-            android:src="@drawable/ic_add"
-            android:tint="@color/bg_primary"
-            android:contentDescription="Create Profile" />
-    </FrameLayout>
+        <!-- Featured server beacon -->
+        <LinearLayout
+            android:id="@+id/lc_beacon"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/lc_glass_card_active"
+            android:clickable="true"
+            android:focusable="true"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:padding="@dimen/lc_card_pad">
 
-    <!-- Refresh Profiles button -->
+            <FrameLayout
+                android:layout_width="46dp"
+                android:layout_height="46dp"
+                android:background="@drawable/lc_orb_button">
+
+                <ImageView
+                    android:id="@+id/lc_beacon_icon"
+                    android:layout_width="34dp"
+                    android:layout_height="34dp"
+                    android:layout_gravity="center"
+                    android:contentDescription="@null"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/lc_ic_servers"
+                    android:tint="@color/lc_cyan" />
+            </FrameLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/lc_beacon_name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/lc_featured_server"
+                        android:textColor="@color/lc_text"
+                        android:textSize="15sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/lc_beacon_badge"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="6dp"
+                        android:background="@drawable/lc_badge_official"
+                        android:paddingStart="7dp"
+                        android:paddingTop="2dp"
+                        android:paddingEnd="7dp"
+                        android:paddingBottom="2dp"
+                        android:text="@string/lc_official"
+                        android:textColor="@color/lc_gold"
+                        android:textSize="8sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/lc_beacon_address"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="1dp"
+                    android:text="@string/lc_featured_server_addr"
+                    android:textColor="@color/lc_text_dim"
+                    android:textSize="11sp" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <View
+                        android:id="@+id/lc_beacon_dot"
+                        android:layout_width="7dp"
+                        android:layout_height="7dp"
+                        android:background="@drawable/lc_dot_mint" />
+
+                    <TextView
+                        android:id="@+id/lc_beacon_status"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="6dp"
+                        android:text="@string/lc_status_checking"
+                        android:textColor="@color/lc_text_dim"
+                        android:textSize="10sp" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <FrameLayout
+                android:id="@+id/lc_beacon_play"
+                android:layout_width="38dp"
+                android:layout_height="38dp"
+                android:background="@drawable/lc_orb_button_active"
+                android:clickable="true"
+                android:focusable="true">
+
+                <ImageView
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:layout_gravity="center"
+                    android:contentDescription="@string/lc_play"
+                    android:src="@drawable/ic_play_arrow"
+                    android:tint="@color/lc_text" />
+            </FrameLayout>
+        </LinearLayout>
+
+        <!-- Instance rail header -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/lc_gap"
+            android:layout_marginBottom="6dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:letterSpacing="0.18"
+                android:text="@string/lc_instances"
+                android:textColor="@color/lc_text_dim"
+                android:textSize="10sp" />
+
+            <TextView
+                android:id="@+id/lc_instances_count"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:textColor="@color/lc_text_faint"
+                android:textSize="10sp" />
+
+            <FrameLayout
+                android:id="@+id/btn_refresh_profiles"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:background="@drawable/lc_orb_button"
+                android:clickable="true"
+                android:focusable="true">
+
+                <ImageView
+                    android:layout_width="15dp"
+                    android:layout_height="15dp"
+                    android:layout_gravity="center"
+                    android:contentDescription="@string/lc_refresh"
+                    android:src="@drawable/ic_redo"
+                    android:tint="@color/lc_text" />
+            </FrameLayout>
+        </LinearLayout>
+
+        <!-- Instance cards -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_home_profiles"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:clipToPadding="false"
+            android:overScrollMode="never"
+            android:paddingBottom="6dp"
+            android:scrollbars="none" />
+
+        <!-- New instance (dashed tile — keeps the old fab id + behaviour) -->
+        <FrameLayout
+            android:id="@+id/fab_create_profile"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginTop="6dp"
+            android:background="@drawable/lc_dashed_tile"
+            android:clickable="true"
+            android:focusable="true">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:contentDescription="@string/lc_new_instance"
+                    android:src="@drawable/ic_add"
+                    android:tint="@color/lc_cyan" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:letterSpacing="0.06"
+                    android:text="@string/lc_new_instance"
+                    android:textColor="@color/lc_text"
+                    android:textSize="12sp" />
+            </LinearLayout>
+        </FrameLayout>
+    </LinearLayout>
+
+    <!-- ══════════ PLAYER STAGE + LAUNCH ORB ══════════ -->
     <FrameLayout
-        android:id="@+id/btn_refresh_profiles"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:layout_marginBottom="32dp"
-        android:layout_marginEnd="24dp"
-        android:background="@drawable/background_image_rounded"
-        android:clickable="true"
-        android:focusable="true"
-        android:elevation="8dp"
+        android:id="@+id/lc_stage"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/lc_home_left"
+        app:layout_constraintTop_toTopOf="parent">
 
+        <!-- pedestal glow -->
         <ImageView
-            android:layout_width="24dp"
-            android:layout_height="24dp"
+            android:layout_width="@dimen/lc_stage_glow"
+            android:layout_height="150dp"
+            android:layout_gravity="center_horizontal|bottom"
+            android:layout_marginBottom="150dp"
+            android:contentDescription="@null"
+            android:importantForAccessibility="no"
+            android:src="@drawable/lc_stage_glow" />
+
+        <!-- name tag -->
+        <TextView
+            android:id="@+id/lc_stage_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="14dp"
+            android:background="@drawable/lc_glass_capsule"
+            android:paddingStart="14dp"
+            android:paddingTop="5dp"
+            android:paddingEnd="14dp"
+            android:paddingBottom="5dp"
+            android:text="@string/lc_player_fallback"
+            android:textColor="@color/lc_text"
+            android:textSize="13sp"
+            android:textStyle="bold" />
+
+        <!-- character -->
+        <FrameLayout
+            android:layout_width="0dp"
+            android:layout_height="0dp"
             android:layout_gravity="center"
-            android:src="@drawable/ic_redo"
-            android:tint="@color/accent_primary"
-            android:contentDescription="Refresh Profiles" />
+            android:layout_marginTop="30dp">
+
+            <ImageView
+                android:id="@+id/lc_stage_head"
+                android:layout_width="@dimen/lc_stage_head"
+                android:layout_height="@dimen/lc_stage_head"
+                android:layout_gravity="center"
+                android:contentDescription="@string/lc_player_fallback"
+                android:scaleType="fitCenter" />
+        </FrameLayout>
+
+        <!-- pedestal ring -->
+        <ImageView
+            android:layout_width="@dimen/lc_pedestal"
+            android:layout_height="22dp"
+            android:layout_gravity="center_horizontal|bottom"
+            android:layout_marginBottom="176dp"
+            android:contentDescription="@null"
+            android:importantForAccessibility="no"
+            android:src="@drawable/lc_pedestal_ring" />
+
+        <!-- launch orb -->
+        <FrameLayout
+            android:id="@+id/lc_launch_orb"
+            android:layout_width="@dimen/lc_launch_halo"
+            android:layout_height="@dimen/lc_launch_halo"
+            android:layout_gravity="center_horizontal|bottom"
+            android:layout_marginBottom="86dp"
+            android:clickable="true"
+            android:focusable="true">
+
+            <ImageView
+                android:id="@+id/lc_launch_halo"
+                android:layout_width="@dimen/lc_launch_halo"
+                android:layout_height="@dimen/lc_launch_halo"
+                android:contentDescription="@null"
+                android:importantForAccessibility="no"
+                android:src="@drawable/lc_halo_glow" />
+
+            <FrameLayout
+                android:layout_width="@dimen/lc_launch_orb"
+                android:layout_height="@dimen/lc_launch_orb"
+                android:layout_gravity="center">
+
+                <ImageView
+                    android:layout_width="@dimen/lc_launch_orb"
+                    android:layout_height="@dimen/lc_launch_orb"
+                    android:contentDescription="@null"
+                    android:importantForAccessibility="no"
+                    android:src="@drawable/lc_launch_orb" />
+
+                <ImageView
+                    android:layout_width="@dimen/lc_launch_icon"
+                    android:layout_height="@dimen/lc_launch_icon"
+                    android:layout_gravity="center"
+                    android:contentDescription="@string/lc_launch"
+                    android:src="@drawable/ic_play_arrow"
+                    android:tint="#FF06121A" />
+            </FrameLayout>
+        </FrameLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal|bottom"
+            android:layout_marginBottom="70dp"
+            android:letterSpacing="0.4"
+            android:text="@string/lc_launch"
+            android:textColor="@color/lc_text"
+            android:textSize="11sp"
+            android:textStyle="bold" />
+
+        <!-- version pill + side orbs -->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal|bottom"
+            android:layout_marginBottom="34dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <FrameLayout
+                android:id="@+id/lc_orb_skin"
+                android:layout_width="38dp"
+                android:layout_height="38dp"
+                android:background="@drawable/lc_orb_button"
+                android:clickable="true"
+                android:focusable="true">
+
+                <ImageView
+                    android:layout_width="18dp"
+                    android:layout_height="18dp"
+                    android:layout_gravity="center"
+                    android:contentDescription="@string/lc_skin_studio"
+                    android:src="@drawable/ic_manage_skin"
+                    android:tint="@color/lc_text" />
+            </FrameLayout>
+
+            <TextView
+                android:id="@+id/lc_version_pill"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:background="@drawable/lc_ripple_capsule"
+                android:clickable="true"
+                android:focusable="true"
+                android:drawablePadding="6dp"
+                android:gravity="center"
+                android:paddingStart="14dp"
+                android:paddingEnd="14dp"
+                android:text="@string/lc_no_version"
+                android:textColor="@color/lc_text"
+                android:textSize="12sp" />
+
+            <FrameLayout
+                android:id="@+id/lc_orb_gamepad"
+                android:layout_width="38dp"
+                android:layout_height="38dp"
+                android:background="@drawable/lc_orb_button"
+                android:clickable="true"
+                android:focusable="true">
+
+                <ImageView
+                    android:layout_width="18dp"
+                    android:layout_height="18dp"
+                    android:layout_gravity="center"
+                    android:contentDescription="@string/mcl_option_customcontrol"
+                    android:src="@drawable/ic_menu_custom_controls"
+                    android:tint="@color/lc_text" />
+            </FrameLayout>
+        </LinearLayout>
     </FrameLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

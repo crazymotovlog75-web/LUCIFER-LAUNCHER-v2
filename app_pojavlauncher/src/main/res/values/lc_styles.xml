@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- ══ Liquid Crystal — text & widget styles ══ -->
+<resources>
+
+    <style name="LcText" parent="@android:style/TextAppearance">
+        <item name="android:textColor">@color/lc_text</item>
+        <item name="android:textSize">@dimen/lc_text_body</item>
+        <item name="android:includeFontPadding">false</item>
+    </style>
+
+    <style name="LcText.Display" parent="LcText">
+        <item name="android:textSize">@dimen/lc_text_display</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:letterSpacing">-0.01</item>
+    </style>
+
+    <style name="LcText.Title" parent="LcText">
+        <item name="android:textSize">@dimen/lc_text_title</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="LcText.Sub" parent="LcText">
+        <item name="android:textSize">@dimen/lc_text_small</item>
+        <item name="android:textColor">@color/lc_text_dim</item>
+    </style>
+
+    <style name="LcText.Label" parent="LcText">
+        <item name="android:textSize">@dimen/lc_text_label</item>
+        <item name="android:textColor">@color/lc_text_dim</item>
+        <item name="android:letterSpacing">0.18</item>
+        <item name="android:textAllCaps">true</item>
+    </style>
+
+    <style name="LcText.Chip" parent="LcText">
+        <item name="android:textSize">@dimen/lc_text_small</item>
+        <item name="android:textColor">@color/lc_text</item>
+        <item name="android:letterSpacing">0.04</item>
+    </style>
+
+    <style name="LcText.Action" parent="LcText">
+        <item name="android:textSize">@dimen/lc_text_body</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:letterSpacing">0.08</item>
+        <item name="android:textAllCaps">true</item>
+    </style>
+
+    <!-- glass surfaces -->
+    <style name="LcGlassSheet">
+        <item name="android:background">@drawable/lc_glass_sheet</item>
+    </style>
+
+    <style name="LcGlassCard">
+        <item name="android:background">@drawable/lc_glass_card</item>
+    </style>
+
+    <style name="LcGlassRow">
+        <item name="android:background">@drawable/lc_ripple_row</item>
+        <item name="android:clickable">true</item>
+        <item name="android:focusable">true</item>
+    </style>
+
+    <style name="LcChip">
+        <item name="android:background">@drawable/lc_chip</item>
+        <item name="android:textAppearance">@style/LcText.Chip</item>
+        <item name="android:paddingStart">10dp</item>
+        <item name="android:paddingEnd">10dp</item>
+        <item name="android:paddingTop">5dp</item>
+        <item name="android:paddingBottom">5dp</item>
+    </style>
+
+    <style name="LcOrbIcon">
+        <item name="android:background">@drawable/lc_orb_button</item>
+        <item name="android:clickable">true</item>
+        <item name="android:focusable">true</item>
+        <item name="android:scaleType">fitCenter</item>
+        <item name="android:padding">10dp</item>
+    </style>
+
+    <style name="LcLiquidButton">
+        <item name="android:background">@drawable/lc_btn_liquid</item>
+        <item name="android:textAppearance">@style/LcText.Action</item>
+        <item name="android:textColor">#FF06121A</item>
+        <item name="android:gravity">center</item>
+        <item name="android:minHeight">46dp</item>
+        <item name="android:paddingStart">22dp</item>
+        <item name="android:paddingEnd">22dp</item>
+    </style>
+
+    <style name="LcGhostButton">
+        <item name="android:background">@drawable/lc_ripple_ghost</item>
+        <item name="android:textAppearance">@style/LcText.Chip</item>
+        <item name="android:textColor">@color/lc_text</item>
+        <item name="android:gravity">center</item>
+        <item name="android:minHeight">40dp</item>
+        <item name="android:paddingStart">18dp</item>
+        <item name="android:paddingEnd">18dp</item>
+    </style>
+
+    <!-- Prefs / list theming so the whole app inherits the glass language -->
+    <style name="LcPreferenceHeader">
+        <item name="android:textColor">@color/lc_text</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:letterSpacing">0.14</item>
+        <item name="android:textSize">@dimen/lc_text_label</item>
+    </style>
+</resources>

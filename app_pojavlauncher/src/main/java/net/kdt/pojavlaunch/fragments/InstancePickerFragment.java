@@ -42,6 +42,21 @@ public class InstancePickerFragment extends Fragment {
         view.findViewById(R.id.instance_picker_back)
                 .setOnClickListener(v -> requireActivity().getOnBackPressedDispatcher().onBackPressed());
 
+        // Liquid Crystal: versions are managed from the same place instances are picked
+        View versions = view.findViewById(R.id.instance_picker_versions);
+        if (versions != null) {
+            versions.setOnClickListener(v -> {
+                Fragment parent = getParentFragment();
+                if (parent instanceof MainMenuFragment) {
+                    ((MainMenuFragment) parent).openChildPane(VersionManagerFragment.class,
+                            VersionManagerFragment.TAG, null);
+                } else {
+                    Tools.swapFragment(requireActivity(), VersionManagerFragment.class,
+                            VersionManagerFragment.TAG, null);
+                }
+            });
+        }
+
         RecyclerView recycler = view.findViewById(R.id.instance_picker_recycler);
         recycler.setLayoutManager(new LinearLayoutManager(requireContext()));
 

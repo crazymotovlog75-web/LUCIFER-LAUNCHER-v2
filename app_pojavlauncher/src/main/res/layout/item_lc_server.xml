@@ -1,0 +1,235 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Liquid Crystal — Server Hub row -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/lc_srv_row"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="6dp"
+    android:background="@drawable/lc_glass_card"
+    android:orientation="vertical"
+    android:padding="@dimen/lc_card_pad">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <!-- icon + initials -->
+        <FrameLayout
+            android:layout_width="46dp"
+            android:layout_height="46dp"
+            android:background="@drawable/lc_icon_tile">
+
+            <ImageView
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_gravity="center"
+                android:contentDescription="@null"
+                android:src="@drawable/lc_ic_servers"
+                android:tint="#5535E6FF" />
+
+            <TextView
+                android:id="@+id/lc_srv_initials"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:letterSpacing="0.04"
+                android:textColor="@color/lc_text"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+        </FrameLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/lc_srv_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:textColor="@color/lc_text"
+                    android:textSize="15sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/lc_srv_kind"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="7dp"
+                    android:background="@drawable/lc_chip"
+                    android:paddingStart="6dp"
+                    android:paddingTop="1dp"
+                    android:paddingEnd="6dp"
+                    android:paddingBottom="1dp"
+                    android:textColor="@color/lc_text_dim"
+                    android:textSize="8sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/lc_srv_address"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="1dp"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:textColor="@color/lc_text_dim"
+                android:textSize="11sp" />
+        </LinearLayout>
+
+        <!-- signal meter -->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="bottom"
+            android:orientation="horizontal">
+
+            <View
+                android:id="@+id/lc_srv_ping_1"
+                android:layout_width="4dp"
+                android:layout_height="7dp"
+                android:layout_marginEnd="2dp"
+                android:background="@drawable/lc_dot_dim" />
+
+            <View
+                android:id="@+id/lc_srv_ping_2"
+                android:layout_width="4dp"
+                android:layout_height="11dp"
+                android:layout_marginEnd="2dp"
+                android:background="@drawable/lc_dot_dim" />
+
+            <View
+                android:id="@+id/lc_srv_ping_3"
+                android:layout_width="4dp"
+                android:layout_height="15dp"
+                android:layout_marginEnd="2dp"
+                android:background="@drawable/lc_dot_dim" />
+
+            <View
+                android:id="@+id/lc_srv_ping_4"
+                android:layout_width="4dp"
+                android:layout_height="19dp"
+                android:layout_marginEnd="2dp"
+                android:background="@drawable/lc_dot_dim" />
+
+            <View
+                android:id="@+id/lc_srv_ping_5"
+                android:layout_width="4dp"
+                android:layout_height="23dp"
+                android:background="@drawable/lc_dot_dim" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/lc_srv_ping_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:minWidth="46dp"
+            android:gravity="end"
+            android:text="…"
+            android:textColor="@color/lc_text_dim"
+            android:textSize="10sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <View
+            android:id="@+id/lc_srv_dot"
+            android:layout_width="7dp"
+            android:layout_height="7dp"
+            android:background="@drawable/lc_dot_dim" />
+
+        <TextView
+            android:id="@+id/lc_srv_motd"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="7dp"
+            android:layout_weight="1"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:textColor="@color/lc_text_dim"
+            android:textSize="11sp" />
+
+        <TextView
+            android:id="@+id/lc_srv_players"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:background="@drawable/lc_chip"
+            android:paddingStart="8dp"
+            android:paddingTop="2dp"
+            android:paddingEnd="8dp"
+            android:paddingBottom="2dp"
+            android:text="—"
+            android:textColor="@color/lc_text"
+            android:textSize="10sp" />
+
+        <FrameLayout
+            android:id="@+id/lc_srv_refresh"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:background="@drawable/lc_orb_button"
+            android:clickable="true"
+            android:focusable="true">
+
+            <ImageView
+                android:layout_width="15dp"
+                android:layout_height="15dp"
+                android:layout_gravity="center"
+                android:contentDescription="@string/lc_refresh"
+                android:src="@drawable/ic_redo"
+                android:tint="@color/lc_text" />
+        </FrameLayout>
+
+        <FrameLayout
+            android:id="@+id/lc_srv_remove"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_marginStart="6dp"
+            android:background="@drawable/lc_orb_button"
+            android:clickable="true"
+            android:focusable="true">
+
+            <ImageView
+                android:layout_width="15dp"
+                android:layout_height="15dp"
+                android:layout_gravity="center"
+                android:contentDescription="@string/global_remove"
+                android:src="@drawable/ic_menu_delete_forever"
+                android:tint="#FFFF6B6B" />
+        </FrameLayout>
+
+        <TextView
+            android:id="@+id/lc_srv_play"
+            android:layout_width="wrap_content"
+            android:layout_height="34dp"
+            android:layout_marginStart="8dp"
+            android:background="@drawable/lc_btn_play"
+            android:clickable="true"
+            android:focusable="true"
+            android:gravity="center"
+            android:letterSpacing="0.08"
+            android:minWidth="78dp"
+            android:text="@string/lc_play"
+            android:textColor="#FF06121A"
+            android:textSize="12sp"
+            android:textStyle="bold" />
+    </LinearLayout>
+</LinearLayout>
