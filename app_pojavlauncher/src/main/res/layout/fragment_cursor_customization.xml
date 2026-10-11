@@ -25,7 +25,7 @@
             android:background="@drawable/bg_icon_button_round"
             android:src="@drawable/ic_arrow_back_white"
             android:padding="10dp"
-            app:tint="@color/lucifer_cyan"
+            app:tint="?attr/luciferAccent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -111,7 +111,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="DEFAULT"
-                        android:textColor="@color/lucifer_cyan"
+                        android:textColor="?attr/luciferAccent"
                         android:textSize="9sp"
                         android:textStyle="bold"
                         android:background="@drawable/bg_lucifer_nav_item"
@@ -234,7 +234,7 @@
                             android:layout_width="28dp"
                             android:layout_height="28dp"
                             android:src="@drawable/ic_upload"
-                            app:tint="@color/lucifer_cyan"
+                            app:tint="?attr/luciferAccent"
                             android:layout_marginBottom="6dp"/>
 
                         <TextView
@@ -282,7 +282,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:text="CURSOR SCALE"
-                            android:textColor="@color/lucifer_cyan"
+                            android:textColor="?attr/luciferAccent"
                             android:textSize="10.5sp"
                             android:textStyle="bold"
                             android:letterSpacing="0.05"/>
@@ -304,8 +304,8 @@
                         android:layout_marginVertical="6dp"
                         android:max="300"
                         android:progress="100"
-                        android:progressTint="@color/lucifer_cyan"
-                        android:thumbTint="@color/lucifer_cyan"
+                        android:progressTint="?attr/luciferAccent"
+                        android:thumbTint="?attr/luciferAccent"
                         android:progressBackgroundTint="#2C2C2E"/>
 
                     <!-- Hotspot X -->
@@ -322,7 +322,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:text="HOTSPOT X"
-                            android:textColor="@color/lucifer_cyan"
+                            android:textColor="?attr/luciferAccent"
                             android:textSize="10.5sp"
                             android:textStyle="bold"
                             android:letterSpacing="0.05"/>
@@ -344,8 +344,8 @@
                         android:layout_marginVertical="6dp"
                         android:max="128"
                         android:progress="0"
-                        android:progressTint="@color/lucifer_cyan"
-                        android:thumbTint="@color/lucifer_cyan"
+                        android:progressTint="?attr/luciferAccent"
+                        android:thumbTint="?attr/luciferAccent"
                         android:progressBackgroundTint="#2C2C2E"/>
 
                     <!-- Hotspot Y -->
@@ -362,7 +362,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:text="HOTSPOT Y"
-                            android:textColor="@color/lucifer_cyan"
+                            android:textColor="?attr/luciferAccent"
                             android:textSize="10.5sp"
                             android:textStyle="bold"
                             android:letterSpacing="0.05"/>
@@ -384,8 +384,8 @@
                         android:layout_marginVertical="6dp"
                         android:max="128"
                         android:progress="0"
-                        android:progressTint="@color/lucifer_cyan"
-                        android:thumbTint="@color/lucifer_cyan"
+                        android:progressTint="?attr/luciferAccent"
+                        android:thumbTint="?attr/luciferAccent"
                         android:progressBackgroundTint="#2C2C2E"/>
 
                 </LinearLayout>
@@ -424,7 +424,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:text="GLOW INTENSITY"
-                            android:textColor="@color/lucifer_cyan"
+                            android:textColor="?attr/luciferAccent"
                             android:textSize="10.5sp"
                             android:textStyle="bold"
                             android:letterSpacing="0.05"/>
@@ -446,8 +446,8 @@
                         android:layout_marginVertical="6dp"
                         android:max="60"
                         android:progress="0"
-                        android:progressTint="@color/lucifer_cyan"
-                        android:thumbTint="@color/lucifer_cyan"
+                        android:progressTint="?attr/luciferAccent"
+                        android:thumbTint="?attr/luciferAccent"
                         android:progressBackgroundTint="#2C2C2E"/>
 
                     <!-- Glow Opacity / Cursor Opacity -->
@@ -464,7 +464,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:text="CURSOR OPACITY"
-                            android:textColor="@color/lucifer_cyan"
+                            android:textColor="?attr/luciferAccent"
                             android:textSize="10.5sp"
                             android:textStyle="bold"
                             android:letterSpacing="0.05"/>
@@ -486,8 +486,8 @@
                         android:layout_marginVertical="6dp"
                         android:max="100"
                         android:progress="100"
-                        android:progressTint="@color/lucifer_cyan"
-                        android:thumbTint="@color/lucifer_cyan"
+                        android:progressTint="?attr/luciferAccent"
+                        android:thumbTint="?attr/luciferAccent"
                         android:progressBackgroundTint="#2C2C2E"/>
 
                     <!-- GLOW COLOR SELECTION -->
@@ -638,7 +638,7 @@
                             android:layout_width="24dp"
                             android:layout_height="24dp"
                             android:src="@drawable/ic_upload"
-                            app:tint="@color/lucifer_cyan"
+                            app:tint="?attr/luciferAccent"
                             android:layout_marginBottom="4dp"/>
 
                         <TextView
@@ -664,7 +664,7 @@
                             android:layout_marginEnd="6dp"
                             android:background="@drawable/bg_lucifer_action"
                             android:text="IMPORT FILE"
-                            android:textColor="@color/text_primary_white"
+                            android:textColor="?attr/luciferOnAccent"
                             android:textSize="11sp"
                             android:textStyle="bold"
                             android:stateListAnimator="@null"/>
@@ -677,7 +677,7 @@
                             android:layout_marginStart="6dp"
                             android:background="@drawable/bg_lucifer_nav_item"
                             android:text="EXPORT FILE"
-                            android:textColor="@color/lucifer_cyan"
+                            android:textColor="?attr/luciferAccent"
                             android:textSize="11sp"
                             android:textStyle="bold"
                             android:stateListAnimator="@null"/>
@@ -695,7 +695,7 @@
                     android:layout_height="48dp"
                     android:background="@drawable/bg_lucifer_action"
                     android:text="SAVE CHANGES"
-                    android:textColor="@color/text_primary_white"
+                    android:textColor="?attr/luciferOnAccent"
                     android:textSize="12sp"
                     android:textStyle="bold"
                     android:letterSpacing="0.05"

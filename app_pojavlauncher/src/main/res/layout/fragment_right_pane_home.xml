@@ -4,7 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/bg_lucifer_scene">
+    android:background="?attr/bgMainDrawable">
 
     <!-- Optional user wallpaper remains supported, with a low-alpha veil so UI stays legible. -->
     <ImageView
@@ -72,7 +72,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="READY WHEN YOU ARE"
-                android:textColor="@color/lucifer_cyan"
+                android:textColor="?attr/luciferAccent"
                 android:textSize="@dimen/_9ssp"
                 android:textStyle="bold"
                 android:letterSpacing="0.15" />
@@ -113,7 +113,7 @@
                     android:paddingHorizontal="@dimen/_8sdp"
                     android:background="@drawable/bg_chip_dark"
                     android:text="Vanilla"
-                    android:textColor="@color/lucifer_cyan"
+                    android:textColor="?attr/luciferAccent"
                     android:textSize="@dimen/_9ssp" />
                 <TextView
                     android:id="@+id/tv_home_ram"
@@ -170,7 +170,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Wiki"
-                    android:textColor="@color/lucifer_cyan"
+                    android:textColor="?attr/luciferAccent"
                     android:textSize="@dimen/_9ssp"
                     android:paddingVertical="@dimen/_3sdp"
                     android:clickable="true"
@@ -181,7 +181,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/_12sdp"
                     android:text="Discord"
-                    android:textColor="@color/lucifer_cyan"
+                    android:textColor="?attr/luciferAccent"
                     android:textSize="@dimen/_9ssp"
                     android:paddingVertical="@dimen/_3sdp"
                     android:clickable="true"
@@ -233,7 +233,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="✦"
-                    android:textColor="@color/lucifer_cyan"
+                    android:textColor="?attr/luciferAccent"
                     android:textSize="@dimen/_22ssp" />
                 <TextView
                     android:id="@+id/tv_launch_label"
@@ -273,7 +273,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="SERVER HUB"
-                android:textColor="@color/lucifer_cyan"
+                android:textColor="?attr/luciferAccent"
                 android:textSize="@dimen/_9ssp"
                 android:textStyle="bold"
                 android:letterSpacing="0.1" />
@@ -295,7 +295,7 @@
                 android:paddingHorizontal="@dimen/_9sdp"
                 android:background="@drawable/bg_lucifer_action"
                 android:text="Open servers"
-                android:textColor="@color/text_primary_white"
+                android:textColor="?attr/luciferOnAccent"
                 android:textSize="@dimen/_9ssp"
                 android:clickable="true"
                 android:focusable="true" />
@@ -355,7 +355,7 @@
         android:background="@drawable/bg_lucifer_action"
         android:elevation="8dp"
         android:text="＋ Add instance"
-        android:textColor="@color/text_primary_white"
+        android:textColor="?attr/luciferOnAccent"
         android:textSize="@dimen/_9ssp"
         android:textStyle="bold"
         android:clickable="true"
@@ -373,7 +373,7 @@
         android:paddingHorizontal="@dimen/_8sdp"
         android:background="@drawable/bg_lucifer_nav_item"
         android:text="↻ Refresh"
-        android:textColor="@color/lucifer_cyan"
+        android:textColor="?attr/luciferAccent"
         android:textSize="@dimen/_8ssp"
         android:clickable="true"
         android:focusable="true"

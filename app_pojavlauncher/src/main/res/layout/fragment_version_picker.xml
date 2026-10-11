@@ -22,7 +22,7 @@
             android:background="?android:attr/selectableItemBackgroundBorderless"
             android:src="@drawable/ic_arrow_back_white"
             android:contentDescription="@string/global_back"
-            app:tint="@color/neon_green"
+            app:tint="?attr/luciferAccent"
             xmlns:app="http://schemas.android.com/apk/res-auto" />
 
         <TextView

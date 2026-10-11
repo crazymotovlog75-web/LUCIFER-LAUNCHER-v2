@@ -5,5 +5,5 @@
     <corners android:radius="@dimen/_8sdp" />
     <stroke
         android:width="2dp"
-        android:color="@color/neon_green" />
+        android:color="?attr/luciferAccent" />
 </shape>

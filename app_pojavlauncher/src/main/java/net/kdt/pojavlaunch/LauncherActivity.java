@@ -244,8 +244,6 @@ public class LauncherActivity extends BaseActivity {
             );
         }
 
-        // Apply saved colour theme before layout inflation
-        setTheme(net.kdt.pojavlaunch.theme.ThemeManager.getSavedTheme());
         
         // Ensure landscape orientation
         setRequestedOrientation(android.content.pm.ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
@@ -485,6 +483,7 @@ public class LauncherActivity extends BaseActivity {
     /** Wire up the landscape header bar navigation buttons. */
     private void setupNavButtons() {
         View navHome = findViewById(R.id.nav_home);
+        View navWallpapers = findViewById(R.id.nav_wallpapers);
         View navInstances = findViewById(R.id.nav_instances);
         View navServers = findViewById(R.id.nav_servers);
         View navModStore = findViewById(R.id.nav_mod_store);
@@ -506,6 +505,7 @@ public class LauncherActivity extends BaseActivity {
         };
 
         if (navHome != null) navHome.setOnClickListener(homeListener);
+        if (navWallpapers != null) navWallpapers.setOnClickListener(v -> openWallpaperStudio());
         if (btnHomeLogo != null) btnHomeLogo.setOnClickListener(homeListener);
         if (tvLauncherTitle != null) tvLauncherTitle.setOnClickListener(homeListener);
 
@@ -549,6 +549,18 @@ public class LauncherActivity extends BaseActivity {
         updateNavSkinIcon();
     }
 
+    private void openWallpaperStudio() {
+        if (getVisibleFragment(net.kdt.pojavlaunch.fragments.WallpaperStudioFragment.TAG) != null) {
+            setNavigationSelection(R.id.nav_wallpapers);
+            return;
+        }
+        Tools.swapFragment(this, net.kdt.pojavlaunch.fragments.WallpaperStudioFragment.class,
+                net.kdt.pojavlaunch.fragments.WallpaperStudioFragment.TAG, null,
+                R.anim.slide_in_right, R.anim.slide_out_left,
+                R.anim.slide_in_left, R.anim.slide_out_right);
+        setNavigationSelection(R.id.nav_wallpapers);
+    }
+
     private void openRightPaneDestination(Class<? extends Fragment> fragmentClass, String tag, int navId) {
         Fragment root = getVisibleFragment("ROOT");
         if (root instanceof MainMenuFragment) {
@@ -560,7 +572,7 @@ public class LauncherActivity extends BaseActivity {
     }
 
     private void setNavigationSelection(int selectedId) {
-        int[] ids = {R.id.nav_home, R.id.nav_instances, R.id.nav_servers, R.id.nav_mod_store,
+        int[] ids = {R.id.nav_home, R.id.nav_wallpapers, R.id.nav_instances, R.id.nav_servers, R.id.nav_mod_store,
                 R.id.nav_custom_controls, R.id.nav_cursor, R.id.nav_skin, R.id.nav_about,
                 R.id.btn_client_features};
         for (int id : ids) {
@@ -571,7 +583,9 @@ public class LauncherActivity extends BaseActivity {
 
     private void updateNavigationForFragment(Fragment fragment) {
         int activeId = R.id.nav_home;
-        if (fragment instanceof net.kdt.pojavlaunch.fragments.InstancePickerFragment ||
+        if (fragment instanceof net.kdt.pojavlaunch.fragments.WallpaperStudioFragment) {
+            activeId = R.id.nav_wallpapers;
+        } else if (fragment instanceof net.kdt.pojavlaunch.fragments.InstancePickerFragment ||
                 fragment instanceof net.kdt.pojavlaunch.fragments.ProfileTypeSelectFragment ||
                 fragment instanceof net.kdt.pojavlaunch.fragments.ProfileEditorFragment) {
             activeId = R.id.nav_instances;
@@ -603,7 +617,7 @@ public class LauncherActivity extends BaseActivity {
     private void updateClientFeaturesButton(android.widget.Button btn, boolean enabled) {
         btn.setText(enabled ? "✦ Pro ✓" : "✦ Pro");
         btn.setBackgroundResource(R.drawable.bg_lucifer_nav_item);
-        btn.setTextColor(ContextCompat.getColor(this, R.color.lucifer_cyan));
+        btn.setTextColor(net.kdt.pojavlaunch.theme.ThemeManager.getAccentColor(this));
         btn.setSelected(enabled);
         // Avoid an infinite pulse on the header: it causes unnecessary redraws and battery use.
     }

@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="false"
-    android:background="@drawable/bg_lucifer_scene">
+    android:background="?attr/bgMainDrawable">
 
     <!-- Lucifer's floating glass navigation ribbon. Navigation stays horizontal on every page. -->
     <LinearLayout
@@ -48,7 +48,7 @@
             android:text="@string/cs_launcher_title"
             android:textSize="@dimen/_12ssp"
             android:textStyle="bold"
-            android:textColor="@color/lucifer_cyan"
+            android:textColor="?attr/luciferAccent"
             android:letterSpacing="0.055"
             android:maxLines="1"
             android:background="?android:attr/selectableItemBackground"
@@ -83,6 +83,14 @@
                     android:contentDescription="Home">
                     <ImageView android:id="@+id/nav_home_icon" style="@style/LuciferTopNavIcon" android:src="@drawable/ic_home" />
                     <TextView android:id="@+id/nav_home_label" style="@style/LuciferTopNavLabel" android:text="Home" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/nav_wallpapers"
+                    style="@style/LuciferTopNavItem"
+                    android:contentDescription="@string/nav_wallpapers">
+                    <ImageView android:id="@+id/nav_wallpapers_icon" style="@style/LuciferTopNavIcon" android:src="@drawable/ic_wallpaper" />
+                    <TextView android:id="@+id/nav_wallpapers_label" style="@style/LuciferTopNavLabel" android:text="@string/nav_wallpapers" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -152,7 +160,7 @@
             android:text="✦ Pro"
             android:textSize="@dimen/_9ssp"
             android:textStyle="bold"
-            android:textColor="@color/lucifer_cyan"
+            android:textColor="?attr/luciferAccent"
             android:background="@drawable/bg_lucifer_nav_item"
             android:paddingHorizontal="@dimen/_8sdp"
             android:contentDescription="Client features" />

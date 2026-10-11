@@ -2,9 +2,13 @@
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
     <item>
         <shape android:shape="rectangle">
-            <gradient android:angle="315" android:startColor="#D71A2432" android:centerColor="#CC121A28" android:endColor="#D50E1522" />
+            <gradient
+                android:angle="315"
+                android:startColor="?attr/luciferGlassHigh"
+                android:centerColor="?attr/luciferGlass"
+                android:endColor="?attr/luciferGlassHigh" />
             <corners android:radius="22dp" />
-            <stroke android:width="1dp" android:color="#5286B8C8" />
+            <stroke android:width="1dp" android:color="?attr/luciferBorder" />
         </shape>
     </item>
     <item android:left="1dp" android:top="1dp" android:right="1dp">

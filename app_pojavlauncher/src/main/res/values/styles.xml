@@ -10,31 +10,53 @@
         <item name="android:navigationBarColor">#080B12</item>
         <item name="preferenceTheme">@style/PreferenceThemeOverlay.v14.Material</item>
         <item name="android:textSize">@dimen/_12ssp</item>
-        <item name="colorBgApp">@color/lucifer_bg</item>
+        <item name="colorBgApp">?attr/luciferBackdrop</item>
         <item name="colorBgBottomBar">#0A101A</item>
         <item name="colorBgStatusBar">#06090F</item>
         <item name="colorDivider">#3C526273</item>
-        <item name="themeAccent">@color/lucifer_cyan</item>
+        <item name="themeAccent">?attr/luciferAccent</item>
         <item name="colorTextPrimary">@color/primary_text</item>
         <item name="colorTextSecondary">@color/secondary_text</item>
         <item name="bgMainDrawable">@drawable/bg_lucifer_scene</item>
         <item name="android:windowBackground">@drawable/bg_lucifer_scene</item>
-        <item name="colorAccent">@color/lucifer_cyan</item>
+        <item name="colorAccent">?attr/luciferAccent</item>
+        <item name="colorPrimary">?attr/luciferAccent</item>
+        <item name="colorOnPrimary">?attr/luciferOnAccent</item>
+        <item name="colorPrimaryContainer">?attr/luciferAccentDim</item>
+        <item name="colorSecondary">?attr/luciferSecondary</item>
+        <item name="colorOnSecondary">?attr/luciferOnAccent</item>
+        <item name="colorSecondaryContainer">?attr/luciferGlassHigh</item>
+        <item name="colorTertiary">?attr/luciferHighlight</item>
+        <item name="colorControlActivated">?attr/luciferAccent</item>
+        <item name="android:colorBackground">?attr/luciferBackdrop</item>
         <item name="colorOnSurface">@color/primary_text</item>
         <item name="colorOnSurfaceVariant">@color/secondary_text</item>
-        <item name="colorSurface">@color/lucifer_surface</item>
-        <item name="colorSurfaceVariant">@color/lucifer_surface_high</item>
+        <item name="colorSurface">?attr/luciferSurface</item>
+        <item name="colorSurfaceVariant">?attr/luciferSurfaceHigh</item>
+        <item name="luciferAccent">@color/wallpaper_01_accent</item>
+        <item name="luciferOnAccent">#10131A</item>
+        <item name="luciferSecondary">@color/wallpaper_01_secondary</item>
+        <item name="luciferHighlight">@color/wallpaper_01_highlight</item>
+        <item name="luciferAccentDim">@color/wallpaper_01_accent_dim</item>
+        <item name="luciferSurface">@color/wallpaper_01_surface</item>
+        <item name="luciferSurfaceHigh">@color/wallpaper_01_surface_high</item>
+        <item name="luciferGlass">@color/wallpaper_01_glass</item>
+        <item name="luciferGlassHigh">@color/wallpaper_01_glass_high</item>
+        <item name="luciferBorder">@color/wallpaper_01_border</item>
+        <item name="luciferBackdrop">@color/wallpaper_01_backdrop</item>
+        <item name="luciferWallpaper">@drawable/lucifer_wallpaper_01</item>
     </style>
     <style name="AppTheme.Gradient">
         <item name="bgMainDrawable">@drawable/bg_gradient_default</item>
         <item name="android:windowBackground">@drawable/bg_gradient_default</item>
         <item name="colorBgBottomBar">@color/cu_bg_bottom_bar</item>
         <item name="colorBgStatusBar">@color/cu_bg_status_bar</item>
-        <item name="colorAccent">#39FF14</item>
+        <item name="colorAccent">?attr/luciferAccent</item>
     </style>
 
     <!-- ── Midnight Blue ────────────────────────────────────── -->
     <style name="AppTheme.MidnightBlue">
+        <item name="luciferOnAccent">#10131A</item>
         <item name="android:statusBarColor">#121212</item>
         <item name="android:navigationBarColor">#121212</item>
         <item name="colorBgApp">#121212</item>
@@ -46,11 +68,22 @@
         <item name="colorTextSecondary">@color/mb_text_secondary</item>
         <item name="bgMainDrawable">#121212</item>
         <item name="android:windowBackground">#121212</item>
-        <item name="colorAccent">#1E90FF</item>
+        <item name="colorAccent">?attr/luciferAccent</item>
         <item name="colorOnSurface">@color/mb_text_primary</item>
         <item name="colorOnSurfaceVariant">@color/mb_text_secondary</item>
         <item name="colorSurface">#121212</item>
         <item name="colorSurfaceVariant">#1E1E1E</item>
+        <item name="luciferAccent">#1E90FF</item>
+        <item name="luciferSecondary">#70B8FF</item>
+        <item name="luciferHighlight">#D6EBFF</item>
+        <item name="luciferAccentDim">#551E90FF</item>
+        <item name="luciferSurface">#0D1B2A</item>
+        <item name="luciferSurfaceHigh">#1B2A3B</item>
+        <item name="luciferGlass">#C00F2133</item>
+        <item name="luciferGlassHigh">#D0122638</item>
+        <item name="luciferBorder">#801E90FF</item>
+        <item name="luciferBackdrop">#8A0D1B2A</item>
+        <item name="luciferWallpaper">@drawable/lucifer_wallpaper_01</item>
     </style>
     <style name="AppTheme.MidnightBlue.Gradient">
         <item name="android:statusBarColor">@color/mb_bg_status_bar</item>
@@ -59,11 +92,12 @@
         <item name="android:windowBackground">@drawable/bg_gradient_midnight_blue</item>
         <item name="colorBgBottomBar">@color/mb_bg_bottom_bar</item>
         <item name="colorBgStatusBar">@color/mb_bg_status_bar</item>
-        <item name="colorAccent">#1E90FF</item>
+        <item name="colorAccent">?attr/luciferAccent</item>
     </style>
 
     <!-- ── Forest Green ─────────────────────────────────────── -->
     <style name="AppTheme.ForestGreen">
+        <item name="luciferOnAccent">#10131A</item>
         <item name="android:statusBarColor">#121212</item>
         <item name="android:navigationBarColor">#121212</item>
         <item name="colorBgApp">#121212</item>
@@ -75,11 +109,22 @@
         <item name="colorTextSecondary">@color/fg_text_secondary</item>
         <item name="bgMainDrawable">#121212</item>
         <item name="android:windowBackground">#121212</item>
-        <item name="colorAccent">#4CAF50</item>
+        <item name="colorAccent">?attr/luciferAccent</item>
         <item name="colorOnSurface">@color/fg_text_primary</item>
         <item name="colorOnSurfaceVariant">@color/fg_text_secondary</item>
         <item name="colorSurface">#121212</item>
         <item name="colorSurfaceVariant">#1E1E1E</item>
+        <item name="luciferAccent">#4CAF50</item>
+        <item name="luciferSecondary">#78D67B</item>
+        <item name="luciferHighlight">#D1F5D4</item>
+        <item name="luciferAccentDim">#554CAF50</item>
+        <item name="luciferSurface">#0F1F0F</item>
+        <item name="luciferSurfaceHigh">#1A2E1A</item>
+        <item name="luciferGlass">#C0112411</item>
+        <item name="luciferGlassHigh">#D0152A15</item>
+        <item name="luciferBorder">#804CAF50</item>
+        <item name="luciferBackdrop">#8A0F1F0F</item>
+        <item name="luciferWallpaper">@drawable/lucifer_wallpaper_01</item>
     </style>
     <style name="AppTheme.ForestGreen.Gradient">
         <item name="android:statusBarColor">@color/fg_bg_status_bar</item>
@@ -88,11 +133,12 @@
         <item name="android:windowBackground">@drawable/bg_gradient_forest_green</item>
         <item name="colorBgBottomBar">@color/fg_bg_bottom_bar</item>
         <item name="colorBgStatusBar">@color/fg_bg_status_bar</item>
-        <item name="colorAccent">#4CAF50</item>
+        <item name="colorAccent">?attr/luciferAccent</item>
     </style>
 
     <!-- ── Crimson ───────────────────────────────────────────── -->
     <style name="AppTheme.Crimson">
+        <item name="luciferOnAccent">#10131A</item>
         <item name="android:statusBarColor">#121212</item>
         <item name="android:navigationBarColor">#121212</item>
         <item name="colorBgApp">#121212</item>
@@ -104,11 +150,22 @@
         <item name="colorTextSecondary">@color/cr_text_secondary</item>
         <item name="bgMainDrawable">#121212</item>
         <item name="android:windowBackground">#121212</item>
-        <item name="colorAccent">#E53935</item>
+        <item name="colorAccent">?attr/luciferAccent</item>
         <item name="colorOnSurface">@color/cr_text_primary</item>
         <item name="colorOnSurfaceVariant">@color/cr_text_secondary</item>
         <item name="colorSurface">#121212</item>
         <item name="colorSurfaceVariant">#1E1E1E</item>
+        <item name="luciferAccent">#E53935</item>
+        <item name="luciferSecondary">#FF8178</item>
+        <item name="luciferHighlight">#FFD8D5</item>
+        <item name="luciferAccentDim">#55E53935</item>
+        <item name="luciferSurface">#1A0A0A</item>
+        <item name="luciferSurfaceHigh">#2A1010</item>
+        <item name="luciferGlass">#C01D0B0B</item>
+        <item name="luciferGlassHigh">#D0240E0E</item>
+        <item name="luciferBorder">#80E53935</item>
+        <item name="luciferBackdrop">#8A1A0A0A</item>
+        <item name="luciferWallpaper">@drawable/lucifer_wallpaper_01</item>
     </style>
     <style name="AppTheme.Crimson.Gradient">
         <item name="android:statusBarColor">@color/cr_bg_status_bar</item>
@@ -117,11 +174,12 @@
         <item name="android:windowBackground">@drawable/bg_gradient_crimson</item>
         <item name="colorBgBottomBar">@color/cr_bg_bottom_bar</item>
         <item name="colorBgStatusBar">@color/cr_bg_status_bar</item>
-        <item name="colorAccent">#E53935</item>
+        <item name="colorAccent">?attr/luciferAccent</item>
     </style>
 
     <!-- ── Amethyst ──────────────────────────────────────────── -->
     <style name="AppTheme.Amethyst">
+        <item name="luciferOnAccent">#10131A</item>
         <item name="android:statusBarColor">#121212</item>
         <item name="android:navigationBarColor">#121212</item>
         <item name="colorBgApp">#121212</item>
@@ -133,11 +191,22 @@
         <item name="colorTextSecondary">@color/am_text_secondary</item>
         <item name="bgMainDrawable">#121212</item>
         <item name="android:windowBackground">#121212</item>
-        <item name="colorAccent">#9C27B0</item>
+        <item name="colorAccent">?attr/luciferAccent</item>
         <item name="colorOnSurface">@color/am_text_primary</item>
         <item name="colorOnSurfaceVariant">@color/am_text_secondary</item>
         <item name="colorSurface">#121212</item>
         <item name="colorSurfaceVariant">#1E1E1E</item>
+        <item name="luciferAccent">#9C27B0</item>
+        <item name="luciferSecondary">#D06DE0</item>
+        <item name="luciferHighlight">#F3D6FA</item>
+        <item name="luciferAccentDim">#559C27B0</item>
+        <item name="luciferSurface">#13091A</item>
+        <item name="luciferSurfaceHigh">#1E1028</item>
+        <item name="luciferGlass">#C0170B21</item>
+        <item name="luciferGlassHigh">#D01D0D28</item>
+        <item name="luciferBorder">#809C27B0</item>
+        <item name="luciferBackdrop">#8A13091A</item>
+        <item name="luciferWallpaper">@drawable/lucifer_wallpaper_01</item>
     </style>
     <style name="AppTheme.Amethyst.Gradient">
         <item name="android:statusBarColor">@color/am_bg_status_bar</item>
@@ -146,11 +215,12 @@
         <item name="android:windowBackground">@drawable/bg_gradient_amethyst</item>
         <item name="colorBgBottomBar">@color/am_bg_bottom_bar</item>
         <item name="colorBgStatusBar">@color/am_bg_status_bar</item>
-        <item name="colorAccent">#9C27B0</item>
+        <item name="colorAccent">?attr/luciferAccent</item>
     </style>
 
     <!-- ── Arctic ───────────────────────────────────────────── -->
     <style name="AppTheme.Arctic">
+        <item name="luciferOnAccent">#10131A</item>
         <item name="android:statusBarColor">#121212</item>
         <item name="android:navigationBarColor">#121212</item>
         <item name="colorBgApp">#121212</item>
@@ -162,7 +232,18 @@
         <item name="colorTextSecondary">@color/ar_text_secondary</item>
         <item name="bgMainDrawable">#121212</item>
         <item name="android:windowBackground">#121212</item>
-        <item name="colorAccent">#00BCD4</item>
+        <item name="colorAccent">?attr/luciferAccent</item>
+        <item name="luciferAccent">#00BCD4</item>
+        <item name="luciferSecondary">#74E5F0</item>
+        <item name="luciferHighlight">#D8FBFF</item>
+        <item name="luciferAccentDim">#5500BCD4</item>
+        <item name="luciferSurface">#0E1A20</item>
+        <item name="luciferSurfaceHigh">#162530</item>
+        <item name="luciferGlass">#C00C1D24</item>
+        <item name="luciferGlassHigh">#D0122730</item>
+        <item name="luciferBorder">#8000BCD4</item>
+        <item name="luciferBackdrop">#8A0E1A20</item>
+        <item name="luciferWallpaper">@drawable/lucifer_wallpaper_01</item>
     </style>
     <style name="AppTheme.Arctic.Gradient">
         <item name="android:statusBarColor">@color/ar_bg_status_bar</item>
@@ -171,7 +252,7 @@
         <item name="android:windowBackground">@drawable/bg_gradient_arctic</item>
         <item name="colorBgBottomBar">@color/ar_bg_bottom_bar</item>
         <item name="colorBgStatusBar">@color/ar_bg_status_bar</item>
-        <item name="colorAccent">#00BCD4</item>
+        <item name="colorAccent">?attr/luciferAccent</item>
         <item name="colorOnSurface">@color/ar_text_primary</item>
         <item name="colorOnSurfaceVariant">@color/ar_text_secondary</item>
         <item name="colorSurface">#121212</item>
@@ -210,7 +291,7 @@
         <item name="android:layout_width">@dimen/_14sdp</item>
         <item name="android:layout_height">@dimen/_14sdp</item>
         <item name="android:layout_marginEnd">@dimen/_3sdp</item>
-        <item name="android:tint">@color/lucifer_cyan</item>
+        <item name="android:tint">?attr/luciferAccent</item>
         <item name="android:contentDescription">@null</item>
     </style>
 
@@ -254,7 +335,7 @@
     <style name="SettingsFullScreenTheme" parent="Theme.AppCompat.NoActionBar">
         <item name="android:windowFullscreen">true</item>
         <item name="android:windowNoTitle">true</item>
-        <item name="android:windowBackground">@color/settings_bg</item>
+        <item name="android:windowBackground">?attr/luciferBackdrop</item>
         <item name="android:windowTranslucentStatus">true</item>
         <item name="android:windowTranslucentNavigation">true</item>
         <item name="android:windowAnimationStyle">@style/SettingsActivityAnim</item>

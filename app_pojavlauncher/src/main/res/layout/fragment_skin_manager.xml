@@ -24,7 +24,7 @@
         <View
             android:layout_width="4dp"
             android:layout_height="32dp"
-            android:background="@color/lucifer_cyan"
+            android:background="?attr/luciferAccent"
             android:layout_marginEnd="12dp"/>
 
         <LinearLayout
@@ -37,7 +37,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Skin Manager"
-                android:textColor="@color/lucifer_cyan"
+                android:textColor="?attr/luciferAccent"
                 android:textSize="18sp"
                 android:textStyle="bold" />
 
@@ -83,7 +83,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="3D PREVIEW (DRAG TO ROTATE)"
-                    android:textColor="@color/lucifer_cyan"
+                    android:textColor="?attr/luciferAccent"
                     android:textSize="11sp"
                     android:textStyle="bold"
                     android:background="#DD090D10"
@@ -128,7 +128,7 @@
                         android:layout_height="32dp"
                         android:text="AUTO"
                         android:textSize="9sp"
-                        android:textColor="@color/lucifer_cyan"
+                        android:textColor="?attr/luciferAccent"
                         android:background="@drawable/bg_lucifer_nav_item"
                         android:layout_marginEnd="4dp" />
 
@@ -166,7 +166,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="SKIN CUSTOMIZATION"
-                    android:textColor="@color/lucifer_cyan"
+                    android:textColor="?attr/luciferAccent"
                     android:textSize="13sp"
                     android:textStyle="bold"
                     android:letterSpacing="0.08"
@@ -193,7 +193,7 @@
                         android:text="Alex (Slim Arms)"
                         android:textColor="#AAAAAA"
                         android:textSize="13sp"
-                        android:thumbTint="@color/lucifer_cyan"
+                        android:thumbTint="?attr/luciferAccent"
                         android:trackTint="#333333" />
                 </LinearLayout>
 
@@ -221,7 +221,7 @@
                         android:layout_weight="1"
                         android:layout_marginEnd="4dp"
                         android:text="UPLOAD SKIN"
-                        android:textColor="@color/text_primary_white"
+                        android:textColor="?attr/luciferOnAccent"
                         android:textSize="12sp"
                         android:textStyle="bold"
                         android:background="@drawable/bg_lucifer_action" />
@@ -266,7 +266,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="CAPE CUSTOMIZATION"
-                    android:textColor="@color/lucifer_cyan"
+                    android:textColor="?attr/luciferAccent"
                     android:textSize="13sp"
                     android:textStyle="bold"
                     android:letterSpacing="0.08"
@@ -295,7 +295,7 @@
                         android:layout_weight="1"
                         android:layout_marginEnd="8dp"
                         android:text="UPLOAD CAPE"
-                        android:textColor="@color/text_primary_white"
+                        android:textColor="?attr/luciferOnAccent"
                         android:textSize="12sp"
                         android:textStyle="bold"
                         android:background="@drawable/bg_lucifer_action" />
@@ -319,7 +319,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="56dp"
                 android:text="SAVE AND APPLY"
-                android:textColor="@color/text_primary_white"
+                android:textColor="?attr/luciferOnAccent"
                 android:textSize="14sp"
                 android:textStyle="bold"
                 android:letterSpacing="0.05"

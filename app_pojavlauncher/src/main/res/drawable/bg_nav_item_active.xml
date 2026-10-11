@@ -3,10 +3,10 @@
 <shape xmlns:android="http://schemas.android.com/apk/res/android"
     android:shape="rectangle">
     <!-- Semi-transparent blue fill -->
-    <solid android:color="@color/accent_bg_subtle" />
+    <solid android:color="?attr/luciferAccentDim" />
     <!-- Primary theme border -->
     <stroke
         android:width="1.5dp"
-        android:color="@color/accent_primary" />
+        android:color="?attr/luciferAccent" />
     <corners android:radius="10dp" />
 </shape>

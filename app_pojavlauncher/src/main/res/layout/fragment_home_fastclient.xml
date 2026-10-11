@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="horizontal"
-    android:background="@color/bg_launcher_dark"
+    android:background="?attr/luciferBackdrop"
     android:padding="@dimen/_10sdp">
 
     <!-- LEFT PANE -->
@@ -127,7 +127,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="⚙  Profile Setting"
-                    android:textColor="#39FF14"
+                    android:textColor="?attr/luciferAccent"
                     android:textSize="@dimen/_10ssp"
                     android:textStyle="bold"
                     android:layout_marginTop="6dp"
@@ -214,7 +214,7 @@
                 android:layout_width="@dimen/_18sdp"
                 android:layout_height="@dimen/_18sdp"
                 android:src="@drawable/ic_folder"
-                android:tint="#39FF14"
+                android:tint="?attr/luciferAccent"
                 android:layout_marginEnd="@dimen/_10sdp"
                 android:contentDescription="Select profile" />
 
@@ -253,7 +253,7 @@
             android:layout_width="match_parent"
             android:layout_height="@dimen/_52sdp"
             android:text="▶  PLAY"
-            android:textColor="#000000"
+            android:textColor="?attr/luciferOnAccent"
             android:textSize="@dimen/_16ssp"
             android:textStyle="bold"
             android:letterSpacing="0.08"
@@ -286,7 +286,7 @@
                 android:layout_width="@dimen/_20sdp"
                 android:layout_height="@dimen/_20sdp"
                 android:src="@drawable/ic_menu_settings"
-                android:tint="#39FF14"
+                android:tint="?attr/luciferAccent"
                 android:layout_marginEnd="@dimen/_8sdp"
                 android:contentDescription="Servers icon" />
 

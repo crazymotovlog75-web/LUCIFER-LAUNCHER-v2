@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/bg_launcher_dark"
+    android:background="?attr/luciferBackdrop"
 >
 
     <!-- ── Top Navigation Bar ─────────────────────────────────────── -->
@@ -13,7 +13,7 @@
         android:id="@+id/detail_top_bar"
         android:layout_width="match_parent"
         android:layout_height="@dimen/_52sdp"
-        android:background="@color/bg_header"
+        android:background="?attr/luciferGlassHigh"
         android:elevation="4dp"
         android:translationZ="4dp">
 
@@ -28,7 +28,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:tint="@color/neon_green" />
+            app:tint="?attr/luciferAccent" />
 
         <TextView
             android:id="@+id/detail_title_textview"
@@ -135,7 +135,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/_12sdp"
                 android:text="@string/detail_screenshots"
-                android:textColor="@color/neon_green"
+                android:textColor="?attr/luciferAccent"
                 android:textSize="@dimen/_12ssp"
                 android:textStyle="bold"
                 android:visibility="gone"
@@ -208,7 +208,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:src="@drawable/ic_spinner_arrow"
-                    app:tint="@color/neon_green" />
+                    app:tint="?attr/luciferAccent" />
 
             </LinearLayout>
 
@@ -241,7 +241,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
-        android:background="@color/bg_bottom_bar"
+        android:background="?attr/luciferGlassHigh"
         android:elevation="8dp"
         android:paddingHorizontal="@dimen/_16sdp"
         android:paddingVertical="@dimen/_10sdp">

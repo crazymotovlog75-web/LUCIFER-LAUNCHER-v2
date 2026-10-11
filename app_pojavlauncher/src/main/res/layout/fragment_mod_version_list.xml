@@ -159,7 +159,7 @@
                     android:layout_height="56dp"
                     android:text="INSTALL"
                     android:background="@drawable/bg_install_button_primary"
-                    android:textColor="#FFFFFF"
+                    android:textColor="?attr/luciferOnAccent"
                     android:textSize="18sp"
                     android:textStyle="bold"
                     android:letterSpacing="0.05" />

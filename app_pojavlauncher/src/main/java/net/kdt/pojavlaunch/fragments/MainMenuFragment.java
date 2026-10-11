@@ -29,6 +29,7 @@ import net.kdt.pojavlaunch.extra.ExtraConstants;
 import net.kdt.pojavlaunch.extra.ExtraCore;
 import net.kdt.pojavlaunch.prefs.LauncherPreferences;
 import net.kdt.pojavlaunch.progresskeeper.ProgressKeeper;
+import net.kdt.pojavlaunch.theme.ThemeManager;
 import net.kdt.pojavlaunch.value.launcherprofiles.LauncherProfiles;
 import net.kdt.pojavlaunch.value.launcherprofiles.MinecraftProfile;
 
@@ -455,9 +456,9 @@ public class MainMenuFragment extends Fragment {
             boolean isActive = (id == activeId);
             btn.setBackgroundResource(isActive ? R.drawable.bg_nav_item_active : 0);
             if (btn instanceof Button) {
-                ((Button) btn).setTextColor(isActive ? 
-                    getResources().getColor(R.color.accent_primary) : 
-                    getResources().getColor(R.color.text_secondary_light));
+                ((Button) btn).setTextColor(isActive
+                    ? ThemeManager.getAccentColor(requireContext())
+                    : getResources().getColor(R.color.text_secondary_light));
             }
         }
     }
@@ -490,7 +491,7 @@ public class MainMenuFragment extends Fragment {
     private void updateClientFeaturesMenuButton(Button btn, boolean enabled) {
         btn.setText(enabled ? "✦ Pro ✓" : "✦ Pro");
         btn.setBackgroundResource(R.drawable.bg_lucifer_nav_item);
-        btn.setTextColor(getResources().getColor(R.color.lucifer_cyan));
+        btn.setTextColor(ThemeManager.getAccentColor(requireContext()));
         btn.setSelected(enabled);
     }
 }

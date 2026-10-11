@@ -40,7 +40,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/_2sdp"
-            android:textColor="@color/lucifer_cyan"
+            android:textColor="?attr/luciferAccent"
             android:textSize="@dimen/_9ssp"
             android:maxLines="1"
             android:ellipsize="end" />
@@ -64,7 +64,7 @@
         android:paddingHorizontal="@dimen/_9sdp"
         android:background="@drawable/bg_lucifer_nav_item"
         android:text="ACTIVE"
-        android:textColor="@color/lucifer_cyan"
+        android:textColor="?attr/luciferAccent"
         android:textSize="@dimen/_8ssp"
         android:textStyle="bold"
         android:visibility="gone" />

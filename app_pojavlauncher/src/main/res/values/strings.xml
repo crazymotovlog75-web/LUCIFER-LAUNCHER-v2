@@ -579,6 +579,39 @@
     <string name="lucifer_version">%1$s</string>
     <string name="instance_count">%1$d INSTANCES</string>
     <string name="instance_load_failed">Could not load instances. Please try again.</string>
+    <string name="nav_wallpapers">Wallpapers</string>
+    <string name="wallpaper_studio_title">WALLPAPER STUDIO</string>
+    <string name="wallpaper_studio_subtitle">20 curated scenes · each one retunes the launcher colors</string>
+    <string name="wallpaper_palette_live">LIVE PALETTE</string>
+    <string name="wallpaper_palette_hint">Accents, glass borders, buttons and controls follow the selected scene.</string>
+    <string name="wallpaper_reset_default">Default look</string>
+    <string name="wallpaper_applied_toast">Wallpaper and matching colors applied</string>
+    <string name="wallpaper_custom_preset">A color preset is active. Choose a scene to sync the palette.</string>
+    <string name="wallpaper_selected">SELECTED</string>
+    <string name="wallpaper_card_description">Apply %1$s wallpaper and matching color palette</string>
+    <string name="wallpaper_card_selected_description">%1$s wallpaper and palette are selected</string>
+    <string-array name="lucifer_wallpaper_names" translatable="false">
+        <item>Aurora Flow</item>
+        <item>Arctic Flux</item>
+        <item>Violet Nebula</item>
+        <item>Solar Ember</item>
+        <item>Sakura Glass</item>
+        <item>Emerald Canopy</item>
+        <item>Deep Ocean</item>
+        <item>Magenta Drift</item>
+        <item>Golden Hour</item>
+        <item>Glacier Bloom</item>
+        <item>Crimson Tide</item>
+        <item>Amethyst Veil</item>
+        <item>Jade Current</item>
+        <item>Copper Mirage</item>
+        <item>Opal Horizon</item>
+        <item>Midnight Gold</item>
+        <item>Wildflower</item>
+        <item>Coral Dream</item>
+        <item>Electric Tide</item>
+        <item>Twilight Bloom</item>
+    </string-array>
 
     <!-- Mod Detail Page Strings -->
     <string name="detail_select_version">Select a version</string>

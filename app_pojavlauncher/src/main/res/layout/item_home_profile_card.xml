@@ -55,7 +55,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/_3sdp"
-                android:textColor="@color/lucifer_cyan"
+                android:textColor="?attr/luciferAccent"
                 android:textSize="@dimen/_8ssp"
                 android:maxLines="1"
                 android:ellipsize="end"
@@ -76,7 +76,7 @@
                 android:layout_height="match_parent"
                 android:gravity="center"
                 android:text="OPEN"
-                android:textColor="@color/text_primary_white"
+                android:textColor="?attr/luciferOnAccent"
                 android:textSize="@dimen/_8ssp"
                 android:textStyle="bold"
                 android:letterSpacing="0.08" />
