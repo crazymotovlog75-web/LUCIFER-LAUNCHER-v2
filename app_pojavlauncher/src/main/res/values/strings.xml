@@ -738,4 +738,24 @@
     <string name="lc_mod_store">Mod Store</string>
     <string name="lc_home_title">NEXUS</string>
     <string name="lc_welcome_back">Welcome back</string>
+    <string name="lc_version_manager_title">Version Manager</string>
+    <string name="lc_version_manager_sub">Install and launch any Minecraft version</string>
+    <string name="lc_filter_all">All</string>
+    <string name="lc_filter_vanilla">Vanilla</string>
+    <string name="lc_loader_forge">Forge</string>
+    <string name="lc_loader_neoforge">NeoForge</string>
+    <string name="lc_loader_fabric">Fabric</string>
+    <string name="lc_loader_quilt">Quilt</string>
+    <string name="lc_loader_optifine">OptiFine</string>
+    <string name="lc_loader_bta">BTA</string>
+    <string name="lc_stability">STABILITY: HIGH</string>
+    <string name="lc_install">INSTALL</string>
+    <string name="lc_installed">Installed</string>
+    <string name="lc_downloads">DOWNLOADS</string>
+    <string name="lc_search">Search</string>
+    <string name="lc_versions_count">%1$d versions</string>
+    <string name="lc_release_prefix">Release: %1$s</string>
+    <string name="lc_size_mb">%1$s MB</string>
+    <string name="lc_create_instance">CREATE INSTANCE</string>
+    <string name="lc_instances_sub">Pick, clone or edit a Minecraft instance</string>
 </resources>

@@ -304,7 +304,7 @@ public class RightPaneHomeFragment extends Fragment {
         TextView versionPill = view.findViewById(R.id.lc_version_pill);
         if (versionPill != null) {
             versionPill.setOnClickListener(v ->
-                    openChild(InstancePickerFragment.class, InstancePickerFragment.TAG));
+                    openChild(VersionManagerFragment.class, VersionManagerFragment.TAG));
         }
 
         // ── featured server beacon → Server Hub ───────────────────────────

@@ -41,6 +41,7 @@ java_targets = [
     "java/net/kdt/pojavlaunch/fragments/RightPaneHomeFragment.java",
     "java/net/kdt/pojavlaunch/LauncherActivity.java",
     "java/net/kdt/pojavlaunch/fragments/AccountsPanelFragment.java",
+    "java/net/kdt/pojavlaunch/fragments/VersionManagerFragment.java",
 ]
 
 if javalang is None:
@@ -127,6 +128,8 @@ new_layouts = [
     "layout/item_lc_server.xml",
     "layout/fragment_accounts_panel.xml",
     "layout/item_lc_account.xml",
+    "layout/fragment_version_manager.xml",
+    "layout/fragment_instance_picker.xml",
 ]
 for layout in new_layouts:
     check_layout(layout)
