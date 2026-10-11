@@ -2,29 +2,29 @@
 <resources>
 
     <!-- Control Buttons -->
-    <color name="control_button_color">#3339FF14</color>
-    <color name="control_button_pressed_color">#6639FF14</color>
+    <color name="control_button_color">#3335E6FF</color>
+    <color name="control_button_pressed_color">#6635E6FF</color>
 
     <!-- Main Button -->
-    <color name="minebutton_color">#39FF14</color>
-    <color name="cu_bg_app">#0D1410</color>
-    <color name="cu_bg_status_bar">#0A110D</color>
-    <color name="cu_bg_bottom_bar">#0A110D</color>
-    <color name="cu_divider">#1A39FF14</color>
+    <color name="minebutton_color">#FF35E6FF</color>
+    <color name="cu_bg_app">#FF06070F</color>
+    <color name="cu_bg_status_bar">#FF06070F</color>
+    <color name="cu_bg_bottom_bar">#FF0A0B18</color>
+    <color name="cu_divider">#1F35E6FF</color>
 
     <!-- BACKGROUND SYSTEM (DARK THEME) -->
     <!-- Dark layered surfaces -->
 
-    <color name="background_app">#121212</color>
+    <color name="background_app">#FF06070F</color>
     <color name="background_overlay">#464646</color>      
-    <color name="background_surface">#464646</color>      
-    <color name="divider">#464646</color>                
-    <color name="background_status_bar">#232323</color>
-    <color name="background_bottom_bar">#272727</color>
+    <color name="background_surface">#0A0B18</color>      
+    <color name="divider">#1FFFFFFF</color>                
+    <color name="background_status_bar">#FF06070F</color>
+    <color name="background_bottom_bar">#FF0A0B18</color>
 
     <!-- TEXT (FIXED: removed orange tint, improved readability) -->
-    <color name="primary_text">#F5F5F5</color>
-    <color name="secondary_text">#B8B8B8</color>
+    <color name="primary_text">#FFEAF0FF</color>
+    <color name="secondary_text">#FF9AA6C4</color>
 
     <!-- ── Midnight Blue preset ───────────────────────────────────────── -->
     <color name="mb_bg_app">#0D1B2A</color>
@@ -73,11 +73,11 @@
 
     <!-- ── CS Launcher v2 Colors (Dark Gaming Theme) ── -->
     <!-- Base backgrounds -->
-    <color name="bg_primary">#121212</color>
-    <color name="bg_launcher_dark">#121212</color>
-    <color name="bg_sidebar">#121212</color>
-    <color name="bg_header">#1E1E1E</color>
-    <color name="bg_bottom_bar">#222222</color>
+    <color name="bg_primary">#FF06070F</color>
+    <color name="bg_launcher_dark">#FF06070F</color>
+    <color name="bg_sidebar">#FF06070F</color>
+    <color name="bg_header">#0A0B18</color>
+    <color name="bg_bottom_bar">#0A0B18</color>
     <color name="bg_card">#1C1C1C</color>
     <color name="bg_card_dark">#2C2C2C</color>
     <color name="bg_elevated">#242424</color>
@@ -85,7 +85,7 @@
     <color name="bg_client_features_card">#2D1B4E</color>
 
     <!-- Accent colors (Neon Green + Purple) -->
-    <color name="accent_primary">#39FF14</color>
+    <color name="accent_primary">#FF35E6FF</color>
     <color name="accent_light">#00FF88</color>
     <color name="accent_purple">#9B59E8</color>
     <color name="accent_purple_client">#9B59B6</color>
@@ -103,7 +103,7 @@
     <color name="text_primary_white">#FFFFFF</color>
     <color name="text_primary_light">#FFFFFF</color>
     <color name="text_primary">#FFFFFFFF</color>
-    <color name="text_secondary_light">#9CA3AF</color>
+    <color name="text_secondary_light">#FF9AA6C4</color>
     <color name="text_secondary_dim">#6B7280</color>
     <color name="text_secondary">#8FFFFFFF</color>
 
@@ -120,11 +120,46 @@
     <color name="settings_bg">#000000</color>
     <color name="card_bg">#0D1410</color>
     <color name="card_bg_pressed">#162018</color>
-    <color name="neon_green">#39FF14</color>
-    <color name="neon_green_dim">#3F39FF14</color>
+    <color name="neon_green">#FF35E6FF</color>
+    <color name="neon_green_dim">#3F35E6FF</color>
     <color name="stroke_neon">#3339FF14</color>
     <color name="like_active">#FF4444</color>
     <color name="installed_color">#22C55E</color>
 
     <color name="bg_nav_item_active">#AA39FF14</color>
+
+    <!-- ══════════════════════════════════════════════════════════════════
+         LIQUID CRYSTAL — design tokens for the redesigned launcher UI
+         ══════════════════════════════════════════════════════════════════ -->
+    <color name="lc_void">#FF06070F</color>
+    <color name="lc_void_soft">#FF0A0B18</color>
+    <color name="lc_cyan">#FF35E6FF</color>
+    <color name="lc_violet">#FF8B6CFF</color>
+    <color name="lc_magenta">#FFFF4FD8</color>
+    <color name="lc_mint">#FF7CFFCB</color>
+    <color name="lc_gold">#FFE8C56A</color>
+    <color name="lc_green">#FF35E06A</color>
+    <color name="lc_red">#FFFF6B6B</color>
+
+    <color name="lc_text">#FFEAF0FF</color>
+    <color name="lc_text_dim">#FF9AA6C4</color>
+    <color name="lc_text_faint">#FF6E7A99</color>
+
+    <color name="lc_rim">#1FFFFFFF</color>
+    <color name="lc_rim_strong">#3DFFFFFF</color>
+
+    <color name="lc_glass">#12FFFFFF</color>
+    <color name="lc_glass_soft">#0DFFFFFF</color>
+    <color name="lc_glass_strong">#26FFFFFF</color>
+
+    <color name="lc_cyan_soft">#3335E6FF</color>
+    <color name="lc_violet_soft">#338B6CFF</color>
+    <color name="lc_magenta_soft">#33FF4FD8</color>
+    <color name="lc_mint_soft">#337CFFCB</color>
+    <color name="lc_gold_soft">#33E8C56A</color>
+    <color name="lc_red_soft">#33FF6B6B</color>
+    <color name="lc_green_soft">#3335E06A</color>
+
+    <color name="lc_ripple">#33FFFFFF</color>
+    <color name="lc_scrim">#B306070F</color>
 </resources>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- chromatic rim -->
+    <item>
+        <shape android:shape="rectangle">
+            <corners android:radius="@dimen/lc_radius_card" />
+            <gradient
+                android:angle="315"
+                android:startColor="@color/lc_cyan"
+                android:centerColor="@color/lc_magenta"
+                android:endColor="@color/lc_violet" />
+        </shape>
+    </item>
+    <!-- glass body inset by the rim width -->
+    <item android:left="1.5dp" android:top="1.5dp" android:right="1.5dp" android:bottom="1.5dp">
+        <shape>
+            <corners android:radius="@dimen/lc_radius_card" />
+            <gradient
+                android:angle="270"
+                android:startColor="#2635E6FF"
+                android:centerColor="#1A8B6CFF"
+                android:endColor="#1406070F" />
+        </shape>
+    </item>
+</layer-list>

@@ -671,4 +671,44 @@
     <string name="mp_import_action">Import Modpack</string>
     <string name="mp_paste_code">Paste from Clipboard</string>
 
+
+    <!-- ══ Liquid Crystal UI strings ══ -->
+    <string name="lc_brand_name">LUCIFER</string>
+    <string name="lc_brand_sub">MADE IN INDIA</string>
+    <string name="lc_instances">Instances</string>
+    <string name="lc_server_hub">Server Hub</string>
+    <string name="lc_settings">Settings</string>
+    <string name="lc_skin_studio">Skin Studio</string>
+    <string name="lc_social_youtube">YouTube</string>
+    <string name="lc_social_discord">Discord</string>
+    <string name="lc_play">Play</string>
+    <string name="lc_launch">LAUNCH</string>
+    <string name="lc_new_instance">New Instance</string>
+    <string name="lc_refresh">Refresh</string>
+    <string name="lc_add_server">Add Server</string>
+    <string name="lc_featured_server">CS Network</string>
+    <string name="lc_featured_server_addr">play.csnetwork.fun</string>
+    <string name="lc_official">OFFICIAL</string>
+    <string name="lc_status_checking">Checking status…</string>
+    <string name="lc_status_online">Online · %1$d ms</string>
+    <string name="lc_status_offline">Offline</string>
+    <string name="lc_player_fallback">Player</string>
+    <string name="lc_no_version">No version selected</string>
+    <string name="lc_mods_zero">Installed Mods: 0</string>
+    <string name="lc_server_hub_title">Server Hub</string>
+    <string name="lc_server_hub_sub">Live status and one-tap join</string>
+    <string name="lc_server_featured">FEATURED SERVER</string>
+    <string name="lc_server_entry">SERVER</string>
+    <string name="lc_server_players">%1$d/%2$d</string>
+    <string name="lc_servers_count">%1$d servers · updated %2$s</string>
+    <string name="lc_maintenance">Maintenance</string>
+    <string name="lc_servers_sync_note">Everything on this list is written into the selected profile's servers.dat, so the same servers show up in Minecraft Multiplayer.</string>
+    <string name="lc_server_dialog_title">Add a server</string>
+    <string name="lc_server_name_hint">Name</string>
+    <string name="lc_server_addr_hint">play.example.net</string>
+    <string name="lc_server_added">Added %1$s</string>
+    <string name="lc_server_removed">Removed %1$s</string>
+    <string name="lc_server_join">Launching with %1$s in the multiplayer list</string>
+    <string name="lc_server_invalid">Enter a valid address</string>
+    <string name="lc_no_profiles">Create an instance first</string>
 </resources>
