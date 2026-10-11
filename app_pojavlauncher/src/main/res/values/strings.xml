@@ -711,4 +711,31 @@
     <string name="lc_server_join">Launching with %1$s in the multiplayer list</string>
     <string name="lc_server_invalid">Enter a valid address</string>
     <string name="lc_no_profiles">Create an instance first</string>
+    <!-- Accounts panel (mockup 02) -->
+    <string name="lc_accounts_eyebrow">ACCOUNTS</string>
+    <string name="lc_who_is_playing">Who is playing?</string>
+    <string name="lc_add_account">Add account</string>
+    <string name="lc_add_account_sub">CREATE OR SIGN IN</string>
+    <string name="lc_microsoft">Microsoft</string>
+    <string name="lc_elyby">Ely.by</string>
+    <string name="lc_elyby_letter">E</string>
+    <string name="lc_local">Local</string>
+    <string name="lc_accounts_hint">Tap an account to sign in \u00b7 bin removes it</string>
+    <string name="lc_accounts_none">No accounts yet \u2014 add one to play online</string>
+    <string name="lc_account_use">Use this account</string>
+    <string name="lc_account_remove">Remove this account</string>
+    <string name="lc_account_badge_local">LOCAL</string>
+    <string name="lc_account_badge_msa">MICROSOFT</string>
+    <string name="lc_account_badge_ely">ELY.BY</string>
+    <string name="lc_account_badge_demo">DEMO</string>
+    <string name="lc_account_active">Active</string>
+    <string name="lc_account_sub_local">Local account \u00b7 no online sign-in</string>
+    <string name="lc_account_sub_online">Online account \u00b7 skin in use</string>
+    <string name="lc_account_removed">Account removed</string>
+    <string name="lc_account_switched">Now playing as %1$s</string>
+    <string name="lc_account_select_first">Select an account first</string>
+    <string name="lc_home">Home</string>
+    <string name="lc_mod_store">Mod Store</string>
+    <string name="lc_home_title">NEXUS</string>
+    <string name="lc_welcome_back">Welcome back</string>
 </resources>

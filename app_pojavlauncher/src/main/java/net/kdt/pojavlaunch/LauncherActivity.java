@@ -11,6 +11,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.widget.ImageView;
 import net.kdt.pojavlaunch.value.MinecraftAccount;
+import net.kdt.pojavlaunch.fragments.AccountsPanelFragment;
 import net.kdt.pojavlaunch.fragments.ClientFeaturesFragment;
 import net.kdt.pojavlaunch.fragments.ModsSearchFragment;
 import net.kdt.pojavlaunch.fragments.CursorCustomizationFragment;
@@ -128,6 +129,13 @@ public class LauncherActivity extends BaseActivity {
     };
 
     /* Listener for the auth method selection screen */
+    /** Liquid Crystal: the account medallion opens the in-app "Who is playing?" panel. */
+    private final ExtraListener<Boolean> mOpenAccounts = (key, value) -> {
+        if (isDestroyed() || isFinishing()) return false;
+        openInPaneOrSwap(AccountsPanelFragment.class, AccountsPanelFragment.TAG);
+        return false;
+    };
+
     private final ExtraListener<Boolean> mSelectAuthMethod = (key, value) -> {
         Fragment fragment = getSupportFragmentManager().findFragmentById(mFragmentView.getId());
         // Allow starting the add account only from the main menu, should it be moved to fragment itself ?
@@ -304,6 +312,7 @@ public class LauncherActivity extends BaseActivity {
         ProgressKeeper.addTaskCountListener(mProgressLayout);
         ExtraCore.addExtraListener(ExtraConstants.BACK_PREFERENCE, mBackPreferenceListener);
         ExtraCore.addExtraListener(ExtraConstants.SELECT_AUTH_METHOD, mSelectAuthMethod);
+        ExtraCore.addExtraListener(ExtraConstants.LC_OPEN_ACCOUNTS, mOpenAccounts);
 
         ExtraCore.addExtraListener(ExtraConstants.LAUNCH_GAME, mLaunchGameListener);
 
@@ -383,6 +392,7 @@ public class LauncherActivity extends BaseActivity {
         ProgressKeeper.removeTaskCountListener(mProgressServiceKeeper);
         ExtraCore.removeExtraListenerFromValue(ExtraConstants.BACK_PREFERENCE, mBackPreferenceListener);
         ExtraCore.removeExtraListenerFromValue(ExtraConstants.SELECT_AUTH_METHOD, mSelectAuthMethod);
+        ExtraCore.removeExtraListenerFromValue(ExtraConstants.LC_OPEN_ACCOUNTS, mOpenAccounts);
         ExtraCore.removeExtraListenerFromValue(ExtraConstants.LAUNCH_GAME, mLaunchGameListener);
 
         getSupportFragmentManager().unregisterFragmentLifecycleCallbacks(mFragmentCallbackListener);

@@ -4,7 +4,7 @@
     LIQUID CRYSTAL SHELL (landscape)
       • whole screen floats over a cached aurora backdrop
       • one glass top bar  — brand, socials, skin/cursor/client-features orbs,
-        account medallion, settings orb
+        account medallion
       • one glass bottom dock — Home · Instances · Mod Store · Server Hub · Settings
     Every legacy id used by LauncherActivity is preserved so all existing
     behaviour (including features that used to live in the old left rail)
@@ -14,11 +14,10 @@
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="false"
-    android:background="@color/lc_void">
+    android:background="@color/lc_void"
+    android:fitsSystemWindows="false">
 
     <!-- Aurora backdrop: rendered once into a downscaled bitmap, then blitted -->
     <net.kdt.pojavlaunch.liquid.AuroraBackdropView
@@ -31,7 +30,7 @@
         android:id="@+id/lc_shimmer"
         android:layout_width="520dp"
         android:layout_height="match_parent"
-        android:alpha="0.30"
+        android:alpha="0.28"
         android:background="@drawable/lc_shimmer"
         android:contentDescription="@null"
         android:importantForAccessibility="no" />
@@ -40,10 +39,10 @@
     <LinearLayout
         android:id="@+id/header_bar"
         android:layout_width="0dp"
-        android:layout_height="@dimen/lc_topbar_height"
-        android:layout_marginStart="@dimen/lc_topbar_margin"
-        android:layout_marginEnd="@dimen/lc_topbar_margin"
-        android:layout_marginTop="@dimen/lc_topbar_margin"
+        android:layout_height="52dp"
+        android:layout_marginStart="14dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="14dp"
         android:background="@drawable/lc_glass_capsule"
         android:elevation="6dp"
         android:gravity="center_vertical"
@@ -54,7 +53,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <!-- Brand tile (clickable → home) -->
+        <!-- brand -->
         <FrameLayout
             android:id="@+id/btn_home_logo"
             android:layout_width="40dp"
@@ -68,7 +67,7 @@
                 android:layout_width="26dp"
                 android:layout_height="26dp"
                 android:layout_gravity="center"
-                android:contentDescription="@string/lc_brand_name"
+                android:contentDescription="@string/app_name"
                 android:scaleType="fitCenter"
                 android:src="@mipmap/ic_launcher_round" />
         </FrameLayout>
@@ -86,7 +85,7 @@
                 android:background="?android:attr/selectableItemBackground"
                 android:clickable="true"
                 android:focusable="true"
-                android:letterSpacing="0.10"
+                android:letterSpacing="0.12"
                 android:text="@string/lc_brand_name"
                 android:textColor="@color/lc_text"
                 android:textSize="15sp"
@@ -101,12 +100,12 @@
                 android:textSize="8sp" />
         </LinearLayout>
 
-        <!-- Social orbs -->
+        <!-- socials -->
         <FrameLayout
             android:id="@+id/lc_social_youtube"
             android:layout_width="34dp"
             android:layout_height="34dp"
-            android:layout_marginStart="14dp"
+            android:layout_marginStart="12dp"
             android:background="@drawable/lc_orb_button"
             android:clickable="true"
             android:focusable="true">
@@ -116,6 +115,7 @@
                 android:layout_height="18dp"
                 android:layout_gravity="center"
                 android:contentDescription="@string/lc_social_youtube"
+                android:importantForAccessibility="no"
                 android:src="@drawable/lc_ic_youtube"
                 android:tint="#FFFF4B4B" />
         </FrameLayout>
@@ -124,7 +124,7 @@
             android:id="@+id/lc_social_discord"
             android:layout_width="34dp"
             android:layout_height="34dp"
-            android:layout_marginStart="6dp"
+            android:layout_marginStart="4dp"
             android:background="@drawable/lc_orb_button"
             android:clickable="true"
             android:focusable="true">
@@ -134,6 +134,7 @@
                 android:layout_height="18dp"
                 android:layout_gravity="center"
                 android:contentDescription="@string/lc_social_discord"
+                android:importantForAccessibility="no"
                 android:src="@drawable/ic_discord"
                 android:tint="#FF8E7BFF" />
         </FrameLayout>
@@ -143,7 +144,7 @@
             android:layout_height="0dp"
             android:layout_weight="1" />
 
-        <!-- Input studio orbs: cursor + gamepad, then skin -->
+        <!-- input studio orbs: cursor + custom controls, then skin -->
         <FrameLayout
             android:id="@+id/nav_cursor"
             android:layout_width="38dp"
@@ -158,6 +159,7 @@
                 android:layout_height="20dp"
                 android:layout_gravity="center"
                 android:contentDescription="@string/cursor_customization_title"
+                android:importantForAccessibility="no"
                 android:src="@drawable/ic_mouse_pointer" />
         </FrameLayout>
 
@@ -176,6 +178,7 @@
                 android:layout_height="20dp"
                 android:layout_gravity="center"
                 android:contentDescription="@string/mcl_option_customcontrol"
+                android:importantForAccessibility="no"
                 android:src="@drawable/ic_menu_custom_controls"
                 android:tint="@color/lc_text" />
         </FrameLayout>
@@ -195,11 +198,12 @@
                 android:layout_height="20dp"
                 android:layout_gravity="center"
                 android:contentDescription="@string/lc_skin_studio"
+                android:importantForAccessibility="no"
                 android:src="@drawable/ic_manage_skin"
                 android:tint="@color/lc_text" />
         </FrameLayout>
 
-        <!-- Client features (✦) -->
+        <!-- client side features (✦) — button kept so its manager keeps working -->
         <Button
             android:id="@+id/btn_client_features"
             android:layout_width="38dp"
@@ -207,15 +211,15 @@
             android:layout_marginStart="4dp"
             android:padding="0dp"
             android:text="✦"
-            android:textColor="#FF8B6CFF"
+            android:textColor="@color/lc_violet"
             android:textSize="16sp" />
 
-        <!-- Account medallion -->
+        <!-- account medallion → in-app "Who is playing?" panel -->
         <com.kdt.mcgui.mcAccountSpinner
             android:id="@+id/account_spinner"
             android:layout_width="wrap_content"
             android:layout_height="38dp"
-            android:layout_marginStart="8dp"
+            android:layout_marginStart="6dp"
             android:background="@drawable/bg_account_spinner"
             android:dropDownVerticalOffset="44dp"
             android:dropDownWidth="wrap_content"
@@ -224,12 +228,11 @@
             android:paddingEnd="6dp" />
     </LinearLayout>
 
-    <!-- ══════════════════ PREVIOUS / NEXT SCREEN ══════════════════ -->
+    <!-- ══════════════════ SCREEN CONTENT ══════════════════ -->
     <FrameLayout
         android:id="@+id/lc_pager_host"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginTop="0dp"
         android:clipChildren="false"
         android:clipToPadding="false"
         app:layout_constraintBottom_toTopOf="@+id/lc_dock"
@@ -241,55 +244,65 @@
             android:layout_height="match_parent" />
     </FrameLayout>
 
+    <com.kdt.mcgui.ProgressLayout
+        android:id="@+id/progress_layout"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="18dp"
+        android:layout_marginEnd="18dp"
+        android:layout_marginBottom="6dp"
+        android:elevation="10dp"
+        app:layout_constraintBottom_toTopOf="@+id/lc_dock"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
     <!-- ══════════════════ GLASS BOTTOM DOCK ══════════════════ -->
     <LinearLayout
         android:id="@+id/lc_dock"
         android:layout_width="wrap_content"
-        android:layout_height="@dimen/lc_dock_height"
-        android:layout_marginBottom="@dimen/lc_dock_bottom_margin"
+        android:layout_height="66dp"
+        android:layout_marginBottom="12dp"
         android:background="@drawable/lc_glass_dock"
-        android:elevation="8dp"
+        android:elevation="10dp"
         android:gravity="center_vertical"
         android:orientation="horizontal"
-        android:paddingStart="6dp"
-        android:paddingEnd="6dp"
+        android:paddingStart="8dp"
+        android:paddingEnd="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
 
-        <!-- HOME -->
         <FrameLayout
             android:id="@+id/nav_home"
-            android:layout_width="@dimen/lc_dock_orb"
-            android:layout_height="@dimen/lc_dock_orb"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
             android:background="@drawable/lc_orb_button"
             android:clickable="true"
             android:focusable="true">
 
             <ImageView
                 android:id="@+id/lc_dock_core_home"
-                android:layout_width="@dimen/lc_dock_orb"
-                android:layout_height="@dimen/lc_dock_orb"
-                android:alpha="1"
-                android:contentDescription="@null"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:alpha="0"
                 android:importantForAccessibility="no"
-                android:scaleType="fitXY"
                 android:src="@drawable/lc_orb_core" />
 
             <ImageView
-                android:layout_width="@dimen/lc_dock_orb_icon"
-                android:layout_height="@dimen/lc_dock_orb_icon"
+                android:id="@+id/lc_dock_icon_home"
+                android:layout_width="22dp"
+                android:layout_height="22dp"
                 android:layout_gravity="center"
-                android:contentDescription="@string/mcl_tab_home"
+                android:contentDescription="@string/lc_home"
+                android:importantForAccessibility="no"
                 android:src="@drawable/ic_home"
                 android:tint="@color/lc_text" />
         </FrameLayout>
 
-        <!-- INSTANCES -->
         <FrameLayout
             android:id="@+id/nav_instances"
-            android:layout_width="@dimen/lc_dock_orb"
-            android:layout_height="@dimen/lc_dock_orb"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
             android:layout_marginStart="4dp"
             android:background="@drawable/lc_orb_button"
             android:clickable="true"
@@ -297,28 +310,26 @@
 
             <ImageView
                 android:id="@+id/lc_dock_core_instances"
-                android:layout_width="@dimen/lc_dock_orb"
-                android:layout_height="@dimen/lc_dock_orb"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
                 android:alpha="0"
-                android:contentDescription="@null"
                 android:importantForAccessibility="no"
-                android:scaleType="fitXY"
                 android:src="@drawable/lc_orb_core" />
 
             <ImageView
-                android:layout_width="@dimen/lc_dock_orb_icon"
-                android:layout_height="@dimen/lc_dock_orb_icon"
+                android:layout_width="22dp"
+                android:layout_height="22dp"
                 android:layout_gravity="center"
                 android:contentDescription="@string/lc_instances"
+                android:importantForAccessibility="no"
                 android:src="@drawable/lc_ic_instances"
                 android:tint="@color/lc_text" />
         </FrameLayout>
 
-        <!-- MOD STORE -->
         <FrameLayout
             android:id="@+id/nav_mod_store"
-            android:layout_width="@dimen/lc_dock_orb"
-            android:layout_height="@dimen/lc_dock_orb"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
             android:layout_marginStart="4dp"
             android:background="@drawable/lc_orb_button"
             android:clickable="true"
@@ -326,29 +337,27 @@
 
             <ImageView
                 android:id="@+id/lc_dock_core_mods"
-                android:layout_width="@dimen/lc_dock_orb"
-                android:layout_height="@dimen/lc_dock_orb"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
                 android:alpha="0"
-                android:contentDescription="@null"
                 android:importantForAccessibility="no"
-                android:scaleType="fitXY"
                 android:src="@drawable/lc_orb_core" />
 
             <ImageView
                 android:id="@+id/nav_mod_store_icon"
-                android:layout_width="@dimen/lc_dock_orb_icon"
-                android:layout_height="@dimen/lc_dock_orb_icon"
+                android:layout_width="22dp"
+                android:layout_height="22dp"
                 android:layout_gravity="center"
-                android:contentDescription="@string/mcl_button_mod_store"
+                android:contentDescription="@string/lc_mod_store"
+                android:importantForAccessibility="no"
                 android:src="@drawable/lc_ic_mods"
                 android:tint="@color/lc_text" />
         </FrameLayout>
 
-        <!-- SERVER HUB -->
         <FrameLayout
             android:id="@+id/nav_servers"
-            android:layout_width="@dimen/lc_dock_orb"
-            android:layout_height="@dimen/lc_dock_orb"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
             android:layout_marginStart="4dp"
             android:background="@drawable/lc_orb_button"
             android:clickable="true"
@@ -356,28 +365,26 @@
 
             <ImageView
                 android:id="@+id/lc_dock_core_servers"
-                android:layout_width="@dimen/lc_dock_orb"
-                android:layout_height="@dimen/lc_dock_orb"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
                 android:alpha="0"
-                android:contentDescription="@null"
                 android:importantForAccessibility="no"
-                android:scaleType="fitXY"
                 android:src="@drawable/lc_orb_core" />
 
             <ImageView
-                android:layout_width="@dimen/lc_dock_orb_icon"
-                android:layout_height="@dimen/lc_dock_orb_icon"
+                android:layout_width="22dp"
+                android:layout_height="22dp"
                 android:layout_gravity="center"
                 android:contentDescription="@string/lc_server_hub"
+                android:importantForAccessibility="no"
                 android:src="@drawable/lc_ic_servers"
                 android:tint="@color/lc_text" />
         </FrameLayout>
 
-        <!-- SETTINGS -->
         <FrameLayout
             android:id="@+id/lc_dock_settings"
-            android:layout_width="@dimen/lc_dock_orb"
-            android:layout_height="@dimen/lc_dock_orb"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
             android:layout_marginStart="4dp"
             android:background="@drawable/lc_orb_button"
             android:clickable="true"
@@ -385,38 +392,23 @@
 
             <ImageView
                 android:id="@+id/lc_dock_core_settings"
-                android:layout_width="@dimen/lc_dock_orb"
-                android:layout_height="@dimen/lc_dock_orb"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
                 android:alpha="0"
-                android:contentDescription="@null"
                 android:importantForAccessibility="no"
-                android:scaleType="fitXY"
                 android:src="@drawable/lc_orb_core" />
 
             <ImageButton
                 android:id="@+id/setting_button"
-                android:layout_width="@dimen/lc_dock_orb"
-                android:layout_height="@dimen/lc_dock_orb"
-                android:background="@null"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:background="@android:color/transparent"
                 android:contentDescription="@string/lc_settings"
-                android:padding="11dp"
+                android:importantForAccessibility="no"
+                android:padding="13dp"
                 android:scaleType="fitCenter"
-                android:src="@drawable/lc_ic_sliders"
+                android:src="@drawable/ic_menu_settings"
                 android:tint="@color/lc_text" />
         </FrameLayout>
     </LinearLayout>
-
-    <!-- ══════════════════ PROGRESS (downloads / tasks) ══════════════════ -->
-    <com.kdt.mcgui.ProgressLayout
-        android:id="@+id/progress_layout"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp"
-        android:layout_marginEnd="@dimen/padding_large"
-        android:layout_marginStart="@dimen/padding_large"
-        android:elevation="10dp"
-        app:layout_constraintBottom_toTopOf="@+id/lc_dock"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
-
 </androidx.constraintlayout.widget.ConstraintLayout>
