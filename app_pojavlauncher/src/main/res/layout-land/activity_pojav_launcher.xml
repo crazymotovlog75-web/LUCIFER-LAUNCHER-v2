@@ -80,7 +80,6 @@
                 <LinearLayout
                     android:id="@+id/nav_home"
                     style="@style/LuciferTopNavItem"
-                    android:selected="true"
                     android:contentDescription="Home">
                     <ImageView android:id="@+id/nav_home_icon" style="@style/LuciferTopNavIcon" android:src="@drawable/ic_home" />
                     <TextView android:id="@+id/nav_home_label" style="@style/LuciferTopNavLabel" android:text="Home" />
