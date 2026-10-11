@@ -1,6 +1,10 @@
 name: Lucifer Launcher V2 CI
 
 on:
+  # Temporary branch CI trigger to produce an installable build for this redesign.
+  push:
+    branches:
+      - 'arena/581836b4-lucifer-launcher-v2'
   pull_request:
     branches-ignore:
       - 'l10n_v3_openjdk'
