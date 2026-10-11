@@ -75,10 +75,11 @@ jobs:
                           -PsigningKeyPassword=$KEY_PASSWORD \
                           -PsigningStorePassword=$STORE_PASSWORD"
           fi
+          set -o pipefail
           ./gradlew :app_pojavlauncher:assembleRelease $SIGNING_ARGS \
             -Pandroid.enableR8.fullMode=true \
             --no-daemon \
-            --stacktrace
+            --stacktrace 2>&1 | tee /tmp/gradle-release.log
 
           RELEASE_APK=$(find app_pojavlauncher/build/outputs/apk/release -name "*.apk" | head -n 1)
           if [ -n "$RELEASE_APK" ]; then
@@ -88,6 +89,21 @@ jobs:
           else
             echo "ERROR: Release APK not found" && exit 1
           fi
+
+      # ── Build diagnostics ───────────────────────────────────────────────────
+      # Surfaces the actual compiler / resource errors in the run summary so a failed
+      # build can be diagnosed without downloading the full log.
+      - name: Report build errors
+        if: failure()
+        run: |
+          {
+            echo "## Build error report"
+            echo '```'
+            grep -aE "error:|error |What went wrong|FAILURE:|Execution failed|\.java:[0-9]+|\.xml:[0-9]+|AAPT|aapt2|Caused by" /tmp/gradle-release.log 2>/dev/null | head -60 || true
+            echo '--- last 40 lines ---'
+            tail -40 /tmp/gradle-release.log 2>/dev/null || true
+            echo '```'
+          } >> $GITHUB_STEP_SUMMARY
 
       # ── Debug APK (internal / QA only) ───────────────────────────────────────
       - name: Build Debug APK
