@@ -1,0 +1,885 @@
+Downloading https://services.gradle.org/distributions/gradle-8.13-bin.zip
+.............10%.............20%.............30%.............40%.............50%.............60%.............70%.............80%.............90%.............100%
+
+Welcome to Gradle 8.13!
+
+Here are the highlights of this release:
+ - Daemon JVM auto-provisioning
+ - Enhancements for Scala plugin and JUnit testing
+ - Improvements for build authors and plugin developers
+
+For more details see https://docs.gradle.org/8.13/release-notes.html
+
+To honour the JVM settings for this build a single-use Daemon process will be forked. For more on this, please refer to https://docs.gradle.org/8.13/userguide/gradle_daemon.html#sec:disabling_the_daemon in the Gradle documentation.
+Daemon will be stopped at the end of the build 
+Configuration on demand is an incubating feature.
+
+> Configure project :app_pojavlauncher
+fatal: No names found, cannot describe anything.
+WARNING: BuildType 'proguard' is both debuggable and has 'isMinifyEnabled' set to true.
+All code optimizations and obfuscation are disabled for debuggable builds.
+Merging LWJGL 3.3.3 modules in the order: 
+lwjgl-glfw.jar
+lwjgl-opengl.jar
+Merging LWJGL 3.4.1 modules in the order: 
+lwjgl-glfw.jar
+lwjgl-opengl.jar
+
+> Task :app_pojavlauncher:preBuild UP-TO-DATE
+> Task :app_pojavlauncher:preGplayBuild UP-TO-DATE
+
+> Task :forge_installer:compileJava
+warning: [options] source value 8 is obsolete and will be removed in a future release
+warning: [options] target value 8 is obsolete and will be removed in a future release
+warning: [options] To suppress warnings about obsolete options, use -Xlint:-options.
+3 warnings
+
+> Task :arc_dns_injector:compileJava
+warning: [options] source value 8 is obsolete and will be removed in a future release
+warning: [options] target value 8 is obsolete and will be removed in a future release
+warning: [options] To suppress warnings about obsolete options, use -Xlint:-options.
+3 warnings
+
+> Task :arc_dns_injector:processResources NO-SOURCE
+> Task :forge_installer:processResources NO-SOURCE
+> Task :forge_installer:classes
+> Task :arc_dns_injector:classes
+> Task :forge_installer:jar
+> Task :arc_dns_injector:jar
+
+> Task :methods_injector_agent:compileJava
+warning: [options] source value 8 is obsolete and will be removed in a future release
+warning: [options] target value 8 is obsolete and will be removed in a future release
+warning: [options] To suppress warnings about obsolete options, use -Xlint:-options.
+3 warnings
+
+> Task :methods_injector_agent:processResources NO-SOURCE
+> Task :methods_injector_agent:classes
+> Task :methods_injector_agent:jar
+
+> Task :jre_lwjgl3glfw:lwjgl-3.3.3:compileJava
+warning: [options] source value 8 is obsolete and will be removed in a future release
+warning: [options] target value 8 is obsolete and will be removed in a future release
+warning: [options] To suppress warnings about obsolete options, use -Xlint:-options.
+Note: Some input files use unchecked or unsafe operations.
+Note: Recompile with -Xlint:unchecked for details.
+3 warnings
+
+> Task :jre_lwjgl3glfw:lwjgl-3.3.3:processResources NO-SOURCE
+> Task :jre_lwjgl3glfw:lwjgl-3.3.3:classes
+
+> Task :jre_lwjgl3glfw:lwjgl-3.4.1:compileJava
+warning: [options] source value 8 is obsolete and will be removed in a future release
+warning: [options] target value 8 is obsolete and will be removed in a future release
+warning: [options] To suppress warnings about obsolete options, use -Xlint:-options.
+Note: Some input files use unchecked or unsafe operations.
+Note: Recompile with -Xlint:unchecked for details.
+3 warnings
+
+> Task :jre_lwjgl3glfw:lwjgl-3.3.3:jar
+Merging LWJGL 3.3.3 modules in the order: 
+lwjgl-glfw.jar
+lwjgl-opengl.jar
+Merging LWJGL 3.3.3 modules in the order: 
+lwjgl-glfw.jar
+lwjgl-opengl.jar
+Merging LWJGL 3.3.3 modules in the order: 
+lwjgl-glfw.jar
+lwjgl-opengl.jar
+
+> Task :jre_lwjgl3glfw:lwjgl-3.4.1:processResources NO-SOURCE
+> Task :jre_lwjgl3glfw:lwjgl-3.4.1:classes
+
+> Task :jre_lwjgl3glfw:lwjgl-3.4.1:jar
+Merging LWJGL 3.4.1 modules in the order: 
+lwjgl-glfw.jar
+lwjgl-opengl.jar
+Merging LWJGL 3.4.1 modules in the order: 
+lwjgl-glfw.jar
+lwjgl-opengl.jar
+Merging LWJGL 3.4.1 modules in the order: 
+lwjgl-glfw.jar
+lwjgl-opengl.jar
+
+> Task :jre_lwjgl3glfw:jar
+> Task :app_pojavlauncher:configureNdkBuildRelease[arm64-v8a]
+
+> Task :app_pojavlauncher:buildNdkBuildRelease[arm64-v8a]
+C/C++: rm: cannot remove '/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/jni/../jniLibs/*/libawt_headless.so': No such file or directory
+C/C++: /home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/jni/egl_bridge.c:212:13: warning: label followed by a declaration is a C23 extension [-Wc23-extensions]
+C/C++:   212 |             const char *renderer = getenv("AMETHYST_RENDERER");
+C/C++:       |             ^
+C/C++: 1 warning generated.
+C/C++: /home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/jni/ctxbridges/gl_bridge.c:88:65: warning: format specifies type 'void *' but the argument has type 'EGLint' (aka 'int') [-Wformat]
+C/C++:    88 |         if (!bindResult) printf("EGLBridge: bind failed: %p\n", eglGetError_p());
+C/C++:       |                                                          ~~     ^~~~~~~~~~~~~~~
+C/C++:       |                                                          %d
+C/C++: 1 warning generated.
+C/C++: /home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/jni/ctxbridges/swap_interval_no_egl.c:238:29: warning: format specifies type 'int' but the argument has type 'unsigned long' [-Wformat]
+C/C++:   237 |         LOGW("ANativeWindow version does not match. Expected %i, got %i",
+C/C++:       |                                                              ~~
+C/C++:       |                                                              %lu
+C/C++:   238 |                             sizeof(struct ANativeWindow_real), nativeWindowReal->common.version);
+C/C++:       |                             ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+C/C++: /home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/jni/log.h:15:65: note: expanded from macro 'LOGW'
+C/C++:    15 | #define LOGW(...) __android_log_print(ANDROID_LOG_WARN,    TAG, __VA_ARGS__)
+C/C++:       |                                                                 ^~~~~~~~~~~
+C/C++: 1 warning generated.
+C/C++: /home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/jni/input_bridge_v3.c:492:94: warning: more '%' conversions than data arguments [-Wformat-insufficient-args]
+C/C++:   492 |     TRY_ATTACH_ENV(jvm_env, pojav_environ->runtimeJavaVMPtr, "nativeSetWindowAttrib failed: %i", return;);
+C/C++:       |                                                                                             ~^
+C/C++: /home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/jni/input_bridge_v3.c:39:16: note: expanded from macro 'TRY_ATTACH_ENV'
+C/C++:    39 |         printf(error_message);                                             \
+C/C++:       |                ^~~~~~~~~~~~~
+C/C++: 1 warning generated.
+C/C++: /home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/jni/jre_launcher.c:119:69: warning: format specifies type 'int' but the argument has type 'size_t' (aka 'unsigned long') [-Wformat]
+C/C++:   119 |             printf("Failed to set signal hander for signal %i: %s", i, strerror(errno));
+C/C++:       |                                                            ~~       ^
+C/C++:       |                                                            %zu
+C/C++: /home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/jni/jre_launcher.c:202:37: warning: passing 'char **' to parameter of type 'const char **' discards qualifiers in nested pointer types [-Wincompatible-pointer-types-discards-qualifiers]
+C/C++:   202 |     free_char_array(env, argsArray, argv);
+C/C++:       |                                     ^~~~
+C/C++: /home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/jni/utils.h:11:75: note: passing argument to parameter 'charArray' here
+C/C++:    11 | void free_char_array(JNIEnv *env, jobjectArray jstringArray, const char **charArray);
+C/C++:       |                                                                           ^
+C/C++: 2 warnings generated.
+C/C++: /home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/jni/utils.c:103:33: warning: passing 'const char *' to parameter of type 'char *' discards qualifiers [-Wincompatible-pointer-types-discards-qualifiers]
+C/C++:   103 |         android_update_LD_LIBRARY_PATH(ldLibPathUtf);
+C/C++:       |                                        ^~~~~~~~~~~~
+C/C++: /home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/jni/utils.c:156:32: warning: passing 'char **' to parameter of type 'const char **' discards qualifiers in nested pointer types [-Wincompatible-pointer-types-discards-qualifiers]
+C/C++:   156 |         free_char_array(env, cmdArgs, cmd_args_c);
+C/C++:       |                                       ^~~~~~~~~~
+C/C++: /home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/jni/utils.c:41:75: note: passing argument to parameter 'charArray' here
+C/C++:    41 | void free_char_array(JNIEnv *env, jobjectArray jstringArray, const char **charArray) {
+C/C++:       |                                                                           ^
+C/C++: 2 warnings generated.
+
+> Task :app_pojavlauncher:configureNdkBuildRelease[armeabi-v7a]
+
+> Task :app_pojavlauncher:buildNdkBuildRelease[armeabi-v7a]
+C/C++: rm: cannot remove '/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/jni/../jniLibs/*/libawt_headless.so': No such file or directory
+C/C++: /home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/jni/egl_bridge.c:212:13: warning: label followed by a declaration is a C23 extension [-Wc23-extensions]
+C/C++:   212 |             const char *renderer = getenv("AMETHYST_RENDERER");
+C/C++:       |             ^
+C/C++: 1 warning generated.
+C/C++: /home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/jni/ctxbridges/gl_bridge.c:88:65: warning: format specifies type 'void *' but the argument has type 'EGLint' (aka 'int') [-Wformat]
+C/C++:    88 |         if (!bindResult) printf("EGLBridge: bind failed: %p\n", eglGetError_p());
+C/C++:       |                                                          ~~     ^~~~~~~~~~~~~~~
+C/C++:       |                                                          %d
+C/C++: 1 warning generated.
+C/C++: /home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/jni/input_bridge_v3.c:492:94: warning: more '%' conversions than data arguments [-Wformat-insufficient-args]
+C/C++:   492 |     TRY_ATTACH_ENV(jvm_env, pojav_environ->runtimeJavaVMPtr, "nativeSetWindowAttrib failed: %i", return;);
+C/C++:       |                                                                                             ~^
+C/C++: /home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/jni/input_bridge_v3.c:39:16: note: expanded from macro 'TRY_ATTACH_ENV'
+C/C++:    39 |         printf(error_message);                                             \
+C/C++:       |                ^~~~~~~~~~~~~
+C/C++: 1 warning generated.
+C/C++: /home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/jni/jre_launcher.c:202:37: warning: passing 'char **' to parameter of type 'const char **' discards qualifiers in nested pointer types [-Wincompatible-pointer-types-discards-qualifiers]
+C/C++:   202 |     free_char_array(env, argsArray, argv);
+C/C++:       |                                     ^~~~
+C/C++: /home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/jni/utils.h:11:75: note: passing argument to parameter 'charArray' here
+C/C++:    11 | void free_char_array(JNIEnv *env, jobjectArray jstringArray, const char **charArray);
+C/C++:       |                                                                           ^
+C/C++: 1 warning generated.
+C/C++: /home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/jni/utils.c:103:33: warning: passing 'const char *' to parameter of type 'char *' discards qualifiers [-Wincompatible-pointer-types-discards-qualifiers]
+C/C++:   103 |         android_update_LD_LIBRARY_PATH(ldLibPathUtf);
+C/C++:       |                                        ^~~~~~~~~~~~
+C/C++: /home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/jni/utils.c:156:32: warning: passing 'char **' to parameter of type 'const char **' discards qualifiers in nested pointer types [-Wincompatible-pointer-types-discards-qualifiers]
+C/C++:   156 |         free_char_array(env, cmdArgs, cmd_args_c);
+C/C++:       |                                       ^~~~~~~~~~
+C/C++: /home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/jni/utils.c:41:75: note: passing argument to parameter 'charArray' here
+C/C++:    41 | void free_char_array(JNIEnv *env, jobjectArray jstringArray, const char **charArray) {
+C/C++:       |                                                                           ^
+C/C++: 2 warnings generated.
+
+> Task :app_pojavlauncher:configureNdkBuildRelease[x86]
+
+> Task :app_pojavlauncher:buildNdkBuildRelease[x86]
+C/C++: rm: cannot remove '/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/jni/../jniLibs/*/libawt_headless.so': No such file or directory
+C/C++: /home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/jni/egl_bridge.c:212:13: warning: label followed by a declaration is a C23 extension [-Wc23-extensions]
+C/C++:   212 |             const char *renderer = getenv("AMETHYST_RENDERER");
+C/C++:       |             ^
+C/C++: 1 warning generated.
+C/C++: /home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/jni/ctxbridges/gl_bridge.c:88:65: warning: format specifies type 'void *' but the argument has type 'EGLint' (aka 'int') [-Wformat]
+C/C++:    88 |         if (!bindResult) printf("EGLBridge: bind failed: %p\n", eglGetError_p());
+C/C++:       |                                                          ~~     ^~~~~~~~~~~~~~~
+C/C++:       |                                                          %d
+C/C++: 1 warning generated.
+C/C++: /home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/jni/input_bridge_v3.c:492:94: warning: more '%' conversions than data arguments [-Wformat-insufficient-args]
+C/C++:   492 |     TRY_ATTACH_ENV(jvm_env, pojav_environ->runtimeJavaVMPtr, "nativeSetWindowAttrib failed: %i", return;);
+C/C++:       |                                                                                             ~^
+C/C++: /home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/jni/input_bridge_v3.c:39:16: note: expanded from macro 'TRY_ATTACH_ENV'
+C/C++:    39 |         printf(error_message);                                             \
+C/C++:       |                ^~~~~~~~~~~~~
+C/C++: 1 warning generated.
+C/C++: /home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/jni/jre_launcher.c:202:37: warning: passing 'char **' to parameter of type 'const char **' discards qualifiers in nested pointer types [-Wincompatible-pointer-types-discards-qualifiers]
+C/C++:   202 |     free_char_array(env, argsArray, argv);
+C/C++:       |                                     ^~~~
+C/C++: /home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/jni/utils.h:11:75: note: passing argument to parameter 'charArray' here
+C/C++:    11 | void free_char_array(JNIEnv *env, jobjectArray jstringArray, const char **charArray);
+C/C++:       |                                                                           ^
+C/C++: 1 warning generated.
+C/C++: /home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/jni/utils.c:103:33: warning: passing 'const char *' to parameter of type 'char *' discards qualifiers [-Wincompatible-pointer-types-discards-qualifiers]
+C/C++:   103 |         android_update_LD_LIBRARY_PATH(ldLibPathUtf);
+C/C++:       |                                        ^~~~~~~~~~~~
+C/C++: /home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/jni/utils.c:156:32: warning: passing 'char **' to parameter of type 'const char **' discards qualifiers in nested pointer types [-Wincompatible-pointer-types-discards-qualifiers]
+C/C++:   156 |         free_char_array(env, cmdArgs, cmd_args_c);
+C/C++:       |                                       ^~~~~~~~~~
+C/C++: /home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/jni/utils.c:41:75: note: passing argument to parameter 'charArray' here
+C/C++:    41 | void free_char_array(JNIEnv *env, jobjectArray jstringArray, const char **charArray) {
+C/C++:       |                                                                           ^
+C/C++: 2 warnings generated.
+
+> Task :app_pojavlauncher:configureNdkBuildRelease[x86_64]
+
+> Task :app_pojavlauncher:buildNdkBuildRelease[x86_64]
+C/C++: rm: cannot remove '/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/jni/../jniLibs/*/libawt_headless.so': No such file or directory
+C/C++: /home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/jni/egl_bridge.c:212:13: warning: label followed by a declaration is a C23 extension [-Wc23-extensions]
+C/C++:   212 |             const char *renderer = getenv("AMETHYST_RENDERER");
+C/C++:       |             ^
+C/C++: 1 warning generated.
+C/C++: /home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/jni/ctxbridges/gl_bridge.c:88:65: warning: format specifies type 'void *' but the argument has type 'EGLint' (aka 'int') [-Wformat]
+C/C++:    88 |         if (!bindResult) printf("EGLBridge: bind failed: %p\n", eglGetError_p());
+C/C++:       |                                                          ~~     ^~~~~~~~~~~~~~~
+C/C++:       |                                                          %d
+C/C++: 1 warning generated.
+C/C++: /home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/jni/ctxbridges/swap_interval_no_egl.c:238:29: warning: format specifies type 'int' but the argument has type 'unsigned long' [-Wformat]
+C/C++:   237 |         LOGW("ANativeWindow version does not match. Expected %i, got %i",
+C/C++:       |                                                              ~~
+C/C++:       |                                                              %lu
+C/C++:   238 |                             sizeof(struct ANativeWindow_real), nativeWindowReal->common.version);
+C/C++:       |                             ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+C/C++: /home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/jni/log.h:15:65: note: expanded from macro 'LOGW'
+C/C++:    15 | #define LOGW(...) __android_log_print(ANDROID_LOG_WARN,    TAG, __VA_ARGS__)
+C/C++:       |                                                                 ^~~~~~~~~~~
+C/C++: 1 warning generated.
+C/C++: /home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/jni/input_bridge_v3.c:492:94: warning: more '%' conversions than data arguments [-Wformat-insufficient-args]
+C/C++:   492 |     TRY_ATTACH_ENV(jvm_env, pojav_environ->runtimeJavaVMPtr, "nativeSetWindowAttrib failed: %i", return;);
+C/C++:       |                                                                                             ~^
+C/C++: /home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/jni/input_bridge_v3.c:39:16: note: expanded from macro 'TRY_ATTACH_ENV'
+C/C++:    39 |         printf(error_message);                                             \
+C/C++:       |                ^~~~~~~~~~~~~
+C/C++: 1 warning generated.
+C/C++: /home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/jni/jre_launcher.c:119:69: warning: format specifies type 'int' but the argument has type 'size_t' (aka 'unsigned long') [-Wformat]
+C/C++:   119 |             printf("Failed to set signal hander for signal %i: %s", i, strerror(errno));
+C/C++:       |                                                            ~~       ^
+C/C++:       |                                                            %zu
+C/C++: /home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/jni/jre_launcher.c:202:37: warning: passing 'char **' to parameter of type 'const char **' discards qualifiers in nested pointer types [-Wincompatible-pointer-types-discards-qualifiers]
+C/C++:   202 |     free_char_array(env, argsArray, argv);
+C/C++:       |                                     ^~~~
+C/C++: /home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/jni/utils.h:11:75: note: passing argument to parameter 'charArray' here
+C/C++:    11 | void free_char_array(JNIEnv *env, jobjectArray jstringArray, const char **charArray);
+C/C++:       |                                                                           ^
+C/C++: 2 warnings generated.
+C/C++: /home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/jni/utils.c:103:33: warning: passing 'const char *' to parameter of type 'char *' discards qualifiers [-Wincompatible-pointer-types-discards-qualifiers]
+C/C++:   103 |         android_update_LD_LIBRARY_PATH(ldLibPathUtf);
+C/C++:       |                                        ^~~~~~~~~~~~
+C/C++: /home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/jni/utils.c:156:32: warning: passing 'char **' to parameter of type 'const char **' discards qualifiers in nested pointer types [-Wincompatible-pointer-types-discards-qualifiers]
+C/C++:   156 |         free_char_array(env, cmdArgs, cmd_args_c);
+C/C++:       |                                       ^~~~~~~~~~
+C/C++: /home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/jni/utils.c:41:75: note: passing argument to parameter 'charArray' here
+C/C++:    41 | void free_char_array(JNIEnv *env, jobjectArray jstringArray, const char **charArray) {
+C/C++:       |                                                                           ^
+C/C++: 2 warnings generated.
+
+> Task :app_pojavlauncher:preReleaseBuild UP-TO-DATE
+> Task :app_pojavlauncher:mergeReleaseJniLibFolders
+> Task :app_pojavlauncher:mergeReleaseNativeLibs
+> Task :app_pojavlauncher:checkReleaseDuplicateClasses
+> Task :app_pojavlauncher:generateReleaseBuildConfig
+> Task :app_pojavlauncher:javaPreCompileRelease
+> Task :app_pojavlauncher:checkReleaseAarMetadata
+> Task :app_pojavlauncher:generateReleaseResValues
+
+> Task :app_pojavlauncher:stripReleaseDebugSymbols
+Unable to strip the following libraries, packaging them as they are: libjnidispatch.so.
+
+> Task :app_pojavlauncher:mapReleaseSourceSetPaths
+> Task :app_pojavlauncher:generateReleaseResources
+> Task :app_pojavlauncher:extractReleaseNativeSymbolTables
+
+> Task :app_pojavlauncher:mergeReleaseResources
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-pt/strings.xml:128:4: Multiple substitutions specified in non-positional format of string resource string/mcl_launch_downloading_progress. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-pt/strings.xml:133:4: Multiple substitutions specified in non-positional format of string resource string/memory_warning_msg. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-fil/strings.xml:106:4: Multiple substitutions specified in non-positional format of string resource string/mcl_launch_downloading_progress. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-fil/strings.xml:109:4: Multiple substitutions specified in non-positional format of string resource string/memory_warning_msg. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-lol-rAA/strings.xml:111:4: Multiple substitutions specified in non-positional format of string resource string/mcl_launch_downloading_progress. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-lol-rAA/strings.xml:179:4: Multiple substitutions specified in non-positional format of string resource string/memory_warning_msg. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values/strings.xml:20:4: Multiple substitutions specified in non-positional format of string resource string/address_memory_warning_msg. Did you mean to add the formatted="false" attribute?
+/home/runner/.gradle/caches/8.13/transforms/912cae28587197271a9f34074e68e8c5/transformed/material-1.12.0/res/values/values.xml:1288:4: Multiple substitutions specified in non-positional format of string resource string/bind_process_waiting_joystick. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values/strings.xml:190:4: Multiple substitutions specified in non-positional format of string resource string/mcl_launch_downloading_progress. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values/strings.xml:497:4: Multiple substitutions specified in non-positional format of string resource string/memory_warning_msg. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values/strings.xml:364:4: Multiple substitutions specified in non-positional format of string resource string/modpack_download_applying_overrides. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values/strings.xml:365:4: Multiple substitutions specified in non-positional format of string resource string/modpack_download_downloading_metadata. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values/strings.xml:366:4: Multiple substitutions specified in non-positional format of string resource string/modpack_download_downloading_mods. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values/strings.xml:373:4: Multiple substitutions specified in non-positional format of string resource string/modpack_download_downloading_mods_fc. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values/strings.xml:411:4: Multiple substitutions specified in non-positional format of string resource string/newdl_downloading_game_files. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-it/strings.xml:14:4: Multiple substitutions specified in non-positional format of string resource string/address_memory_warning_msg. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values/strings.xml:408:4: Multiple substitutions specified in non-positional format of string resource string/newdl_downloading_game_files_size. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values/strings.xml:409:4: Multiple substitutions specified in non-positional format of string resource string/newdl_downloading_jre_runtime. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values/strings.xml:407:4: Multiple substitutions specified in non-positional format of string resource string/newdl_extracting_native_libraries. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-it/strings.xml:155:4: Multiple substitutions specified in non-positional format of string resource string/mcl_launch_downloading_progress. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-it/strings.xml:387:4: Multiple substitutions specified in non-positional format of string resource string/memory_warning_msg. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-it/strings.xml:291:4: Multiple substitutions specified in non-positional format of string resource string/modpack_download_applying_overrides. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-it/strings.xml:292:4: Multiple substitutions specified in non-positional format of string resource string/modpack_download_downloading_metadata. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-it/strings.xml:293:4: Multiple substitutions specified in non-positional format of string resource string/modpack_download_downloading_mods. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-it/strings.xml:300:4: Multiple substitutions specified in non-positional format of string resource string/modpack_download_downloading_mods_fc. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-it/strings.xml:335:4: Multiple substitutions specified in non-positional format of string resource string/newdl_downloading_game_files. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-it/strings.xml:333:4: Multiple substitutions specified in non-positional format of string resource string/newdl_downloading_game_files_size. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-it/strings.xml:332:4: Multiple substitutions specified in non-positional format of string resource string/newdl_extracting_native_libraries. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-af/strings.xml:30:4: Multiple substitutions specified in non-positional format of string resource string/mcl_launch_downloading_progress. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-ar/strings.xml:13:4: Multiple substitutions specified in non-positional format of string resource string/address_memory_warning_msg. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-ar/strings.xml:134:4: Multiple substitutions specified in non-positional format of string resource string/mcl_launch_downloading_progress. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-ar/strings.xml:217:4: Multiple substitutions specified in non-positional format of string resource string/memory_warning_msg. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-ar/strings.xml:268:4: Multiple substitutions specified in non-positional format of string resource string/modpack_download_applying_overrides. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-ar/strings.xml:269:4: Multiple substitutions specified in non-positional format of string resource string/modpack_download_downloading_metadata. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-ar/strings.xml:270:4: Multiple substitutions specified in non-positional format of string resource string/modpack_download_downloading_mods. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-ar/strings.xml:277:4: Multiple substitutions specified in non-positional format of string resource string/modpack_download_downloading_mods_fc. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-ar/strings.xml:308:4: Multiple substitutions specified in non-positional format of string resource string/newdl_downloading_game_files. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-ar/strings.xml:306:4: Multiple substitutions specified in non-positional format of string resource string/newdl_downloading_game_files_size. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-ba/strings.xml:31:4: Multiple substitutions specified in non-positional format of string resource string/mcl_launch_downloading_progress. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-ro/strings.xml:108:4: Multiple substitutions specified in non-positional format of string resource string/mcl_launch_downloading_progress. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-ro/strings.xml:158:4: Multiple substitutions specified in non-positional format of string resource string/memory_warning_msg. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-ru/strings.xml:14:4: Multiple substitutions specified in non-positional format of string resource string/address_memory_warning_msg. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-ru/strings.xml:153:4: Multiple substitutions specified in non-positional format of string resource string/mcl_launch_downloading_progress. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-ru/strings.xml:392:4: Multiple substitutions specified in non-positional format of string resource string/memory_warning_msg. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-ru/strings.xml:291:4: Multiple substitutions specified in non-positional format of string resource string/modpack_download_applying_overrides. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-ru/strings.xml:292:4: Multiple substitutions specified in non-positional format of string resource string/modpack_download_downloading_metadata. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-ru/strings.xml:293:4: Multiple substitutions specified in non-positional format of string resource string/modpack_download_downloading_mods. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-ru/strings.xml:300:4: Multiple substitutions specified in non-positional format of string resource string/modpack_download_downloading_mods_fc. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-ru/strings.xml:335:4: Multiple substitutions specified in non-positional format of string resource string/newdl_downloading_game_files. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-ru/strings.xml:333:4: Multiple substitutions specified in non-positional format of string resource string/newdl_downloading_game_files_size. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-ru/strings.xml:332:4: Multiple substitutions specified in non-positional format of string resource string/newdl_extracting_native_libraries. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-fa-rIR/strings.xml:133:4: Multiple substitutions specified in non-positional format of string resource string/mcl_launch_downloading_progress. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-fa-rIR/strings.xml:200:4: Multiple substitutions specified in non-positional format of string resource string/memory_warning_msg. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-fa-rIR/strings.xml:232:4: Multiple substitutions specified in non-positional format of string resource string/modpack_download_applying_overrides. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-fa-rIR/strings.xml:233:4: Multiple substitutions specified in non-positional format of string resource string/modpack_download_downloading_metadata. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-fa-rIR/strings.xml:234:4: Multiple substitutions specified in non-positional format of string resource string/modpack_download_downloading_mods. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-fa-rIR/strings.xml:241:4: Multiple substitutions specified in non-positional format of string resource string/modpack_download_downloading_mods_fc. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-de/strings.xml:14:4: Multiple substitutions specified in non-positional format of string resource string/address_memory_warning_msg. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-de/strings.xml:157:4: Multiple substitutions specified in non-positional format of string resource string/mcl_launch_downloading_progress. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-sr/strings.xml:110:4: Multiple substitutions specified in non-positional format of string resource string/mcl_launch_downloading_progress. Did you mean to add the formatted="false" attribute?
+/home/runner/.gradle/caches/8.13/transforms/912cae28587197271a9f34074e68e8c5/transformed/material-1.12.0/res/values-sr/values-sr.xml:33:4: Multiple substitutions specified in non-positional format of string resource string/memory_warning_msg. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-de/strings.xml:389:4: Multiple substitutions specified in non-positional format of string resource string/memory_warning_msg. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-de/strings.xml:293:4: Multiple substitutions specified in non-positional format of string resource string/modpack_download_applying_overrides. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-de/strings.xml:294:4: Multiple substitutions specified in non-positional format of string resource string/modpack_download_downloading_metadata. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-de/strings.xml:295:4: Multiple substitutions specified in non-positional format of string resource string/modpack_download_downloading_mods. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-de/strings.xml:302:4: Multiple substitutions specified in non-positional format of string resource string/modpack_download_downloading_mods_fc. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-de/strings.xml:337:4: Multiple substitutions specified in non-positional format of string resource string/newdl_downloading_game_files. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-de/strings.xml:335:4: Multiple substitutions specified in non-positional format of string resource string/newdl_downloading_game_files_size. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-de/strings.xml:334:4: Multiple substitutions specified in non-positional format of string resource string/newdl_extracting_native_libraries. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-sv/strings.xml:64:4: Multiple substitutions specified in non-positional format of string resource string/mcl_launch_downloading_progress. Did you mean to add the formatted="false" attribute?
+/home/runner/.gradle/caches/8.13/transforms/912cae28587197271a9f34074e68e8c5/transformed/material-1.12.0/res/values-sv/values-sv.xml:32:4: Multiple substitutions specified in non-positional format of string resource string/memory_warning_msg. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-bn-rBD/strings.xml:31:4: Multiple substitutions specified in non-positional format of string resource string/mcl_launch_downloading_progress. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-cs/strings.xml:14:4: Multiple substitutions specified in non-positional format of string resource string/address_memory_warning_msg. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-cs/strings.xml:156:4: Multiple substitutions specified in non-positional format of string resource string/mcl_launch_downloading_progress. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-cs/strings.xml:395:4: Multiple substitutions specified in non-positional format of string resource string/memory_warning_msg. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-cs/strings.xml:294:4: Multiple substitutions specified in non-positional format of string resource string/modpack_download_applying_overrides. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-cs/strings.xml:295:4: Multiple substitutions specified in non-positional format of string resource string/modpack_download_downloading_metadata. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-cs/strings.xml:296:4: Multiple substitutions specified in non-positional format of string resource string/modpack_download_downloading_mods. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-cs/strings.xml:303:4: Multiple substitutions specified in non-positional format of string resource string/modpack_download_downloading_mods_fc. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-cs/strings.xml:338:4: Multiple substitutions specified in non-positional format of string resource string/newdl_downloading_game_files. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-cs/strings.xml:336:4: Multiple substitutions specified in non-positional format of string resource string/newdl_downloading_game_files_size. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-cs/strings.xml:335:4: Multiple substitutions specified in non-positional format of string resource string/newdl_extracting_native_libraries. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-el/strings.xml:131:4: Multiple substitutions specified in non-positional format of string resource string/mcl_launch_downloading_progress. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-el/strings.xml:207:4: Multiple substitutions specified in non-positional format of string resource string/memory_warning_msg. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-el/strings.xml:258:4: Multiple substitutions specified in non-positional format of string resource string/modpack_download_applying_overrides. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-el/strings.xml:259:4: Multiple substitutions specified in non-positional format of string resource string/modpack_download_downloading_metadata. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-el/strings.xml:260:4: Multiple substitutions specified in non-positional format of string resource string/modpack_download_downloading_mods. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-el/strings.xml:266:4: Multiple substitutions specified in non-positional format of string resource string/modpack_download_downloading_mods_fc. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-no/strings.xml:88:4: Multiple substitutions specified in non-positional format of string resource string/mcl_launch_downloading_progress. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-no/strings.xml:90:4: Multiple substitutions specified in non-positional format of string resource string/memory_warning_msg. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-rpr/strings.xml:109:4: Multiple substitutions specified in non-positional format of string resource string/mcl_launch_downloading_progress. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-rpr/strings.xml:111:4: Multiple substitutions specified in non-positional format of string resource string/memory_warning_msg. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-pl/strings.xml:14:4: Multiple substitutions specified in non-positional format of string resource string/address_memory_warning_msg. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-pl/strings.xml:158:4: Multiple substitutions specified in non-positional format of string resource string/mcl_launch_downloading_progress. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-pl/strings.xml:397:4: Multiple substitutions specified in non-positional format of string resource string/memory_warning_msg. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-pl/strings.xml:296:4: Multiple substitutions specified in non-positional format of string resource string/modpack_download_applying_overrides. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-pl/strings.xml:297:4: Multiple substitutions specified in non-positional format of string resource string/modpack_download_downloading_metadata. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-pl/strings.xml:298:4: Multiple substitutions specified in non-positional format of string resource string/modpack_download_downloading_mods. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-pl/strings.xml:305:4: Multiple substitutions specified in non-positional format of string resource string/modpack_download_downloading_mods_fc. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-pl/strings.xml:340:4: Multiple substitutions specified in non-positional format of string resource string/newdl_downloading_game_files. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-pl/strings.xml:338:4: Multiple substitutions specified in non-positional format of string resource string/newdl_downloading_game_files_size. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-pl/strings.xml:337:4: Multiple substitutions specified in non-positional format of string resource string/newdl_extracting_native_libraries. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-zh-rTW/strings.xml:14:4: Multiple substitutions specified in non-positional format of string resource string/address_memory_warning_msg. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-zh-rTW/strings.xml:156:4: Multiple substitutions specified in non-positional format of string resource string/mcl_launch_downloading_progress. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-zh-rTW/strings.xml:396:4: Multiple substitutions specified in non-positional format of string resource string/memory_warning_msg. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-zh-rTW/strings.xml:295:4: Multiple substitutions specified in non-positional format of string resource string/modpack_download_applying_overrides. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-zh-rTW/strings.xml:296:4: Multiple substitutions specified in non-positional format of string resource string/modpack_download_downloading_metadata. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-zh-rTW/strings.xml:297:4: Multiple substitutions specified in non-positional format of string resource string/modpack_download_downloading_mods. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-zh-rTW/strings.xml:304:4: Multiple substitutions specified in non-positional format of string resource string/modpack_download_downloading_mods_fc. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-zh-rTW/strings.xml:339:4: Multiple substitutions specified in non-positional format of string resource string/newdl_downloading_game_files. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-zh-rTW/strings.xml:337:4: Multiple substitutions specified in non-positional format of string resource string/newdl_downloading_game_files_size. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-zh-rTW/strings.xml:336:4: Multiple substitutions specified in non-positional format of string resource string/newdl_extracting_native_libraries. Did you mean to add the formatted="false" attribute?
+
+> Task :app_pojavlauncher:createReleaseCompatibleScreenManifests
+> Task :app_pojavlauncher:extractDeepLinksRelease
+
+> Task :app_pojavlauncher:processReleaseMainManifest
+[lwjgl-3.4.1-natives-release.aar] /home/runner/.gradle/caches/8.13/transforms/5fbe89884e2051217e7cc2e6c88d3a95/transformed/lwjgl-3.4.1-natives-release/AndroidManifest.xml Warning:
+	Namespace 'org.angelauramc.lwjgl3x' is used in multiple modules and/or libraries: lwjgl-3.4.1-natives-release.aar, lwjgl-3.3.3-natives-release.aar. Please ensure that all modules and libraries have a unique namespace. For more information, See https://developer.android.com/studio/build/configure-app-module#set-namespace
+
+> Task :app_pojavlauncher:processReleaseManifest
+> Task :app_pojavlauncher:mergeReleaseNativeDebugMetadata
+
+> Task :app_pojavlauncher:mergeReleaseResources
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-az-rAZ/strings.xml:106:4: Multiple substitutions specified in non-positional format of string resource string/mcl_launch_downloading_progress. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-az-rAZ/strings.xml:176:4: Multiple substitutions specified in non-positional format of string resource string/memory_warning_msg. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-az-rAZ/strings.xml:226:4: Multiple substitutions specified in non-positional format of string resource string/modpack_download_applying_overrides. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-az-rAZ/strings.xml:227:4: Multiple substitutions specified in non-positional format of string resource string/modpack_download_downloading_metadata. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-az-rAZ/strings.xml:228:4: Multiple substitutions specified in non-positional format of string resource string/modpack_download_downloading_mods. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-az-rAZ/strings.xml:235:4: Multiple substitutions specified in non-positional format of string resource string/modpack_download_downloading_mods_fc. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-in/strings.xml:14:4: Multiple substitutions specified in non-positional format of string resource string/address_memory_warning_msg. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-in/strings.xml:156:4: Multiple substitutions specified in non-positional format of string resource string/mcl_launch_downloading_progress. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-in/strings.xml:395:4: Multiple substitutions specified in non-positional format of string resource string/memory_warning_msg. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-in/strings.xml:294:4: Multiple substitutions specified in non-positional format of string resource string/modpack_download_applying_overrides. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-in/strings.xml:295:4: Multiple substitutions specified in non-positional format of string resource string/modpack_download_downloading_metadata. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-in/strings.xml:296:4: Multiple substitutions specified in non-positional format of string resource string/modpack_download_downloading_mods. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-in/strings.xml:303:4: Multiple substitutions specified in non-positional format of string resource string/modpack_download_downloading_mods_fc. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-in/strings.xml:338:4: Multiple substitutions specified in non-positional format of string resource string/newdl_downloading_game_files. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-in/strings.xml:336:4: Multiple substitutions specified in non-positional format of string resource string/newdl_downloading_game_files_size. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-in/strings.xml:335:4: Multiple substitutions specified in non-positional format of string resource string/newdl_extracting_native_libraries. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-iw/strings.xml:14:4: Multiple substitutions specified in non-positional format of string resource string/address_memory_warning_msg. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-iw/strings.xml:150:4: Multiple substitutions specified in non-positional format of string resource string/mcl_launch_downloading_progress. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-iw/strings.xml:376:4: Multiple substitutions specified in non-positional format of string resource string/memory_warning_msg. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-iw/strings.xml:282:4: Multiple substitutions specified in non-positional format of string resource string/modpack_download_applying_overrides. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-iw/strings.xml:283:4: Multiple substitutions specified in non-positional format of string resource string/modpack_download_downloading_metadata. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-iw/strings.xml:284:4: Multiple substitutions specified in non-positional format of string resource string/modpack_download_downloading_mods. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-iw/strings.xml:291:4: Multiple substitutions specified in non-positional format of string resource string/modpack_download_downloading_mods_fc. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-iw/strings.xml:326:4: Multiple substitutions specified in non-positional format of string resource string/newdl_downloading_game_files. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-iw/strings.xml:324:4: Multiple substitutions specified in non-positional format of string resource string/newdl_downloading_game_files_size. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-iw/strings.xml:323:4: Multiple substitutions specified in non-positional format of string resource string/newdl_extracting_native_libraries. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-hu/strings.xml:14:4: Multiple substitutions specified in non-positional format of string resource string/address_memory_warning_msg. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-hu/strings.xml:32:4: Multiple substitutions specified in non-positional format of string resource string/mcl_launch_downloading_progress. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-hu/strings.xml:397:4: Multiple substitutions specified in non-positional format of string resource string/memory_warning_msg. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-hu/strings.xml:296:4: Multiple substitutions specified in non-positional format of string resource string/modpack_download_applying_overrides. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-hu/strings.xml:297:4: Multiple substitutions specified in non-positional format of string resource string/modpack_download_downloading_metadata. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-hu/strings.xml:298:4: Multiple substitutions specified in non-positional format of string resource string/modpack_download_downloading_mods. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-hu/strings.xml:305:4: Multiple substitutions specified in non-positional format of string resource string/modpack_download_downloading_mods_fc. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-hu/strings.xml:340:4: Multiple substitutions specified in non-positional format of string resource string/newdl_downloading_game_files. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-hu/strings.xml:338:4: Multiple substitutions specified in non-positional format of string resource string/newdl_downloading_game_files_size. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-hu/strings.xml:337:4: Multiple substitutions specified in non-positional format of string resource string/newdl_extracting_native_libraries. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-mn-rMN/strings.xml:30:4: Multiple substitutions specified in non-positional format of string resource string/mcl_launch_downloading_progress. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-ja/strings.xml:138:4: Multiple substitutions specified in non-positional format of string resource string/mcl_launch_downloading_progress. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-ja/strings.xml:213:4: Multiple substitutions specified in non-positional format of string resource string/memory_warning_msg. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-ca/strings.xml:39:4: Multiple substitutions specified in non-positional format of string resource string/mcl_launch_downloading_progress. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-ca/strings.xml:123:4: Multiple substitutions specified in non-positional format of string resource string/modpack_download_applying_overrides. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-ca/strings.xml:130:4: Multiple substitutions specified in non-positional format of string resource string/modpack_download_downloading_mods_fc. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-sk-rSK/strings.xml:126:4: Multiple substitutions specified in non-positional format of string resource string/mcl_launch_downloading_progress. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-sk-rSK/strings.xml:201:4: Multiple substitutions specified in non-positional format of string resource string/memory_warning_msg. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-sk-rSK/strings.xml:251:4: Multiple substitutions specified in non-positional format of string resource string/modpack_download_applying_overrides. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-sk-rSK/strings.xml:252:4: Multiple substitutions specified in non-positional format of string resource string/modpack_download_downloading_metadata. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-sk-rSK/strings.xml:253:4: Multiple substitutions specified in non-positional format of string resource string/modpack_download_downloading_mods. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-sk-rSK/strings.xml:260:4: Multiple substitutions specified in non-positional format of string resource string/modpack_download_downloading_mods_fc. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-ko/strings.xml:14:4: Multiple substitutions specified in non-positional format of string resource string/address_memory_warning_msg. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-ko/strings.xml:154:4: Multiple substitutions specified in non-positional format of string resource string/mcl_launch_downloading_progress. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-ko/strings.xml:386:4: Multiple substitutions specified in non-positional format of string resource string/memory_warning_msg. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-ko/strings.xml:291:4: Multiple substitutions specified in non-positional format of string resource string/modpack_download_applying_overrides. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-ko/strings.xml:292:4: Multiple substitutions specified in non-positional format of string resource string/modpack_download_downloading_metadata. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-ko/strings.xml:293:4: Multiple substitutions specified in non-positional format of string resource string/modpack_download_downloading_mods. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-ko/strings.xml:300:4: Multiple substitutions specified in non-positional format of string resource string/modpack_download_downloading_mods_fc. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-ko/strings.xml:335:4: Multiple substitutions specified in non-positional format of string resource string/newdl_downloading_game_files. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-ko/strings.xml:333:4: Multiple substitutions specified in non-positional format of string resource string/newdl_downloading_game_files_size. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-ko/strings.xml:332:4: Multiple substitutions specified in non-positional format of string resource string/newdl_extracting_native_libraries. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-kk/strings.xml:31:4: Multiple substitutions specified in non-positional format of string resource string/mcl_launch_downloading_progress. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-pt-rBR/strings.xml:13:4: Multiple substitutions specified in non-positional format of string resource string/address_memory_warning_msg. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-pt-rBR/strings.xml:135:4: Multiple substitutions specified in non-positional format of string resource string/mcl_launch_downloading_progress. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-pt-rBR/strings.xml:216:4: Multiple substitutions specified in non-positional format of string resource string/memory_warning_msg. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-pt-rBR/strings.xml:267:4: Multiple substitutions specified in non-positional format of string resource string/modpack_download_applying_overrides. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-pt-rBR/strings.xml:268:4: Multiple substitutions specified in non-positional format of string resource string/modpack_download_downloading_metadata. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-pt-rBR/strings.xml:269:4: Multiple substitutions specified in non-positional format of string resource string/modpack_download_downloading_mods. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-pt-rBR/strings.xml:276:4: Multiple substitutions specified in non-positional format of string resource string/modpack_download_downloading_mods_fc. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-pt-rBR/strings.xml:311:4: Multiple substitutions specified in non-positional format of string resource string/newdl_downloading_game_files. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-pt-rBR/strings.xml:309:4: Multiple substitutions specified in non-positional format of string resource string/newdl_downloading_game_files_size. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-th/strings.xml:133:4: Multiple substitutions specified in non-positional format of string resource string/mcl_launch_downloading_progress. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-th/strings.xml:214:4: Multiple substitutions specified in non-positional format of string resource string/memory_warning_msg. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-th/strings.xml:265:4: Multiple substitutions specified in non-positional format of string resource string/modpack_download_applying_overrides. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-th/strings.xml:266:4: Multiple substitutions specified in non-positional format of string resource string/modpack_download_downloading_metadata. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-th/strings.xml:267:4: Multiple substitutions specified in non-positional format of string resource string/modpack_download_downloading_mods. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-th/strings.xml:274:4: Multiple substitutions specified in non-positional format of string resource string/modpack_download_downloading_mods_fc. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-da/strings.xml:20:4: Multiple substitutions specified in non-positional format of string resource string/mcl_launch_downloading_progress. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-tt/strings.xml:95:4: Multiple substitutions specified in non-positional format of string resource string/mcl_launch_downloading_progress. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-lt/strings.xml:123:4: Multiple substitutions specified in non-positional format of string resource string/mcl_launch_downloading_progress. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-lt/strings.xml:181:4: Multiple substitutions specified in non-positional format of string resource string/memory_warning_msg. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-lt/strings.xml:214:4: Multiple substitutions specified in non-positional format of string resource string/modpack_download_applying_overrides. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-lt/strings.xml:219:4: Multiple substitutions specified in non-positional format of string resource string/modpack_download_downloading_mods_fc. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-uk/strings.xml:14:4: Multiple substitutions specified in non-positional format of string resource string/address_memory_warning_msg. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-uk/strings.xml:158:4: Multiple substitutions specified in non-positional format of string resource string/mcl_launch_downloading_progress. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-uk/strings.xml:397:4: Multiple substitutions specified in non-positional format of string resource string/memory_warning_msg. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-tr/strings.xml:14:4: Multiple substitutions specified in non-positional format of string resource string/address_memory_warning_msg. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-tr/strings.xml:156:4: Multiple substitutions specified in non-positional format of string resource string/mcl_launch_downloading_progress. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-tr/strings.xml:395:4: Multiple substitutions specified in non-positional format of string resource string/memory_warning_msg. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-tr/strings.xml:294:4: Multiple substitutions specified in non-positional format of string resource string/modpack_download_applying_overrides. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-tr/strings.xml:295:4: Multiple substitutions specified in non-positional format of string resource string/modpack_download_downloading_metadata. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-tr/strings.xml:296:4: Multiple substitutions specified in non-positional format of string resource string/modpack_download_downloading_mods. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-tr/strings.xml:303:4: Multiple substitutions specified in non-positional format of string resource string/modpack_download_downloading_mods_fc. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-tr/strings.xml:338:4: Multiple substitutions specified in non-positional format of string resource string/newdl_downloading_game_files. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-tr/strings.xml:336:4: Multiple substitutions specified in non-positional format of string resource string/newdl_downloading_game_files_size. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-tr/strings.xml:335:4: Multiple substitutions specified in non-positional format of string resource string/newdl_extracting_native_libraries. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-uk/strings.xml:296:4: Multiple substitutions specified in non-positional format of string resource string/modpack_download_applying_overrides. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-uk/strings.xml:297:4: Multiple substitutions specified in non-positional format of string resource string/modpack_download_downloading_metadata. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-uk/strings.xml:298:4: Multiple substitutions specified in non-positional format of string resource string/modpack_download_downloading_mods. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-uk/strings.xml:305:4: Multiple substitutions specified in non-positional format of string resource string/modpack_download_downloading_mods_fc. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-uk/strings.xml:340:4: Multiple substitutions specified in non-positional format of string resource string/newdl_downloading_game_files. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-uk/strings.xml:338:4: Multiple substitutions specified in non-positional format of string resource string/newdl_downloading_game_files_size. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-uk/strings.xml:337:4: Multiple substitutions specified in non-positional format of string resource string/newdl_extracting_native_libraries. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-ms/strings.xml:14:4: Multiple substitutions specified in non-positional format of string resource string/address_memory_warning_msg. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-et-rEE/strings.xml:130:4: Multiple substitutions specified in non-positional format of string resource string/memory_warning_msg. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-ms/strings.xml:156:4: Multiple substitutions specified in non-positional format of string resource string/mcl_launch_downloading_progress. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-ms/strings.xml:395:4: Multiple substitutions specified in non-positional format of string resource string/memory_warning_msg. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-es/strings.xml:12:4: Multiple substitutions specified in non-positional format of string resource string/address_memory_warning_msg. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-ms/strings.xml:294:4: Multiple substitutions specified in non-positional format of string resource string/modpack_download_applying_overrides. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-ms/strings.xml:295:4: Multiple substitutions specified in non-positional format of string resource string/modpack_download_downloading_metadata. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-ms/strings.xml:296:4: Multiple substitutions specified in non-positional format of string resource string/modpack_download_downloading_mods. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-ms/strings.xml:303:4: Multiple substitutions specified in non-positional format of string resource string/modpack_download_downloading_mods_fc. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-ms/strings.xml:338:4: Multiple substitutions specified in non-positional format of string resource string/newdl_downloading_game_files. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-ms/strings.xml:336:4: Multiple substitutions specified in non-positional format of string resource string/newdl_downloading_game_files_size. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-ms/strings.xml:335:4: Multiple substitutions specified in non-positional format of string resource string/newdl_extracting_native_libraries. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-es/strings.xml:144:4: Multiple substitutions specified in non-positional format of string resource string/mcl_launch_downloading_progress. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-es/strings.xml:227:4: Multiple substitutions specified in non-positional format of string resource string/memory_warning_msg. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-es/strings.xml:280:4: Multiple substitutions specified in non-positional format of string resource string/modpack_download_applying_overrides. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-es/strings.xml:281:4: Multiple substitutions specified in non-positional format of string resource string/modpack_download_downloading_metadata. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-es/strings.xml:282:4: Multiple substitutions specified in non-positional format of string resource string/modpack_download_downloading_mods. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-es/strings.xml:289:4: Multiple substitutions specified in non-positional format of string resource string/modpack_download_downloading_mods_fc. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-es/strings.xml:324:4: Multiple substitutions specified in non-positional format of string resource string/newdl_downloading_game_files. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-es/strings.xml:322:4: Multiple substitutions specified in non-positional format of string resource string/newdl_downloading_game_files_size. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-zh-rCN/strings.xml:14:4: Multiple substitutions specified in non-positional format of string resource string/address_memory_warning_msg. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-zh-rCN/strings.xml:158:4: Multiple substitutions specified in non-positional format of string resource string/mcl_launch_downloading_progress. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-zh-rCN/strings.xml:399:4: Multiple substitutions specified in non-positional format of string resource string/memory_warning_msg. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-zh-rCN/strings.xml:298:4: Multiple substitutions specified in non-positional format of string resource string/modpack_download_applying_overrides. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-zh-rCN/strings.xml:299:4: Multiple substitutions specified in non-positional format of string resource string/modpack_download_downloading_metadata. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-zh-rCN/strings.xml:300:4: Multiple substitutions specified in non-positional format of string resource string/modpack_download_downloading_mods. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-vi/strings.xml:14:4: Multiple substitutions specified in non-positional format of string resource string/address_memory_warning_msg. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-zh-rCN/strings.xml:307:4: Multiple substitutions specified in non-positional format of string resource string/modpack_download_downloading_mods_fc. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-zh-rCN/strings.xml:342:4: Multiple substitutions specified in non-positional format of string resource string/newdl_downloading_game_files. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-zh-rCN/strings.xml:340:4: Multiple substitutions specified in non-positional format of string resource string/newdl_downloading_game_files_size. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-zh-rCN/strings.xml:339:4: Multiple substitutions specified in non-positional format of string resource string/newdl_extracting_native_libraries. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-vi/strings.xml:156:4: Multiple substitutions specified in non-positional format of string resource string/mcl_launch_downloading_progress. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-vi/strings.xml:395:4: Multiple substitutions specified in non-positional format of string resource string/memory_warning_msg. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-vi/strings.xml:294:4: Multiple substitutions specified in non-positional format of string resource string/modpack_download_applying_overrides. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-vi/strings.xml:295:4: Multiple substitutions specified in non-positional format of string resource string/modpack_download_downloading_metadata. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-vi/strings.xml:296:4: Multiple substitutions specified in non-positional format of string resource string/modpack_download_downloading_mods. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-vi/strings.xml:303:4: Multiple substitutions specified in non-positional format of string resource string/modpack_download_downloading_mods_fc. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-vi/strings.xml:338:4: Multiple substitutions specified in non-positional format of string resource string/newdl_downloading_game_files. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-vi/strings.xml:336:4: Multiple substitutions specified in non-positional format of string resource string/newdl_downloading_game_files_size. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-vi/strings.xml:335:4: Multiple substitutions specified in non-positional format of string resource string/newdl_extracting_native_libraries. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-nl/strings.xml:115:4: Multiple substitutions specified in non-positional format of string resource string/mcl_launch_downloading_progress. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-nl/strings.xml:178:4: Multiple substitutions specified in non-positional format of string resource string/memory_warning_msg. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-nl/strings.xml:188:4: Multiple substitutions specified in non-positional format of string resource string/modpack_download_applying_overrides. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-nl/strings.xml:189:4: Multiple substitutions specified in non-positional format of string resource string/modpack_download_downloading_metadata. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-nl/strings.xml:190:4: Multiple substitutions specified in non-positional format of string resource string/modpack_download_downloading_mods. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-nl/strings.xml:196:4: Multiple substitutions specified in non-positional format of string resource string/modpack_download_downloading_mods_fc. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-fr/strings.xml:14:4: Multiple substitutions specified in non-positional format of string resource string/address_memory_warning_msg. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-fr/strings.xml:151:4: Multiple substitutions specified in non-positional format of string resource string/mcl_launch_downloading_progress. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-fr/strings.xml:382:4: Multiple substitutions specified in non-positional format of string resource string/memory_warning_msg. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-fr/strings.xml:287:4: Multiple substitutions specified in non-positional format of string resource string/modpack_download_applying_overrides. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-fr/strings.xml:288:4: Multiple substitutions specified in non-positional format of string resource string/modpack_download_downloading_metadata. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-fr/strings.xml:289:4: Multiple substitutions specified in non-positional format of string resource string/modpack_download_downloading_mods. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-fr/strings.xml:296:4: Multiple substitutions specified in non-positional format of string resource string/modpack_download_downloading_mods_fc. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-fr/strings.xml:331:4: Multiple substitutions specified in non-positional format of string resource string/newdl_downloading_game_files. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-fr/strings.xml:329:4: Multiple substitutions specified in non-positional format of string resource string/newdl_downloading_game_files_size. Did you mean to add the formatted="false" attribute?
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/res/values-fr/strings.xml:328:4: Multiple substitutions specified in non-positional format of string resource string/newdl_extracting_native_libraries. Did you mean to add the formatted="false" attribute?
+
+> Task :app_pojavlauncher:processReleaseManifestForPackage
+> Task :app_pojavlauncher:mergeReleaseStartupProfile
+> Task :app_pojavlauncher:mergeReleaseArtProfile
+> Task :app_pojavlauncher:mergeReleaseShaders
+> Task :app_pojavlauncher:compileReleaseShaders NO-SOURCE
+> Task :app_pojavlauncher:generateReleaseAssets UP-TO-DATE
+> Task :app_pojavlauncher:mergeReleaseAssets
+> Task :app_pojavlauncher:extractReleaseVersionControlInfo
+> Task :app_pojavlauncher:processReleaseJavaRes NO-SOURCE
+> Task :app_pojavlauncher:desugarReleaseFileDependencies
+> Task :app_pojavlauncher:compressReleaseAssets
+> Task :app_pojavlauncher:mergeReleaseJavaResource
+> Task :app_pojavlauncher:collectReleaseDependencies
+> Task :app_pojavlauncher:sdkReleaseDependencyData
+> Task :app_pojavlauncher:writeReleaseAppMetadata
+> Task :app_pojavlauncher:writeReleaseSigningConfigVersions
+warn: removing resource com.craftstudio.cslauncher:string/login_error_invalid_username without required default value.
+warn: removing resource com.craftstudio.cslauncher:string/login_microsoft without required default value.
+
+> Task :app_pojavlauncher:processReleaseResources
+> Task :app_pojavlauncher:mergeExtDexRelease
+
+> Task :app_pojavlauncher:compileReleaseJavaWithJavac
+Java compiler version 21 has deprecated support for compiling with source/target version 8.
+Try one of the following options:
+    1. [Recommended] Use Java toolchain with a lower language version
+    2. Set a higher source/target version
+    3. Use a lower version of the JDK running the build (if you're not using Java toolchain)
+For more details on how to configure these settings, see https://developer.android.com/build/jdks.
+To suppress this warning, set android.javaCompile.suppressSourceTargetDeprecationWarning=true in gradle.properties.
+warning: [options] source value 8 is obsolete and will be removed in a future release
+warning: [options] target value 8 is obsolete and will be removed in a future release
+warning: [options] To suppress warnings about obsolete options, use -Xlint:-options.
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/java/net/kdt/pojavlaunch/fragments/VersionManagerFragment.java:174: error: no suitable method found for setText(installed [...].type)
+        badge.setText(installed ? R.string.lc_installed : version.type);
+             ^
+    method TextView.setText(CharSequence) is not applicable
+      (argument mismatch; bad type in conditional expression
+          int cannot be converted to CharSequence)
+    method TextView.setText(int) is not applicable
+      (argument mismatch; bad type in conditional expression
+          String cannot be converted to int)
+Note: Some input files use or override a deprecated API.
+Note: Recompile with -Xlint:deprecation for details.
+Note: /home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/java/net/kdt/pojavlaunch/fragments/FabriclikeInstallFragment.java uses unchecked or unsafe operations.
+Note: Recompile with -Xlint:unchecked for details.
+Note: Some messages have been simplified; recompile with -Xdiags:verbose to get full output
+1 error
+3 warnings
+
+> Task :app_pojavlauncher:compileReleaseJavaWithJavac FAILED
+gradle/actions: Writing build results to /home/runner/work/_temp/.gradle-actions/build-results/__run_3-1791688269139.json
+
+[Incubating] Problems report is available at: file:///home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/build/reports/problems/problems-report.html
+
+FAILURE: Build failed with an exception.
+
+* What went wrong:
+Execution failed for task ':app_pojavlauncher:compileReleaseJavaWithJavac'.
+> Compilation failed; see the compiler output below.
+  warning: [options] source value 8 is obsolete and will be removed in a future release
+  warning: [options] target value 8 is obsolete and will be removed in a future release
+  warning: [options] To suppress warnings about obsolete options, use -Xlint:-options.
+  /home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/java/net/kdt/pojavlaunch/fragments/VersionManagerFragment.java:174: error: no suitable method found for setText(installed [...].type)
+          badge.setText(installed ? R.string.lc_installed : version.type);
+               ^
+      method TextView.setText(CharSequence) is not applicable
+        (argument mismatch; bad type in conditional expression
+            int cannot be converted to CharSequence)
+      method TextView.setText(int) is not applicable
+        (argument mismatch; bad type in conditional expression
+            String cannot be converted to int)
+  Note: Some input files use or override a deprecated API.
+  Note: Recompile with -Xlint:deprecation for details.
+  Note: /home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/java/net/kdt/pojavlaunch/fragments/FabriclikeInstallFragment.java uses unchecked or unsafe operations.
+  Note: Recompile with -Xlint:unchecked for details.
+  Note: Some messages have been simplified; recompile with -Xdiags:verbose to get full output
+  1 error
+  3 warnings
+
+* Try:
+> Check your code and dependencies to fix the compilation error(s)
+> Run with --scan to get full insights.
+
+* Exception is:
+org.gradle.api.tasks.TaskExecutionException: Execution failed for task ':app_pojavlauncher:compileReleaseJavaWithJavac'.
+	at org.gradle.api.internal.tasks.execution.ExecuteActionsTaskExecuter.lambda$executeIfValid$1(ExecuteActionsTaskExecuter.java:130)
+	at org.gradle.internal.Try$Failure.ifSuccessfulOrElse(Try.java:293)
+	at org.gradle.api.internal.tasks.execution.ExecuteActionsTaskExecuter.executeIfValid(ExecuteActionsTaskExecuter.java:128)
+	at org.gradle.api.internal.tasks.execution.ExecuteActionsTaskExecuter.execute(ExecuteActionsTaskExecuter.java:116)
+	at org.gradle.api.internal.tasks.execution.ProblemsTaskPathTrackingTaskExecuter.execute(ProblemsTaskPathTrackingTaskExecuter.java:40)
+	at org.gradle.api.internal.tasks.execution.FinalizePropertiesTaskExecuter.execute(FinalizePropertiesTaskExecuter.java:46)
+	at org.gradle.api.internal.tasks.execution.ResolveTaskExecutionModeExecuter.execute(ResolveTaskExecutionModeExecuter.java:51)
+	at org.gradle.api.internal.tasks.execution.SkipTaskWithNoActionsExecuter.execute(SkipTaskWithNoActionsExecuter.java:57)
+	at org.gradle.api.internal.tasks.execution.SkipOnlyIfTaskExecuter.execute(SkipOnlyIfTaskExecuter.java:74)
+	at org.gradle.api.internal.tasks.execution.CatchExceptionTaskExecuter.execute(CatchExceptionTaskExecuter.java:36)
+	at org.gradle.api.internal.tasks.execution.EventFiringTaskExecuter$1.executeTask(EventFiringTaskExecuter.java:77)
+	at org.gradle.api.internal.tasks.execution.EventFiringTaskExecuter$1.call(EventFiringTaskExecuter.java:55)
+	at org.gradle.api.internal.tasks.execution.EventFiringTaskExecuter$1.call(EventFiringTaskExecuter.java:52)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner$CallableBuildOperationWorker.execute(DefaultBuildOperationRunner.java:210)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner$CallableBuildOperationWorker.execute(DefaultBuildOperationRunner.java:205)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner$2.execute(DefaultBuildOperationRunner.java:67)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner$2.execute(DefaultBuildOperationRunner.java:60)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner.execute(DefaultBuildOperationRunner.java:167)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner.execute(DefaultBuildOperationRunner.java:60)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner.call(DefaultBuildOperationRunner.java:54)
+	at org.gradle.api.internal.tasks.execution.EventFiringTaskExecuter.execute(EventFiringTaskExecuter.java:52)
+	at org.gradle.execution.plan.LocalTaskNodeExecutor.execute(LocalTaskNodeExecutor.java:42)
+	at org.gradle.execution.taskgraph.DefaultTaskExecutionGraph$InvokeNodeExecutorsAction.execute(DefaultTaskExecutionGraph.java:331)
+	at org.gradle.execution.taskgraph.DefaultTaskExecutionGraph$InvokeNodeExecutorsAction.execute(DefaultTaskExecutionGraph.java:318)
+	at org.gradle.execution.taskgraph.DefaultTaskExecutionGraph$BuildOperationAwareExecutionAction.lambda$execute$0(DefaultTaskExecutionGraph.java:314)
+	at org.gradle.internal.operations.CurrentBuildOperationRef.with(CurrentBuildOperationRef.java:85)
+	at org.gradle.execution.taskgraph.DefaultTaskExecutionGraph$BuildOperationAwareExecutionAction.execute(DefaultTaskExecutionGraph.java:314)
+	at org.gradle.execution.taskgraph.DefaultTaskExecutionGraph$BuildOperationAwareExecutionAction.execute(DefaultTaskExecutionGraph.java:303)
+	at org.gradle.execution.plan.DefaultPlanExecutor$ExecutorWorker.execute(DefaultPlanExecutor.java:459)
+	at org.gradle.execution.plan.DefaultPlanExecutor$ExecutorWorker.run(DefaultPlanExecutor.java:376)
+	at org.gradle.internal.concurrent.ExecutorPolicy$CatchAndRecordFailures.onExecute(ExecutorPolicy.java:64)
+	at org.gradle.internal.concurrent.AbstractManagedExecutor$1.run(AbstractManagedExecutor.java:48)
+Caused by: org.gradle.api.internal.tasks.compile.CompilationFailedException: Compilation failed; see the compiler output below.
+warning: [options] source value 8 is obsolete and will be removed in a future release
+warning: [options] target value 8 is obsolete and will be removed in a future release
+warning: [options] To suppress warnings about obsolete options, use -Xlint:-options.
+/home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/java/net/kdt/pojavlaunch/fragments/VersionManagerFragment.java:174: error: no suitable method found for setText(installed [...].type)
+        badge.setText(installed ? R.string.lc_installed : version.type);
+             ^
+    method TextView.setText(CharSequence) is not applicable
+      (argument mismatch; bad type in conditional expression
+          int cannot be converted to CharSequence)
+    method TextView.setText(int) is not applicable
+      (argument mismatch; bad type in conditional expression
+          String cannot be converted to int)
+Note: Some input files use or override a deprecated API.
+Note: Recompile with -Xlint:deprecation for details.
+Note: /home/runner/work/LUCIFER-LAUNCHER-v2/LUCIFER-LAUNCHER-v2/app_pojavlauncher/src/main/java/net/kdt/pojavlaunch/fragments/FabriclikeInstallFragment.java uses unchecked or unsafe operations.
+Note: Recompile with -Xlint:unchecked for details.
+Note: Some messages have been simplified; recompile with -Xdiags:verbose to get full output
+1 error
+3 warnings
+	at org.gradle.api.internal.tasks.compile.JdkJavaCompiler.execute(JdkJavaCompiler.java:89)
+	at org.gradle.api.internal.tasks.compile.JdkJavaCompiler.execute(JdkJavaCompiler.java:50)
+	at org.gradle.api.internal.tasks.compile.NormalizingJavaCompiler.delegateAndHandleErrors(NormalizingJavaCompiler.java:98)
+	at org.gradle.api.internal.tasks.compile.NormalizingJavaCompiler.execute(NormalizingJavaCompiler.java:52)
+	at org.gradle.api.internal.tasks.compile.NormalizingJavaCompiler.execute(NormalizingJavaCompiler.java:38)
+	at org.gradle.api.internal.tasks.compile.AnnotationProcessorDiscoveringCompiler.execute(AnnotationProcessorDiscoveringCompiler.java:52)
+	at org.gradle.api.internal.tasks.compile.AnnotationProcessorDiscoveringCompiler.execute(AnnotationProcessorDiscoveringCompiler.java:38)
+	at org.gradle.api.internal.tasks.compile.ModuleApplicationNameWritingCompiler.execute(ModuleApplicationNameWritingCompiler.java:46)
+	at org.gradle.api.internal.tasks.compile.ModuleApplicationNameWritingCompiler.execute(ModuleApplicationNameWritingCompiler.java:36)
+	at org.gradle.jvm.toolchain.internal.DefaultToolchainJavaCompiler.execute(DefaultToolchainJavaCompiler.java:57)
+	at org.gradle.api.tasks.compile.JavaCompile.lambda$createToolchainCompiler$3(JavaCompile.java:206)
+	at org.gradle.api.internal.tasks.compile.CleaningJavaCompiler.execute(CleaningJavaCompiler.java:53)
+	at org.gradle.api.internal.tasks.compile.incremental.IncrementalCompilerFactory.lambda$createRebuildAllCompiler$0(IncrementalCompilerFactory.java:55)
+	at org.gradle.api.internal.tasks.compile.incremental.SelectiveCompiler.execute(SelectiveCompiler.java:70)
+	at org.gradle.api.internal.tasks.compile.incremental.SelectiveCompiler.execute(SelectiveCompiler.java:44)
+	at org.gradle.api.internal.tasks.compile.incremental.IncrementalResultStoringCompiler.execute(IncrementalResultStoringCompiler.java:66)
+	at org.gradle.api.internal.tasks.compile.incremental.IncrementalResultStoringCompiler.execute(IncrementalResultStoringCompiler.java:52)
+	at org.gradle.api.internal.tasks.compile.CompileJavaBuildOperationReportingCompiler$1.call(CompileJavaBuildOperationReportingCompiler.java:64)
+	at org.gradle.api.internal.tasks.compile.CompileJavaBuildOperationReportingCompiler$1.call(CompileJavaBuildOperationReportingCompiler.java:48)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner$CallableBuildOperationWorker.execute(DefaultBuildOperationRunner.java:210)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner$CallableBuildOperationWorker.execute(DefaultBuildOperationRunner.java:205)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner$2.execute(DefaultBuildOperationRunner.java:67)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner$2.execute(DefaultBuildOperationRunner.java:60)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner.execute(DefaultBuildOperationRunner.java:167)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner.execute(DefaultBuildOperationRunner.java:60)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner.call(DefaultBuildOperationRunner.java:54)
+	at org.gradle.api.internal.tasks.compile.CompileJavaBuildOperationReportingCompiler.execute(CompileJavaBuildOperationReportingCompiler.java:48)
+	at org.gradle.api.tasks.compile.JavaCompile.performCompilation(JavaCompile.java:224)
+	at org.gradle.api.tasks.compile.JavaCompile.performIncrementalCompilation(JavaCompile.java:165)
+	at org.gradle.api.tasks.compile.JavaCompile.compile(JavaCompile.java:150)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at org.gradle.internal.reflect.JavaMethod.invoke(JavaMethod.java:125)
+	at org.gradle.api.internal.project.taskfactory.IncrementalTaskAction.doExecute(IncrementalTaskAction.java:45)
+	at org.gradle.api.internal.project.taskfactory.StandardTaskAction.execute(StandardTaskAction.java:51)
+	at org.gradle.api.internal.project.taskfactory.IncrementalTaskAction.execute(IncrementalTaskAction.java:26)
+	at org.gradle.api.internal.project.taskfactory.StandardTaskAction.execute(StandardTaskAction.java:29)
+	at org.gradle.api.internal.tasks.execution.TaskExecution$3.run(TaskExecution.java:244)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner$1.execute(DefaultBuildOperationRunner.java:30)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner$1.execute(DefaultBuildOperationRunner.java:27)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner$2.execute(DefaultBuildOperationRunner.java:67)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner$2.execute(DefaultBuildOperationRunner.java:60)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner.execute(DefaultBuildOperationRunner.java:167)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner.execute(DefaultBuildOperationRunner.java:60)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner.run(DefaultBuildOperationRunner.java:48)
+	at org.gradle.api.internal.tasks.execution.TaskExecution.executeAction(TaskExecution.java:229)
+	at org.gradle.api.internal.tasks.execution.TaskExecution.executeActions(TaskExecution.java:212)
+	at org.gradle.api.internal.tasks.execution.TaskExecution.executeWithPreviousOutputFiles(TaskExecution.java:195)
+	at org.gradle.api.internal.tasks.execution.TaskExecution.execute(TaskExecution.java:162)
+	at org.gradle.internal.execution.steps.ExecuteStep.executeInternal(ExecuteStep.java:105)
+	at org.gradle.internal.execution.steps.ExecuteStep.access$000(ExecuteStep.java:44)
+	at org.gradle.internal.execution.steps.ExecuteStep$1.call(ExecuteStep.java:59)
+	at org.gradle.internal.execution.steps.ExecuteStep$1.call(ExecuteStep.java:56)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner$CallableBuildOperationWorker.execute(DefaultBuildOperationRunner.java:210)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner$CallableBuildOperationWorker.execute(DefaultBuildOperationRunner.java:205)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner$2.execute(DefaultBuildOperationRunner.java:67)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner$2.execute(DefaultBuildOperationRunner.java:60)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner.execute(DefaultBuildOperationRunner.java:167)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner.execute(DefaultBuildOperationRunner.java:60)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner.call(DefaultBuildOperationRunner.java:54)
+	at org.gradle.internal.execution.steps.ExecuteStep.execute(ExecuteStep.java:56)
+	at org.gradle.internal.execution.steps.ExecuteStep.execute(ExecuteStep.java:44)
+	at org.gradle.internal.execution.steps.CancelExecutionStep.execute(CancelExecutionStep.java:42)
+	at org.gradle.internal.execution.steps.TimeoutStep.executeWithoutTimeout(TimeoutStep.java:75)
+	at org.gradle.internal.execution.steps.TimeoutStep.execute(TimeoutStep.java:55)
+	at org.gradle.internal.execution.steps.PreCreateOutputParentsStep.execute(PreCreateOutputParentsStep.java:50)
+	at org.gradle.internal.execution.steps.PreCreateOutputParentsStep.execute(PreCreateOutputParentsStep.java:28)
+	at org.gradle.internal.execution.steps.RemovePreviousOutputsStep.execute(RemovePreviousOutputsStep.java:67)
+	at org.gradle.internal.execution.steps.RemovePreviousOutputsStep.execute(RemovePreviousOutputsStep.java:37)
+	at org.gradle.internal.execution.steps.BroadcastChangingOutputsStep.execute(BroadcastChangingOutputsStep.java:61)
+	at org.gradle.internal.execution.steps.BroadcastChangingOutputsStep.execute(BroadcastChangingOutputsStep.java:26)
+	at org.gradle.internal.execution.steps.CaptureOutputsAfterExecutionStep.execute(CaptureOutputsAfterExecutionStep.java:69)
+	at org.gradle.internal.execution.steps.CaptureOutputsAfterExecutionStep.execute(CaptureOutputsAfterExecutionStep.java:46)
+	at org.gradle.internal.execution.steps.ResolveInputChangesStep.execute(ResolveInputChangesStep.java:40)
+	at org.gradle.internal.execution.steps.ResolveInputChangesStep.execute(ResolveInputChangesStep.java:29)
+	at org.gradle.internal.execution.steps.BuildCacheStep.executeWithoutCache(BuildCacheStep.java:189)
+	at org.gradle.internal.execution.steps.BuildCacheStep.executeAndStoreInCache(BuildCacheStep.java:145)
+	at org.gradle.internal.execution.steps.BuildCacheStep.lambda$executeWithCache$4(BuildCacheStep.java:101)
+	at org.gradle.internal.execution.steps.BuildCacheStep.lambda$executeWithCache$5(BuildCacheStep.java:101)
+	at org.gradle.internal.Try$Success.map(Try.java:175)
+	at org.gradle.internal.execution.steps.BuildCacheStep.executeWithCache(BuildCacheStep.java:85)
+	at org.gradle.internal.execution.steps.BuildCacheStep.lambda$execute$0(BuildCacheStep.java:74)
+	at org.gradle.internal.Either$Left.fold(Either.java:115)
+	at org.gradle.internal.execution.caching.CachingState.fold(CachingState.java:62)
+	at org.gradle.internal.execution.steps.BuildCacheStep.execute(BuildCacheStep.java:73)
+	at org.gradle.internal.execution.steps.BuildCacheStep.execute(BuildCacheStep.java:48)
+	at org.gradle.internal.execution.steps.StoreExecutionStateStep.execute(StoreExecutionStateStep.java:46)
+	at org.gradle.internal.execution.steps.StoreExecutionStateStep.execute(StoreExecutionStateStep.java:35)
+	at org.gradle.internal.execution.steps.SkipUpToDateStep.executeBecause(SkipUpToDateStep.java:75)
+	at org.gradle.internal.execution.steps.SkipUpToDateStep.lambda$execute$2(SkipUpToDateStep.java:53)
+	at org.gradle.internal.execution.steps.SkipUpToDateStep.execute(SkipUpToDateStep.java:53)
+	at org.gradle.internal.execution.steps.SkipUpToDateStep.execute(SkipUpToDateStep.java:35)
+	at org.gradle.internal.execution.steps.legacy.MarkSnapshottingInputsFinishedStep.execute(MarkSnapshottingInputsFinishedStep.java:37)
+	at org.gradle.internal.execution.steps.legacy.MarkSnapshottingInputsFinishedStep.execute(MarkSnapshottingInputsFinishedStep.java:27)
+	at org.gradle.internal.execution.steps.ResolveIncrementalCachingStateStep.executeDelegate(ResolveIncrementalCachingStateStep.java:49)
+	at org.gradle.internal.execution.steps.ResolveIncrementalCachingStateStep.executeDelegate(ResolveIncrementalCachingStateStep.java:27)
+	at org.gradle.internal.execution.steps.AbstractResolveCachingStateStep.execute(AbstractResolveCachingStateStep.java:71)
+	at org.gradle.internal.execution.steps.AbstractResolveCachingStateStep.execute(AbstractResolveCachingStateStep.java:39)
+	at org.gradle.internal.execution.steps.ResolveChangesStep.execute(ResolveChangesStep.java:65)
+	at org.gradle.internal.execution.steps.ResolveChangesStep.execute(ResolveChangesStep.java:36)
+	at org.gradle.internal.execution.steps.ValidateStep.execute(ValidateStep.java:107)
+	at org.gradle.internal.execution.steps.ValidateStep.execute(ValidateStep.java:56)
+	at org.gradle.internal.execution.steps.AbstractCaptureStateBeforeExecutionStep.execute(AbstractCaptureStateBeforeExecutionStep.java:64)
+	at org.gradle.internal.execution.steps.AbstractCaptureStateBeforeExecutionStep.execute(AbstractCaptureStateBeforeExecutionStep.java:43)
+	at org.gradle.internal.execution.steps.AbstractSkipEmptyWorkStep.executeWithNonEmptySources(AbstractSkipEmptyWorkStep.java:125)
+	at org.gradle.internal.execution.steps.AbstractSkipEmptyWorkStep.execute(AbstractSkipEmptyWorkStep.java:61)
+	at org.gradle.internal.execution.steps.AbstractSkipEmptyWorkStep.execute(AbstractSkipEmptyWorkStep.java:36)
+	at org.gradle.internal.execution.steps.legacy.MarkSnapshottingInputsStartedStep.execute(MarkSnapshottingInputsStartedStep.java:38)
+	at org.gradle.internal.execution.steps.LoadPreviousExecutionStateStep.execute(LoadPreviousExecutionStateStep.java:36)
+	at org.gradle.internal.execution.steps.LoadPreviousExecutionStateStep.execute(LoadPreviousExecutionStateStep.java:23)
+	at org.gradle.internal.execution.steps.HandleStaleOutputsStep.execute(HandleStaleOutputsStep.java:75)
+	at org.gradle.internal.execution.steps.HandleStaleOutputsStep.execute(HandleStaleOutputsStep.java:41)
+	at org.gradle.internal.execution.steps.AssignMutableWorkspaceStep.lambda$execute$0(AssignMutableWorkspaceStep.java:35)
+	at org.gradle.api.internal.tasks.execution.TaskExecution$4.withWorkspace(TaskExecution.java:289)
+	at org.gradle.internal.execution.steps.AssignMutableWorkspaceStep.execute(AssignMutableWorkspaceStep.java:31)
+	at org.gradle.internal.execution.steps.AssignMutableWorkspaceStep.execute(AssignMutableWorkspaceStep.java:22)
+	at org.gradle.internal.execution.steps.ChoosePipelineStep.execute(ChoosePipelineStep.java:40)
+	at org.gradle.internal.execution.steps.ChoosePipelineStep.execute(ChoosePipelineStep.java:23)
+	at org.gradle.internal.execution.steps.ExecuteWorkBuildOperationFiringStep.lambda$execute$2(ExecuteWorkBuildOperationFiringStep.java:67)
+	at org.gradle.internal.execution.steps.ExecuteWorkBuildOperationFiringStep.execute(ExecuteWorkBuildOperationFiringStep.java:67)
+	at org.gradle.internal.execution.steps.ExecuteWorkBuildOperationFiringStep.execute(ExecuteWorkBuildOperationFiringStep.java:39)
+	at org.gradle.internal.execution.steps.IdentityCacheStep.execute(IdentityCacheStep.java:46)
+	at org.gradle.internal.execution.steps.IdentityCacheStep.execute(IdentityCacheStep.java:34)
+	at org.gradle.internal.execution.steps.IdentifyStep.execute(IdentifyStep.java:48)
+	at org.gradle.internal.execution.steps.IdentifyStep.execute(IdentifyStep.java:35)
+	at org.gradle.internal.execution.impl.DefaultExecutionEngine$1.execute(DefaultExecutionEngine.java:61)
+	at org.gradle.api.internal.tasks.execution.ExecuteActionsTaskExecuter.executeIfValid(ExecuteActionsTaskExecuter.java:127)
+	at org.gradle.api.internal.tasks.execution.ExecuteActionsTaskExecuter.execute(ExecuteActionsTaskExecuter.java:116)
+	at org.gradle.api.internal.tasks.execution.ProblemsTaskPathTrackingTaskExecuter.execute(ProblemsTaskPathTrackingTaskExecuter.java:40)
+	at org.gradle.api.internal.tasks.execution.FinalizePropertiesTaskExecuter.execute(FinalizePropertiesTaskExecuter.java:46)
+	at org.gradle.api.internal.tasks.execution.ResolveTaskExecutionModeExecuter.execute(ResolveTaskExecutionModeExecuter.java:51)
+	at org.gradle.api.internal.tasks.execution.SkipTaskWithNoActionsExecuter.execute(SkipTaskWithNoActionsExecuter.java:57)
+	at org.gradle.api.internal.tasks.execution.SkipOnlyIfTaskExecuter.execute(SkipOnlyIfTaskExecuter.java:74)
+	at org.gradle.api.internal.tasks.execution.CatchExceptionTaskExecuter.execute(CatchExceptionTaskExecuter.java:36)
+	at org.gradle.api.internal.tasks.execution.EventFiringTaskExecuter$1.executeTask(EventFiringTaskExecuter.java:77)
+	at org.gradle.api.internal.tasks.execution.EventFiringTaskExecuter$1.call(EventFiringTaskExecuter.java:55)
+	at org.gradle.api.internal.tasks.execution.EventFiringTaskExecuter$1.call(EventFiringTaskExecuter.java:52)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner$CallableBuildOperationWorker.execute(DefaultBuildOperationRunner.java:210)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner$CallableBuildOperationWorker.execute(DefaultBuildOperationRunner.java:205)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner$2.execute(DefaultBuildOperationRunner.java:67)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner$2.execute(DefaultBuildOperationRunner.java:60)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner.execute(DefaultBuildOperationRunner.java:167)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner.execute(DefaultBuildOperationRunner.java:60)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner.call(DefaultBuildOperationRunner.java:54)
+	at org.gradle.api.internal.tasks.execution.EventFiringTaskExecuter.execute(EventFiringTaskExecuter.java:52)
+	at org.gradle.execution.plan.LocalTaskNodeExecutor.execute(LocalTaskNodeExecutor.java:42)
+	at org.gradle.execution.taskgraph.DefaultTaskExecutionGraph$InvokeNodeExecutorsAction.execute(DefaultTaskExecutionGraph.java:331)
+	at org.gradle.execution.taskgraph.DefaultTaskExecutionGraph$InvokeNodeExecutorsAction.execute(DefaultTaskExecutionGraph.java:318)
+	at org.gradle.execution.taskgraph.DefaultTaskExecutionGraph$BuildOperationAwareExecutionAction.lambda$execute$0(DefaultTaskExecutionGraph.java:314)
+	at org.gradle.internal.operations.CurrentBuildOperationRef.with(CurrentBuildOperationRef.java:85)
+	at org.gradle.execution.taskgraph.DefaultTaskExecutionGraph$BuildOperationAwareExecutionAction.execute(DefaultTaskExecutionGraph.java:314)
+	at org.gradle.execution.taskgraph.DefaultTaskExecutionGraph$BuildOperationAwareExecutionAction.execute(DefaultTaskExecutionGraph.java:303)
+	at org.gradle.execution.plan.DefaultPlanExecutor$ExecutorWorker.execute(DefaultPlanExecutor.java:459)
+	at org.gradle.execution.plan.DefaultPlanExecutor$ExecutorWorker.run(DefaultPlanExecutor.java:376)
+	at org.gradle.internal.concurrent.ExecutorPolicy$CatchAndRecordFailures.onExecute(ExecutorPolicy.java:64)
+	at org.gradle.internal.concurrent.AbstractManagedExecutor$1.run(AbstractManagedExecutor.java:48)
+
+
+Deprecated Gradle features were used in this build, making it incompatible with Gradle 9.0.
+
+You can use '--warning-mode all' to show the individual deprecation warnings and determine if they come from your own scripts or plugins.
+
+For more on this, please refer to https://docs.gradle.org/8.13/userguide/command_line_interface.html#sec:command_line_warnings in the Gradle documentation.
+
+BUILD FAILED in 1m 33s
+51 actionable tasks: 51 executed
