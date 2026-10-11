@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>LUCIFER — Liquid Crystal UI Redesign · 10 Screen Mockups</title>
+<style>
+  :root{
+    --bg:#06070F;
+    --cyan:#35E6FF;
+    --violet:#8B6CFF;
+    --magenta:#FF4FD8;
+    --mint:#7CFFCB;
+    --ink:#EAF0FF;
+    --dim:#9AA6C4;
+    --glass:rgba(255,255,255,.055);
+    --glass-2:rgba(255,255,255,.085);
+    --line:rgba(255,255,255,.14);
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;background:
+     radial-gradient(1200px 700px at 12% -5%, rgba(139,108,255,.20), transparent 60%),
+     radial-gradient(900px 600px at 88% 0%, rgba(53,230,255,.18), transparent 60%),
+     radial-gradient(800px 700px at 60% 100%, rgba(255,79,216,.14), transparent 60%),
+     var(--bg);
+     color:var(--ink);
+     font-family:"Inter","Segoe UI",Roboto,system-ui,-apple-system,"Helvetica Neue",Arial,sans-serif;
+     -webkit-font-smoothing:antialiased;}
+  a{color:var(--cyan);text-decoration:none}
+  .wrap{max-width:1280px;margin:0 auto;padding:44px 22px 100px}
+
+  .glass{background:var(--glass);border:1px solid var(--line);border-radius:22px;
+         backdrop-filter:blur(18px) saturate(140%);-webkit-backdrop-filter:blur(18px) saturate(140%);
+         box-shadow:0 24px 60px rgba(0,0,0,.45), inset 0 1px 0 rgba(255,255,255,.18);}
+
+  header.hero{padding:26px 26px 22px;margin-bottom:30px}
+  .kicker{font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--cyan);opacity:.9}
+  h1{margin:10px 0 8px;font-size:40px;line-height:1.05;letter-spacing:-.02em}
+  h1 span{background:linear-gradient(92deg,var(--cyan),var(--violet) 45%,var(--magenta));
+          -webkit-background-clip:text;background-clip:text;color:transparent}
+  .sub{color:var(--dim);max-width:820px;line-height:1.6;font-size:15px}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}
+  .chip{font-size:11.5px;letter-spacing:.06em;text-transform:uppercase;padding:7px 12px;border-radius:999px;
+        background:var(--glass-2);border:1px solid var(--line);color:var(--ink)}
+  .chip.on{background:linear-gradient(92deg,rgba(53,230,255,.22),rgba(255,79,216,.22));border-color:rgba(53,230,255,.5)}
+
+  .swatches{display:flex;flex-wrap:wrap;gap:14px;margin-top:22px}
+  .sw{display:flex;align-items:center;gap:10px;font-size:12px;color:var(--dim)}
+  .dot{width:26px;height:26px;border-radius:9px;box-shadow:0 0 22px currentColor}
+
+  nav.toc{position:sticky;top:0;z-index:20;margin:0 -22px 26px;padding:12px 22px;
+          background:rgba(6,7,15,.72);backdrop-filter:blur(16px);border-bottom:1px solid var(--line);
+          display:flex;gap:8px;overflow-x:auto;scrollbar-width:none}
+  nav.toc::-webkit-scrollbar{display:none}
+  nav.toc a{white-space:nowrap;font-size:12px;padding:8px 12px;border-radius:999px;
+            background:var(--glass);border:1px solid var(--line);color:var(--ink)}
+  nav.toc a:hover{border-color:var(--cyan);color:var(--cyan)}
+
+  section.screen{margin:0 0 42px;overflow:hidden}
+  .screen-head{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;padding:22px 24px 6px}
+  .num{font-size:12px;font-weight:700;letter-spacing:.2em;color:var(--cyan)}
+  .screen-head h2{margin:0;font-size:24px;letter-spacing:-.01em}
+  .tag{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--dim);
+       border:1px solid var(--line);padding:5px 10px;border-radius:999px}
+  .screen-body{display:grid;grid-template-columns:1fr;gap:0}
+  .shot{padding:14px 14px 0}
+  .shot img{width:100%;display:block;border-radius:16px;border:1px solid var(--line);
+            box-shadow:0 30px 70px rgba(0,0,0,.55)}
+  .notes{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:18px;padding:20px 24px 24px}
+  .note h3{margin:0 0 8px;font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--dim)}
+  .note ul{margin:0;padding-left:18px;color:var(--ink);font-size:13.5px;line-height:1.7}
+  .note li::marker{color:var(--cyan)}
+  .note.new li::marker{color:var(--magenta)}
+
+  table{width:100%;border-collapse:collapse;font-size:13.5px}
+  th,td{text-align:left;padding:11px 12px;border-bottom:1px solid rgba(255,255,255,.09);vertical-align:top}
+  th{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--dim)}
+  code{background:rgba(255,255,255,.07);padding:2px 6px;border-radius:6px;font-size:12px;color:var(--mint)}
+
+  .callout{padding:18px 22px;margin:0 0 34px;border-left:3px solid var(--magenta);font-size:14px;line-height:1.7;color:var(--ink)}
+  .callout b{color:var(--magenta)}
+  footer{color:var(--dim);font-size:12.5px;text-align:center;padding-top:20px;line-height:1.8}
+  @media (max-width:700px){h1{font-size:29px} .wrap{padding:26px 14px 70px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="hero glass">
+    <div class="kicker">LUCIFER LAUNCHER V2 · UI DIRECTION</div>
+    <h1>Liquid Crystal — <span>10 brand-new tab screens</span></h1>
+    <p class="sub">
+      A complete visual rebuild of every tab page in your CS&nbsp;Launcher&nbsp;V2 fork. The old left icon rail is gone,
+      the white pill LAUNCH button is gone, the flat widget cards are gone. Everything now floats as thick frosted
+      glass over a deep-space aurora, with liquid light cores, chromatic edges and a bottom orb dock.
+      <strong>No feature was removed</strong> — every item that exists today has an exact new home (see the parity table at the end).
+    </p>
+    <div class="chips">
+      <span class="chip on">Frosted liquid glass</span>
+      <span class="chip">Bottom orb dock · no left rail</span>
+      <span class="chip">No white pill play button</span>
+      <span class="chip">Zero flat widgets</span>
+      <span class="chip">5 fixed orbs + account medallion</span>
+      <span class="chip">Edge-to-edge 16:9 landscape</span>
+    </div>
+    <div class="swatches">
+      <div class="sw"><div class="dot" style="background:#06070F;color:#06070F"></div>Void #06070F</div>
+      <div class="sw"><div class="dot" style="background:#35E6FF;color:#35E6FF"></div>Crystal Cyan #35E6FF</div>
+      <div class="sw"><div class="dot" style="background:#8B6CFF;color:#8B6CFF"></div>Aura Violet #8B6CFF</div>
+      <div class="sw"><div class="dot" style="background:#FF4FD8;color:#FF4FD8"></div>Prism Magenta #FF4FD8</div>
+      <div class="sw"><div class="dot" style="background:#7CFFCB;color:#7CFFCB"></div>Reactor Mint #7CFFCB</div>
+    </div>
+  </header>
+
+  <nav class="toc">
+    <a href="#s1">01 Home</a>
+    <a href="#s2">02 Accounts</a>
+    <a href="#s3">03 Instances</a>
+    <a href="#s4">04 Versions</a>
+    <a href="#s5">05 Mod Store</a>
+    <a href="#s6">06 Skin Studio</a>
+    <a href="#s7">07 Server Hub</a>
+    <a href="#s8">08 Performance</a>
+    <a href="#s9">09 Input Studio</a>
+    <a href="#s10">10 Settings &amp; About</a>
+    <a href="#system">Design system</a>
+    <a href="#parity">Feature parity</a>
+  </nav>
+
+  <div class="callout glass">
+    <b>What changed everywhere:</b> the 6-icon left rail → a floating 5-orb glass dock at the bottom centre
+    (Home · Instances · Mod Store · Server Hub · Settings) with the account identity moved into a circular medallion
+    in the top right. The big white pill LAUNCH → a circular <em>liquid core</em> orb with an orbiting progress halo.
+    Cursor Studio + Custom Controls + Gamepad Mapper → one merged <em>Input Studio</em>. Nothing else is lost — Login,
+    Wiki/Discord, Mod Store, Version Manager, Modpacks, Skins, Servers, Performance, Custom Controls, Cursor Studio,
+    Client Features, About and the Plus Pro upsell all still have their own surface.
+  </div>
+
+  <!-- 01 -->
+  <section class="screen glass" id="s1">
+    <div class="screen-head"><span class="num">01</span><h2>Nexus Home</h2><span class="tag">launcher hub</span></div>
+    <div class="screen-body">
+      <div class="shot"><img src="01-nexus-home.jpg" alt="Nexus Home mockup" /></div>
+      <div class="notes">
+        <div class="note">
+          <h3>Kept from today</h3>
+          <ul>
+            <li>LUCIFER / CS Launcher Plus branding tile + "Made in India" flag</li>
+            <li>YouTube &amp; Discord shortcut buttons</li>
+            <li>Account chip (name, <code>LOCAL</code> badge, spinner chevron)</li>
+            <li>Featured <strong>CS Network</strong> server beacon with OFFICIAL badge, address, quick PLAY</li>
+            <li>Skin/model preview character with floating name tag</li>
+            <li>Launch action, skin button, gamepad button</li>
+            <li>Version pill (was the bottom-left version spinner)</li>
+            <li>Instance cards with play + 3-dot menu, and the dashed "+ New Instance" card</li>
+          </ul>
+        </div>
+        <div class="note new">
+          <h3>New here</h3>
+          <ul>
+            <li>Vertical rail deleted → bottom orb dock, home orb lit with a liquid core</li>
+            <li>LAUNCH pill → circular liquid-core orb + orbiting progress halo (also shows download %)</li>
+            <li>Server beacon floats top-left as a glass card instead of a wide header strip</li>
+            <li>Instance cards became frosted slabs with a violet "active instance" rim</li>
+            <li>Character stands on a crystal pedestal with an idle glow ring — the whole home is now a stage, not a form</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 02 -->
+  <section class="screen glass" id="s2">
+    <div class="screen-head"><span class="num">02</span><h2>Accounts — "Who is playing?"</h2><span class="tag">account sheet</span></div>
+    <div class="screen-body">
+      <div class="shot"><img src="02-accounts-who-is-playing.jpg" alt="Accounts mockup" /></div>
+      <div class="notes">
+        <div class="note">
+          <h3>Kept from today</h3>
+          <ul>
+            <li>Sheet title "Who is playing?" with account count badge and close button</li>
+            <li>"Add account · CREATE OR SIGN IN" dashed row</li>
+            <li>Microsoft, Ely.by and Local sign-in paths</li>
+            <li>Active account row: head medallion, name, <code>LOCAL</code> chip, "Local · Active skin slot 2"</li>
+            <li>Selected check + delete (bin) action, footer hint line</li>
+          </ul>
+        </div>
+        <div class="note new">
+          <h3>New here</h3>
+          <ul>
+            <li>Rounded floating glass sheet with a chromatic rim instead of a flat full-height dialog</li>
+            <li>Sign-in providers exposed as three glowing brand orbs (Microsoft / Ely.by / Local) instead of hidden behind one row</li>
+            <li>Check action is a lit cyan orb; delete is a separate neutral orb — clearer tap targets</li>
+            <li>Dock stays visible underneath so context is never lost</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 03 -->
+  <section class="screen glass" id="s3">
+    <div class="screen-head"><span class="num">03</span><h2>Instances &amp; Profiles</h2><span class="tag">profile ecosystem</span></div>
+    <div class="screen-body">
+      <div class="shot"><img src="03-instances-profiles.jpg" alt="Instances mockup" /></div>
+      <div class="notes">
+        <div class="note">
+          <h3>Kept from today</h3>
+          <ul>
+            <li>Profile list with per-profile icons and active indicator</li>
+            <li>Instance hero: modpack icon, version name, loader / Java / RAM / FPS chips</li>
+            <li>Launch, Clone, Edit, Delete actions (cloned instances supported)</li>
+            <li>Storage + mod count line, "last played" line</li>
+            <li>Instance settings: name field, version selector, RAM slider</li>
+            <li>New modpack creation, import/export of profiles</li>
+          </ul>
+        </div>
+        <div class="note new">
+          <h3>New here</h3>
+          <ul>
+            <li>Two-pane "control room": profile column on the left, live detail stage on the right</li>
+            <li>Each profile row is a separate floating glass slab, active one wrapped in violet light</li>
+            <li>Feature chips (Fabric / Java / RAM / FPS) read as glass micro-capsules, not flat tags</li>
+            <li>Actions became glass pills in a single row — no hidden overflow menu</li>
+            <li>Import / export / new modpack live in the dashed creation tile</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 04 -->
+  <section class="screen glass" id="s4">
+    <div class="screen-head"><span class="num">04</span><h2>Version Manager</h2><span class="tag">downloads &amp; loaders</span></div>
+    <div class="screen-body">
+      <div class="shot"><img src="04-version-manager.jpg" alt="Version Manager mockup" /></div>
+      <div class="notes">
+        <div class="note">
+          <h3>Kept from today</h3>
+          <ul>
+            <li>Version list with install state and per-version install action</li>
+            <li>Loader filters: Vanilla, Forge, NeoForge, Fabric, Quilt, OptiFine, BTA</li>
+            <li>Version detail: release info, download size, stability</li>
+            <li>Download queue with progress and pause/cancel (was the Download List screen)</li>
+            <li>All loader install fragments still reachable (Forge / NeoForge / Fabric-like / Quilt / OptiFine / BTA)</li>
+          </ul>
+        </div>
+        <div class="note new">
+          <h3>New here</h3>
+          <ul>
+            <li>Filter row is a floating chip strip; the active loader glows with a liquid edge</li>
+            <li>Right pane is a "cartridge bay": floating voxel cube, install button filled with animated liquid</li>
+            <li>Download queue is a circular progress orb instead of a linear bar</li>
+            <li>Loaders also appear as six glass tiles at the bottom for one-tap jumps straight into that installer</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 05 -->
+  <section class="screen glass" id="s5">
+    <div class="screen-head"><span class="num">05</span><h2>Mod Store &amp; Modpack Builder</h2><span class="tag">content</span></div>
+    <div class="screen-body">
+      <div class="shot"><img src="05-mod-store-modpacks.jpg" alt="Mod Store mockup" /></div>
+      <div class="notes">
+        <div class="note">
+          <h3>Kept from today</h3>
+          <ul>
+            <li>Modrinth and CurseForge sources (segmented switch)</li>
+            <li>Search field, filters, sort</li>
+            <li>Mod cards with icon, name, downloads, version chip, installed badge</li>
+            <li>Mod detail: description, version picker, dependencies, screenshots, install</li>
+            <li>Per-mod download progress ring</li>
+            <li>Modpack builder in 6 steps: Loader, Version, Mods, Resourcepacks, Shaders, Review</li>
+            <li>Search / world / shader / resourcepack browsing and installed-mod management stay in this section</li>
+          </ul>
+        </div>
+        <div class="note new">
+          <h3>New here</h3>
+          <ul>
+            <li>Source switch glows with a liquid underline; active card lifted with frosted depth</li>
+            <li>Mod tiles are glass squircle cards, "Installed" as a lit mint capsule</li>
+            <li>Detail pane is a vertical showcase card with the Install button as a gradient liquid slab</li>
+            <li>Builder steps became a connected node track (progress path) instead of plain tabs</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 06 -->
+  <section class="screen glass" id="s6">
+    <div class="screen-head"><span class="num">06</span><h2>Skin Studio</h2><span class="tag">skins &amp; capes</span></div>
+    <div class="screen-body">
+      <div class="shot"><img src="06-skin-cape-studio.jpg" alt="Skin Studio mockup" /></div>
+      <div class="notes">
+        <div class="note">
+          <h3>Kept from today</h3>
+          <ul>
+            <li>Live 3D skin preview (the GL surface)</li>
+            <li>Classic / Slim model switcher</li>
+            <li>Skin slot: change, remove, current file path label</li>
+            <li>Cape slot: change, remove, current file label</li>
+            <li>Camera controls: reset, auto-rotate, zoom in, zoom out (and rotate reset)</li>
+            <li>Save / apply changes, reset to default</li>
+          </ul>
+        </div>
+        <div class="note new">
+          <h3>New here</h3>
+          <ul>
+            <li>Preview became a lit "stage" with a rotating pedestal ring and spotlight haze</li>
+            <li>Skin and cape are now twin glass slot cards with their own thumbnails</li>
+            <li>Camera actions are labelled round orbs under a CAMERA header — no bare icon row</li>
+            <li>Bottom thumbnail strip acts as a quick skin library (recent skins, no extra screens)</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 07 -->
+  <section class="screen glass" id="s7">
+    <div class="screen-head"><span class="num">07</span><h2>Server Hub</h2><span class="tag">multiplayer</span></div>
+    <div class="screen-body">
+      <div class="shot"><img src="07-server-hub.jpg" alt="Server Hub mockup" /></div>
+      <div class="notes">
+        <div class="note">
+          <h3>Kept from today</h3>
+          <ul>
+            <li>Featured CS Network card: logo, OFFICIAL badge, address, Velocity chip, live status line, PLAY / RANKS / DISCORD</li>
+            <li>licifermc card: address, ping meter, player count 0/69, Maintenance state, PLAY</li>
+            <li>Refresh, add server, remove server</li>
+            <li>servers.dat sync note (same list shows in Minecraft Multiplayer)</li>
+          </ul>
+        </div>
+        <div class="note new">
+          <h3>New here</h3>
+          <ul>
+            <li>Servers are stacked glass slabs with a signal meter rendered as live lit bars</li>
+            <li>Maintenance state shown as an amber/red glass warning band inside the card</li>
+            <li>PLAY buttons use liquid-green fill; secondary actions become gold/violet pills</li>
+            <li>Footer hint text is now a quiet micro-line instead of a paragraph block</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 08 -->
+  <section class="screen glass" id="s8">
+    <div class="screen-head"><span class="num">08</span><h2>Performance Lab</h2><span class="tag">game settings</span></div>
+    <div class="screen-body">
+      <div class="shot"><img src="08-performance-lab.jpg" alt="Performance Lab mockup" /></div>
+      <div class="notes">
+        <div class="note">
+          <h3>Kept from today</h3>
+          <ul>
+            <li>RAM allocation slider with value readout</li>
+            <li>Performance mode (Battery / Balanced / Performance)</li>
+            <li>Renderer selection: Holy GL4ES, Zink, Vulkan, ANGLE, VirGL</li>
+            <li>Frame rate limit presets (30 / 60 / 90 / 120 / Unlimited)</li>
+            <li>Java runtime choice (Java 8 / 17 / 21) and runtime settings entry</li>
+            <li>Resolution scale, gyroscope and related toggles</li>
+            <li>Client Features enable action (the Optix/enable flow) — now the lightning orb in the header</li>
+          </ul>
+        </div>
+        <div class="note new">
+          <h3>New here</h3>
+          <ul>
+            <li>Live telemetry card with an FPS sparkline, temperature and memory readouts</li>
+            <li>Sliders now have liquid cyan knobs with glow trails</li>
+            <li>Renderer options as glass tiles carrying their glyph, active one lit violet</li>
+            <li>Frame-rate presets as a chip cluster — one tap, no dropdown</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 09 -->
+  <section class="screen glass" id="s9">
+    <div class="screen-head"><span class="num">09</span><h2>Input Studio — Cursor · Touch · Gamepad</h2><span class="tag">controls merged</span></div>
+    <div class="screen-body">
+      <div class="shot"><img src="09-controls-cursor-studio.jpg" alt="Input Studio mockup" /></div>
+      <div class="notes">
+        <div class="note">
+          <h3>Kept from today</h3>
+          <ul>
+            <li>Cursor Studio: preview plate, cursor presets, size / opacity / animation-speed sliders, reset, export</li>
+            <li>Custom Controls: draggable on-screen layout editor, add button, add drawer button, save, load, default layout, per-version layouts</li>
+            <li>Gamepad mapper: button-to-action rows with rebinding, live mouse speed</li>
+          </ul>
+        </div>
+        <div class="note new">
+          <h3>New here</h3>
+          <ul>
+            <li>Three separate rail destinations merged into one segmented studio (Cursor / Touch / Gamepad) — fewer hops, zero feature loss</li>
+            <li>Editor controls drawn as frosted, glowing on-screen buttons with drag handles over a dim game preview</li>
+            <li>Toolbar (add, drawer, save, load, default) is a single row of labelled orbs</li>
+            <li>Gamepad mapping uses clean binding rows with a rebind orb + live mouse-speed slider</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 10 -->
+  <section class="screen glass" id="s10">
+    <div class="screen-head"><span class="num">10</span><h2>Settings &amp; About</h2><span class="tag">preferences</span></div>
+    <div class="screen-body">
+      <div class="shot"><img src="10-settings-about.jpg" alt="Settings and About mockup" /></div>
+      <div class="notes">
+        <div class="note">
+          <h3>Kept from today</h3>
+          <ul>
+            <li>Crown entry for <strong>CS Launcher Plus Pro</strong> — ₹90, "UI effects, animated cape, early updates"</li>
+            <li>Sections: General (updates, animations, download server), Game (RAM, performance mode, Java), Display, Controls</li>
+            <li>Settings search field</li>
+            <li>About panel: version v1.3.0, logo, license/privacy/changelog entries, Made in India</li>
+            <li>Launcher features grid: Profile Instances, Version Manager, Mod Management, Skin Support, Performance Tools, Custom Controls</li>
+          </ul>
+        </div>
+        <div class="note new">
+          <h3>New here</h3>
+          <ul>
+            <li>Section rows are floating glass slabs with coloured squircle icon tiles and chevrons</li>
+            <li>Update action is a dedicated orb with a down-arrow in the header</li>
+            <li>About became a right-hand glass column with its own header orb, feature cards and footer pills</li>
+            <li>Whole page keeps the dock, the palette and the glass language so Settings no longer looks like a different app</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SYSTEM -->
+  <section class="screen glass" id="system">
+    <div class="screen-head"><span class="num">◆</span><h2>Design system — Liquid Crystal</h2><span class="tag">how to build it</span></div>
+    <div class="notes" style="padding-top:10px">
+      <div class="note">
+        <h3>Surfaces</h3>
+        <ul>
+          <li>Base: void black <code>#06070F</code> + aurora nebula, bokeh embers, caustic haze, blurred voxel horizon</li>
+          <li>Panel: white at 5–9% over the backdrop, 24 dp squircle radius, 1 px white rim at 14–20%</li>
+          <li>Blur: 18–28 dp backdrop blur, saturation ~140%, plus a top-left specular highlight</li>
+          <li>Accent rim: 1 px cyan→magenta gradient, only on the focused/active element</li>
+        </ul>
+      </div>
+      <div class="note">
+        <h3>Motion &amp; light</h3>
+        <ul>
+          <li>Liquid cores: 2–3 layered translucent orbs with slow internal drift; they mark the current tab and the Launch action</li>
+          <li>Hover / press: 300 ms spring scale 1 → 1.04, rim brightens, caustic bloom grows</li>
+          <li>Transitions: sheets rise + fade with blur-in; the dock core slides between orbs</li>
+          <li>Progress always reads as light: orbiting halo on Launch, circular ring on downloads</li>
+        </ul>
+      </div>
+      <div class="note">
+        <h3>Android implementation notes</h3>
+        <ul>
+          <li>Backdrop blur: <code>RenderEffect.createBlurEffect</code> (API 31+) or a RealtimeBlurView/Haze fallback below that; always pair with a translucent fallback colour so low-end devices still read correctly</li>
+          <li>Rim light: layer-list / radial gradient drawables instead of 9-patch, so rims scale with density</li>
+          <li>Dock: single <code>FrameLayout</code> + 5 animated orbs replaces the left rail in <code>fragment_home_fastclient.xml</code></li>
+          <li>Launch orb: custom view with a rotating halo shader; hosts both launch and download progress states</li>
+          <li>Aurora backdrop: one static blurred asset + slow parallax layer beats a live shader for battery</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- PARITY -->
+  <section class="screen glass" id="parity">
+    <div class="screen-head"><span class="num">◆</span><h2>Feature parity — nothing removed</h2><span class="tag">old → new home</span></div>
+    <div class="notes" style="display:block;padding-top:6px">
+      <table>
+        <thead><tr><th>Today (in your fork)</th><th>New home in this UI</th></tr></thead>
+        <tbody>
+          <tr><td>Left icon rail (home, instances, cursor, gamepad, account, settings)</td><td>Bottom glass orb dock (Home · Instances · Mod Store · Server Hub · Settings) + account medallion in the top bar; cursor/gamepad live in Input Studio</td></tr>
+          <tr><td>Big white pill LAUNCH button</td><td>Circular liquid-core Launch orb with orbiting halo (doubles as download progress)</td></tr>
+          <tr><td>Version spinner + edit-profile button at the bottom</td><td>Version pill under the Launch orb; instance cards carry the play / edit actions</td></tr>
+          <tr><td>Accounts dialog — "Who is playing?"</td><td>Screen 02 — floating account glass sheet with Microsoft / Ely.by / Local orbs</td></tr>
+          <tr><td>Profile instances, clone / edit / remove, modpack creation, import &amp; export</td><td>Screen 03 — Instances &amp; Profiles control room</td></tr>
+          <tr><td>Version Manager + Forge / NeoForge / Fabric / Quilt / OptiFine / BTA installers</td><td>Screen 04 — Version Manager with loader tiles</td></tr>
+          <tr><td>Download list / queue</td><td>Screen 04 — circular queue ring card</td></tr>
+          <tr><td>Mod store (Modrinth + CurseForge), mod detail, versions, dependencies, mod management</td><td>Screen 05 — Mod Store showcase + install slab</td></tr>
+          <tr><td>Modpack builder (loader → version → mods → resourcepacks → shaders → review)</td><td>Screen 05 — connected node stepper</td></tr>
+          <tr><td>Skin manager (3D preview, classic/slim, skin &amp; cape, camera, reset)</td><td>Screen 06 — Skin Studio with pedestal stage</td></tr>
+          <tr><td>Server hub (CS Network featured, licifermc, add / refresh / remove, servers.dat sync)</td><td>Screen 07 — Server Hub glass slabs</td></tr>
+          <tr><td>RAM, performance mode, renderer, frame rate, Java runtime, resolution scale, gyro</td><td>Screen 08 — Performance Lab + live telemetry</td></tr>
+          <tr><td>Client features enable flow (with progress)</td><td>Screen 08 — lightning orb in the header, progress surface reused</td></tr>
+          <tr><td>Custom controls editor, gamepad mapper, cursor customization</td><td>Screen 09 — Input Studio (Cursor · Touch · Gamepad)</td></tr>
+          <tr><td>Settings sections + search + Plus Pro upsell + About / changelog / licences / privacy</td><td>Screen 10 — Settings &amp; About two-column layout</td></tr>
+          <tr><td>Wiki/News, Discord, YouTube, share logs, open game directory, run .jar</td><td>Header social orbs (YouTube / Discord) and the instance/utility tiles; all keep their existing handlers</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <footer>
+    LUCIFER LAUNCHER V2 · Liquid Crystal UI direction · 10 screens<br />
+    Mockups are AI-rendered visual direction (not pixel-accurate specs) — use them as the target look, then build the real layouts in Android XML.
+  </footer>
+</div>
+</body>
+</html>

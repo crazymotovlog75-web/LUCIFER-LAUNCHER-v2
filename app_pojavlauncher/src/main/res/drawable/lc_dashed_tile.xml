@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <solid android:color="#0A35E6FF" />
+    <corners android:radius="@dimen/lc_radius_card" />
+    <stroke
+        android:width="1.5dp"
+        android:color="#7035E6FF"
+        android:dashWidth="7dp"
+        android:dashGap="5dp" />
+</shape>

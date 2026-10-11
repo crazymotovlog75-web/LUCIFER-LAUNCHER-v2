@@ -1,32 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ripple xmlns:android="http://schemas.android.com/apk/res/android"
-    android:color="@color/neon_green_dim">
-    <item android:id="@android:id/mask">
-        <shape android:shape="rectangle">
-            <corners android:radius="14dp" />
-            <solid android:color="@android:color/white" />
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <shape>
+            <corners android:radius="@dimen/lc_radius_card" />
+            <gradient
+                android:angle="270"
+                android:startColor="#17FFFFFF"
+                android:endColor="#0AFFFFFF" />
+            <stroke android:width="1dp" android:color="@color/lc_rim" />
         </shape>
     </item>
-    <item>
-        <selector>
-            <item android:state_pressed="true">
-                <shape android:shape="rectangle">
-                    <corners android:radius="14dp" />
-                    <solid android:color="@color/card_bg_pressed" />
-                    <stroke
-                        android:width="1dp"
-                        android:color="@color/stroke_neon" />
-                </shape>
-            </item>
-            <item>
-                <shape android:shape="rectangle">
-                    <corners android:radius="14dp" />
-                    <solid android:color="@color/card_bg" />
-                    <stroke
-                        android:width="1dp"
-                        android:color="@color/stroke_neon" />
-                </shape>
-            </item>
-        </selector>
-    </item>
-</ripple>
+</layer-list>

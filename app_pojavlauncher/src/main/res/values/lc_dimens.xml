@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- ══ Liquid Crystal — dimensions ══ -->
+<resources>
+
+    <!-- corner radii -->
+    <dimen name="lc_radius_sheet">26dp</dimen>
+    <dimen name="lc_radius_card">20dp</dimen>
+    <dimen name="lc_radius_row">16dp</dimen>
+    <dimen name="lc_radius_field">16dp</dimen>
+    <dimen name="lc_radius_tile">14dp</dimen>
+
+    <!-- structure -->
+    <dimen name="lc_screen_pad">12dp</dimen>
+    <dimen name="lc_gap">10dp</dimen>
+    <dimen name="lc_gap_small">6dp</dimen>
+
+    <!-- top bar -->
+    <dimen name="lc_topbar_height">54dp</dimen>
+    <dimen name="lc_topbar_margin">8dp</dimen>
+
+    <!-- dock -->
+    <dimen name="lc_dock_height">58dp</dimen>
+    <dimen name="lc_dock_bottom_margin">8dp</dimen>
+    <dimen name="lc_dock_orb">44dp</dimen>
+    <dimen name="lc_dock_orb_icon">22dp</dimen>
+
+    <!-- orbs / toolbar -->
+    <dimen name="lc_orb">40dp</dimen>
+    <dimen name="lc_orb_icon">20dp</dimen>
+    <dimen name="lc_orb_small">32dp</dimen>
+    <dimen name="lc_orb_small_icon">16dp</dimen>
+
+    <!-- launch orb -->
+    <dimen name="lc_launch_orb">122dp</dimen>
+    <dimen name="lc_launch_halo">146dp</dimen>
+    <dimen name="lc_launch_icon">44dp</dimen>
+
+    <!-- stage -->
+    <dimen name="lc_stage_head">96dp</dimen>
+    <dimen name="lc_stage_glow">210dp</dimen>
+    <dimen name="lc_pedestal">168dp</dimen>
+
+    <!-- cards & tiles -->
+    <dimen name="lc_card_pad">14dp</dimen>
+    <dimen name="lc_tile">42dp</dimen>
+    <dimen name="lc_tile_icon">22dp</dimen>
+    <dimen name="lc_row_height">58dp</dimen>
+
+    <!-- type -->
+    <dimen name="lc_text_display">24sp</dimen>
+    <dimen name="lc_text_title">19sp</dimen>
+    <dimen name="lc_text_body">13sp</dimen>
+    <dimen name="lc_text_small">11sp</dimen>
+    <dimen name="lc_text_label">10sp</dimen>
+</resources>

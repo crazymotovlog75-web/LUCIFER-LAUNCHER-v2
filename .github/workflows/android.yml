@@ -75,10 +75,11 @@ jobs:
                           -PsigningKeyPassword=$KEY_PASSWORD \
                           -PsigningStorePassword=$STORE_PASSWORD"
           fi
+          set -o pipefail
           ./gradlew :app_pojavlauncher:assembleRelease $SIGNING_ARGS \
             -Pandroid.enableR8.fullMode=true \
             --no-daemon \
-            --stacktrace
+            --stacktrace 2>&1 | tee /tmp/gradle-release.log
 
           RELEASE_APK=$(find app_pojavlauncher/build/outputs/apk/release -name "*.apk" | head -n 1)
           if [ -n "$RELEASE_APK" ]; then
@@ -88,6 +89,34 @@ jobs:
           else
             echo "ERROR: Release APK not found" && exit 1
           fi
+
+      # ── Build diagnostics ───────────────────────────────────────────────────
+      # Surfaces the real compiler / resource errors as check annotations and publishes
+      # the full Gradle log on a side branch (ci-logs) so no artifact download is needed.
+      - name: Publish build log for diagnosis
+        if: failure()
+        run: |
+          LOG=/tmp/gradle-release.log
+          {
+            echo "## Build error report"
+            echo '```'
+            grep -aE "error:|error |What went wrong|FAILURE:|Execution failed|\\.java:[0-9]+|\\.xml:[0-9]+|AAPT|aapt2|Caused by|Unresolved reference" "$LOG" 2>/dev/null | head -80 || true
+            echo '--- last 30 lines ---'
+            tail -30 "$LOG" 2>/dev/null || true
+            echo '```'
+          } >> $GITHUB_STEP_SUMMARY
+          while IFS= read -r line; do
+            [ -n "$line" ] && echo "::error::$line"
+          done < <(grep -aE "error:|error |What went wrong|Execution failed|\\.java:[0-9]+|AAPT|aapt2" "$LOG" 2>/dev/null | head -12 || true)
+          [ -f "$LOG" ] || exit 0
+          rm -f ci-last-build.log
+          cp "$LOG" ci-last-build.log
+          git config user.name "ci-bot"
+          git config user.email "ci-bot@users.noreply.github.com"
+          git checkout -q -B ci-logs
+          git add -f ci-last-build.log
+          git commit -q -m "CI log for run $GITHUB_RUN_ID" || exit 0
+          git push -q -f origin ci-logs && echo "log published to ci-logs"
 
       # ── Debug APK (internal / QA only) ───────────────────────────────────────
       - name: Build Debug APK

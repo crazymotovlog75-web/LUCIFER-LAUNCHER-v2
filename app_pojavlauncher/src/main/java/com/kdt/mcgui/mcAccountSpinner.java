@@ -242,8 +242,8 @@ public class mcAccountSpinner extends AppCompatSpinner implements AdapterView.On
         // Make the spinner act like a button, since there is no item to really select
         setOnTouchListener((v, event) -> {
             if(event.getAction() != MotionEvent.ACTION_UP) return false;
-            // The activity should intercept this and spawn another fragment
-            ExtraCore.setValue(ExtraConstants.SELECT_AUTH_METHOD, true);
+            // Liquid Crystal: open the in-app account panel (no drop-down, no separate window)
+            ExtraCore.setValue(ExtraConstants.LC_OPEN_ACCOUNTS, true);
             return true;
         });
     }

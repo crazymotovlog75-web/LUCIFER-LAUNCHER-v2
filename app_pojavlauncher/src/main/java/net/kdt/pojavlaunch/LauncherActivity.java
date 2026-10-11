@@ -11,6 +11,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.widget.ImageView;
 import net.kdt.pojavlaunch.value.MinecraftAccount;
+import net.kdt.pojavlaunch.fragments.AccountsPanelFragment;
 import net.kdt.pojavlaunch.fragments.ClientFeaturesFragment;
 import net.kdt.pojavlaunch.fragments.ModsSearchFragment;
 import net.kdt.pojavlaunch.fragments.CursorCustomizationFragment;
@@ -43,6 +44,7 @@ import net.kdt.pojavlaunch.extra.ExtraListener;
 import net.kdt.pojavlaunch.fragments.MainMenuFragment;
 import net.kdt.pojavlaunch.fragments.MicrosoftLoginFragment;
 import net.kdt.pojavlaunch.fragments.SelectAuthFragment;
+import net.kdt.pojavlaunch.liquid.Liquid;
 import net.kdt.pojavlaunch.lifecycle.ContextAwareDoneListener;
 import net.kdt.pojavlaunch.lifecycle.ContextExecutor;
 import net.kdt.pojavlaunch.modloaders.modpacks.ModloaderInstallTracker;
@@ -127,6 +129,13 @@ public class LauncherActivity extends BaseActivity {
     };
 
     /* Listener for the auth method selection screen */
+    /** Liquid Crystal: the account medallion opens the in-app "Who is playing?" panel. */
+    private final ExtraListener<Boolean> mOpenAccounts = (key, value) -> {
+        if (isDestroyed() || isFinishing()) return false;
+        openInPaneOrSwap(AccountsPanelFragment.class, AccountsPanelFragment.TAG);
+        return false;
+    };
+
     private final ExtraListener<Boolean> mSelectAuthMethod = (key, value) -> {
         Fragment fragment = getSupportFragmentManager().findFragmentById(mFragmentView.getId());
         // Allow starting the add account only from the main menu, should it be moved to fragment itself ?
@@ -270,7 +279,6 @@ public class LauncherActivity extends BaseActivity {
         }
 
 
-        IconCacheJanitor.runJanitor();
         mRequestNotificationPermissionLauncher = registerForActivityResult(
                 new ActivityResultContracts.RequestPermission(),
                 isAllowed -> {
@@ -304,10 +312,22 @@ public class LauncherActivity extends BaseActivity {
         ProgressKeeper.addTaskCountListener(mProgressLayout);
         ExtraCore.addExtraListener(ExtraConstants.BACK_PREFERENCE, mBackPreferenceListener);
         ExtraCore.addExtraListener(ExtraConstants.SELECT_AUTH_METHOD, mSelectAuthMethod);
+        ExtraCore.addExtraListener(ExtraConstants.LC_OPEN_ACCOUNTS, mOpenAccounts);
 
         ExtraCore.addExtraListener(ExtraConstants.LAUNCH_GAME, mLaunchGameListener);
 
-        new AsyncVersionList().getVersionList(versions -> ExtraCore.setValue(ExtraConstants.RELEASE_TABLE, versions), false);
+        // ── startup performance ───────────────────────────────────────────────
+        // The version table fetch and the icon-cache janitor are both I/O heavy and were
+        // previously kicked off while the first frame was still being drawn. They are now
+        // deferred until the launcher UI is actually on screen, which cuts cold-start jank.
+        mFragmentView.postDelayed(() -> {
+            if (isDestroyed() || isFinishing()) return;
+            new AsyncVersionList().getVersionList(
+                    versions -> ExtraCore.setValue(ExtraConstants.RELEASE_TABLE, versions), false);
+        }, 700L);
+
+        mFragmentView.postDelayed(() -> PojavApplication.sExecutorService.execute(
+                IconCacheJanitor::runJanitor), 1200L);
 
         mInstallTracker = new ModloaderInstallTracker(this);
 
@@ -331,8 +351,24 @@ public class LauncherActivity extends BaseActivity {
         android.widget.Button btnClientFeatures = findViewById(R.id.btn_client_features);
         if (btnClientFeatures != null) {
             updateClientFeaturesButton(btnClientFeatures, mClientFeaturesManager.isEnabled());
-            startPremiumButtonPulse(btnClientFeatures);
         }
+        updateDockStateForVisibleScreen();
+    }
+
+    /** Lights the dock orb matching whatever screen is currently visible. */
+    private void updateDockStateForVisibleScreen() {
+        int orb = R.id.nav_home;
+        if (getVisibleFragment(SETTING_FRAGMENT_TAG) != null) {
+            orb = R.id.lc_dock_settings;
+        } else if (getVisibleFragment(net.kdt.pojavlaunch.fragments.ServerHubFragment.TAG) != null) {
+            orb = R.id.nav_servers;
+        } else if (getVisibleFragment(ModsSearchFragment.TAG) != null) {
+            orb = R.id.nav_mod_store;
+        } else if (getVisibleFragment(net.kdt.pojavlaunch.fragments.InstancePickerFragment.TAG) != null
+                || getVisibleFragment(net.kdt.pojavlaunch.fragments.ProfileEditorFragment.TAG) != null) {
+            orb = R.id.nav_instances;
+        }
+        updateDockState(orb);
     }
 
     @Override
@@ -356,6 +392,7 @@ public class LauncherActivity extends BaseActivity {
         ProgressKeeper.removeTaskCountListener(mProgressServiceKeeper);
         ExtraCore.removeExtraListenerFromValue(ExtraConstants.BACK_PREFERENCE, mBackPreferenceListener);
         ExtraCore.removeExtraListenerFromValue(ExtraConstants.SELECT_AUTH_METHOD, mSelectAuthMethod);
+        ExtraCore.removeExtraListenerFromValue(ExtraConstants.LC_OPEN_ACCOUNTS, mOpenAccounts);
         ExtraCore.removeExtraListenerFromValue(ExtraConstants.LAUNCH_GAME, mLaunchGameListener);
 
         getSupportFragmentManager().unregisterFragmentLifecycleCallbacks(mFragmentCallbackListener);
@@ -482,15 +519,30 @@ public class LauncherActivity extends BaseActivity {
 
     /** Stuff all the view boilerplate here */
 
-    /** Wire up the landscape header bar navigation buttons. */
+    /** Wire up the glass dock + top bar orbs (Liquid Crystal shell). */
     private void setupNavButtons() {
         View navModStore       = findViewById(R.id.nav_mod_store);
         View navCustomControls  = findViewById(R.id.nav_custom_controls);
         View navCursor          = findViewById(R.id.nav_cursor);
         View navHome            = findViewById(R.id.nav_home);
+        View navInstances       = findViewById(R.id.nav_instances);
+        View navServers         = findViewById(R.id.nav_servers);
         View btnHomeLogo        = findViewById(R.id.btn_home_logo);
         View tvLauncherTitle    = findViewById(R.id.tv_launcher_title);
         final android.widget.Button btnClientFeatures = findViewById(R.id.btn_client_features);
+
+        // social orbs in the top bar
+        View socialYoutube = findViewById(R.id.lc_social_youtube);
+        if (socialYoutube != null) {
+            socialYoutube.setOnClickListener(v -> Tools.openURL(this, Tools.URL_HOME));
+        }
+        View socialDiscord = findViewById(R.id.lc_social_discord);
+        if (socialDiscord != null) {
+            socialDiscord.setOnClickListener(v ->
+                    Tools.openURL(this, getString(R.string.discord_invite)));
+        }
+        Liquid.pressFeedback(socialYoutube, socialDiscord, navHome, navInstances, navModStore,
+                navServers, navCursor, navCustomControls);
 
         View.OnClickListener homeListener = v -> {
             // Always pop to ROOT when clicking home
@@ -501,7 +553,10 @@ public class LauncherActivity extends BaseActivity {
             }
         };
 
-        if (navHome != null)         navHome.setOnClickListener(homeListener);
+        if (navHome != null)         navHome.setOnClickListener(v -> {
+            homeListener.onClick(v);
+            updateDockState(R.id.nav_home);
+        });
         if (btnHomeLogo != null)     btnHomeLogo.setOnClickListener(homeListener);
         if (tvLauncherTitle != null) tvLauncherTitle.setOnClickListener(homeListener);
 
@@ -524,6 +579,7 @@ public class LauncherActivity extends BaseActivity {
                 } else {
                     Tools.swapFragment(this, ModsSearchFragment.class, ModsSearchFragment.TAG, null);
                 }
+                updateDockState(R.id.nav_mod_store);
             });
         }
 
@@ -550,7 +606,79 @@ public class LauncherActivity extends BaseActivity {
                 }
             });
         }
+
+        // ── glass dock: Instances + Server Hub (open in the right pane when available) ──
+        if (navInstances != null) {
+            navInstances.setOnClickListener(v -> {
+                openInPaneOrSwap(net.kdt.pojavlaunch.fragments.InstancePickerFragment.class,
+                        net.kdt.pojavlaunch.fragments.InstancePickerFragment.TAG);
+                updateDockState(R.id.nav_instances);
+            });
+        }
+
+        if (navServers != null) {
+            navServers.setOnClickListener(v -> {
+                openInPaneOrSwap(net.kdt.pojavlaunch.fragments.ServerHubFragment.class,
+                        net.kdt.pojavlaunch.fragments.ServerHubFragment.TAG);
+                updateDockState(R.id.nav_servers);
+            });
+        }
+
+        View dockSettings = findViewById(R.id.lc_dock_settings);
+        if (dockSettings != null && mSettingsButton != null) {
+            dockSettings.setOnClickListener(v -> {
+                mSettingsButton.performClick();
+                updateDockState(R.id.lc_dock_settings);
+            });
+        }
+        updateDockState(R.id.nav_home);
+        startShimmer();
         updateNavSkinIcon();
+    }
+
+    /**
+     * Opens a screen in the landscape right pane when possible, otherwise swaps it full-screen.
+     * Keeps every navigation path working in both layout configurations.
+     */
+    private void openInPaneOrSwap(Class<? extends Fragment> fragmentClass, String tag) {
+        Fragment frag = getVisibleFragment("ROOT");
+        if (frag instanceof MainMenuFragment) {
+            ((MainMenuFragment) frag).openChildPane(fragmentClass, tag, null);
+        } else {
+            Tools.swapFragment(this, fragmentClass, tag, null);
+        }
+    }
+
+    /** Lights the liquid core of the dock orb representing the current screen. */
+    private void updateDockState(int activeOrbId) {
+        int[] orbs = {R.id.nav_home, R.id.nav_instances, R.id.nav_mod_store,
+                R.id.nav_servers, R.id.lc_dock_settings};
+        int[] cores = {R.id.lc_dock_core_home, R.id.lc_dock_core_instances,
+                R.id.lc_dock_core_mods, R.id.lc_dock_core_servers, R.id.lc_dock_core_settings};
+        for (int i = 0; i < orbs.length; i++) {
+            View orb = findViewById(orbs[i]);
+            View core = findViewById(cores[i]);
+            if (orb == null && core == null) continue;
+            Liquid.setOrbActive(orb, core, orbs[i] == activeOrbId);
+        }
+    }
+
+    /**
+     * Slow drifting light sweep across the backdrop. Pure GPU translation (no invalidate,
+     * no shader, no allocation) so it costs nothing on the render thread.
+     */
+    private void startShimmer() {
+        View shimmer = findViewById(R.id.lc_shimmer);
+        if (shimmer == null || !Liquid.animationsEnabled()) return;
+        android.util.DisplayMetrics metrics = getResources().getDisplayMetrics();
+        float span = metrics.widthPixels * 1.2f;
+        shimmer.setTranslationX(-span);
+        shimmer.animate()
+                .translationX(span)
+                .setDuration(22000)
+                .setInterpolator(new android.view.animation.LinearInterpolator())
+                .withEndAction(this::startShimmer)
+                .start();
     }
 
     public void updateNavSkinIcon() {
@@ -574,9 +702,10 @@ public class LauncherActivity extends BaseActivity {
     }
 
     private void startPremiumButtonPulse(View btn) {
+        // Performance: this used to run an endless repeating alpha animation on the client-features
+        // orb, which forced a redraw every frame for the whole session. Only the press feedback
+        // (GPU-composited scale) is kept now.
         if (btn == null) return;
-        android.view.animation.Animation pulse = android.view.animation.AnimationUtils.loadAnimation(this, R.anim.pulse_animation);
-        btn.startAnimation(pulse);
         btn.setOnTouchListener((v, event) -> {
             switch (event.getAction()) {
                 case android.view.MotionEvent.ACTION_DOWN:
@@ -585,9 +714,7 @@ public class LauncherActivity extends BaseActivity {
                     break;
                 case android.view.MotionEvent.ACTION_UP:
                 case android.view.MotionEvent.ACTION_CANCEL:
-                    v.animate().scaleX(1.0f).scaleY(1.0f).setDuration(120).withEndAction(() -> {
-                        v.startAnimation(pulse);
-                    }).start();
+                    v.animate().scaleX(1.0f).scaleY(1.0f).setDuration(120).start();
                     break;
             }
             return false;
