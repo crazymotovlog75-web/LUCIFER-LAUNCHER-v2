@@ -47,8 +47,8 @@
         <item name="luciferWallpaper">@drawable/lucifer_wallpaper_01</item>
     </style>
     <style name="AppTheme.Gradient">
-        <item name="bgMainDrawable">@drawable/bg_gradient_default</item>
-        <item name="android:windowBackground">@drawable/bg_gradient_default</item>
+        <item name="bgMainDrawable">@drawable/bg_lucifer_scene_gradient</item>
+        <item name="android:windowBackground">@drawable/bg_lucifer_scene_gradient</item>
         <item name="colorBgBottomBar">@color/cu_bg_bottom_bar</item>
         <item name="colorBgStatusBar">@color/cu_bg_status_bar</item>
         <item name="colorAccent">?attr/luciferAccent</item>
@@ -66,8 +66,8 @@
         <item name="themeAccent">@color/mb_accent</item>
         <item name="colorTextPrimary">@color/mb_text_primary</item>
         <item name="colorTextSecondary">@color/mb_text_secondary</item>
-        <item name="bgMainDrawable">#121212</item>
-        <item name="android:windowBackground">#121212</item>
+        <item name="bgMainDrawable">@drawable/bg_lucifer_scene</item>
+        <item name="android:windowBackground">@drawable/bg_lucifer_scene</item>
         <item name="colorAccent">?attr/luciferAccent</item>
         <item name="colorOnSurface">@color/mb_text_primary</item>
         <item name="colorOnSurfaceVariant">@color/mb_text_secondary</item>
@@ -88,8 +88,8 @@
     <style name="AppTheme.MidnightBlue.Gradient">
         <item name="android:statusBarColor">@color/mb_bg_status_bar</item>
         <item name="android:navigationBarColor">@color/mb_bg_app</item>
-        <item name="bgMainDrawable">@drawable/bg_gradient_midnight_blue</item>
-        <item name="android:windowBackground">@drawable/bg_gradient_midnight_blue</item>
+        <item name="bgMainDrawable">@drawable/bg_lucifer_scene_gradient</item>
+        <item name="android:windowBackground">@drawable/bg_lucifer_scene_gradient</item>
         <item name="colorBgBottomBar">@color/mb_bg_bottom_bar</item>
         <item name="colorBgStatusBar">@color/mb_bg_status_bar</item>
         <item name="colorAccent">?attr/luciferAccent</item>
@@ -107,8 +107,8 @@
         <item name="themeAccent">@color/fg_accent</item>
         <item name="colorTextPrimary">@color/fg_text_primary</item>
         <item name="colorTextSecondary">@color/fg_text_secondary</item>
-        <item name="bgMainDrawable">#121212</item>
-        <item name="android:windowBackground">#121212</item>
+        <item name="bgMainDrawable">@drawable/bg_lucifer_scene</item>
+        <item name="android:windowBackground">@drawable/bg_lucifer_scene</item>
         <item name="colorAccent">?attr/luciferAccent</item>
         <item name="colorOnSurface">@color/fg_text_primary</item>
         <item name="colorOnSurfaceVariant">@color/fg_text_secondary</item>
@@ -129,8 +129,8 @@
     <style name="AppTheme.ForestGreen.Gradient">
         <item name="android:statusBarColor">@color/fg_bg_status_bar</item>
         <item name="android:navigationBarColor">@color/fg_bg_app</item>
-        <item name="bgMainDrawable">@drawable/bg_gradient_forest_green</item>
-        <item name="android:windowBackground">@drawable/bg_gradient_forest_green</item>
+        <item name="bgMainDrawable">@drawable/bg_lucifer_scene_gradient</item>
+        <item name="android:windowBackground">@drawable/bg_lucifer_scene_gradient</item>
         <item name="colorBgBottomBar">@color/fg_bg_bottom_bar</item>
         <item name="colorBgStatusBar">@color/fg_bg_status_bar</item>
         <item name="colorAccent">?attr/luciferAccent</item>
@@ -148,8 +148,8 @@
         <item name="themeAccent">@color/cr_accent</item>
         <item name="colorTextPrimary">@color/cr_text_primary</item>
         <item name="colorTextSecondary">@color/cr_text_secondary</item>
-        <item name="bgMainDrawable">#121212</item>
-        <item name="android:windowBackground">#121212</item>
+        <item name="bgMainDrawable">@drawable/bg_lucifer_scene</item>
+        <item name="android:windowBackground">@drawable/bg_lucifer_scene</item>
         <item name="colorAccent">?attr/luciferAccent</item>
         <item name="colorOnSurface">@color/cr_text_primary</item>
         <item name="colorOnSurfaceVariant">@color/cr_text_secondary</item>
@@ -170,8 +170,8 @@
     <style name="AppTheme.Crimson.Gradient">
         <item name="android:statusBarColor">@color/cr_bg_status_bar</item>
         <item name="android:navigationBarColor">@color/cr_bg_app</item>
-        <item name="bgMainDrawable">@drawable/bg_gradient_crimson</item>
-        <item name="android:windowBackground">@drawable/bg_gradient_crimson</item>
+        <item name="bgMainDrawable">@drawable/bg_lucifer_scene_gradient</item>
+        <item name="android:windowBackground">@drawable/bg_lucifer_scene_gradient</item>
         <item name="colorBgBottomBar">@color/cr_bg_bottom_bar</item>
         <item name="colorBgStatusBar">@color/cr_bg_status_bar</item>
         <item name="colorAccent">?attr/luciferAccent</item>
@@ -189,8 +189,8 @@
         <item name="themeAccent">@color/am_accent</item>
         <item name="colorTextPrimary">@color/am_text_primary</item>
         <item name="colorTextSecondary">@color/am_text_secondary</item>
-        <item name="bgMainDrawable">#121212</item>
-        <item name="android:windowBackground">#121212</item>
+        <item name="bgMainDrawable">@drawable/bg_lucifer_scene</item>
+        <item name="android:windowBackground">@drawable/bg_lucifer_scene</item>
         <item name="colorAccent">?attr/luciferAccent</item>
         <item name="colorOnSurface">@color/am_text_primary</item>
         <item name="colorOnSurfaceVariant">@color/am_text_secondary</item>
@@ -211,8 +211,8 @@
     <style name="AppTheme.Amethyst.Gradient">
         <item name="android:statusBarColor">@color/am_bg_status_bar</item>
         <item name="android:navigationBarColor">@color/am_bg_app</item>
-        <item name="bgMainDrawable">@drawable/bg_gradient_amethyst</item>
-        <item name="android:windowBackground">@drawable/bg_gradient_amethyst</item>
+        <item name="bgMainDrawable">@drawable/bg_lucifer_scene_gradient</item>
+        <item name="android:windowBackground">@drawable/bg_lucifer_scene_gradient</item>
         <item name="colorBgBottomBar">@color/am_bg_bottom_bar</item>
         <item name="colorBgStatusBar">@color/am_bg_status_bar</item>
         <item name="colorAccent">?attr/luciferAccent</item>
@@ -230,8 +230,8 @@
         <item name="themeAccent">@color/ar_accent</item>
         <item name="colorTextPrimary">@color/ar_text_primary</item>
         <item name="colorTextSecondary">@color/ar_text_secondary</item>
-        <item name="bgMainDrawable">#121212</item>
-        <item name="android:windowBackground">#121212</item>
+        <item name="bgMainDrawable">@drawable/bg_lucifer_scene</item>
+        <item name="android:windowBackground">@drawable/bg_lucifer_scene</item>
         <item name="colorAccent">?attr/luciferAccent</item>
         <item name="luciferAccent">#00BCD4</item>
         <item name="luciferSecondary">#74E5F0</item>
@@ -248,8 +248,8 @@
     <style name="AppTheme.Arctic.Gradient">
         <item name="android:statusBarColor">@color/ar_bg_status_bar</item>
         <item name="android:navigationBarColor">@color/ar_bg_app</item>
-        <item name="bgMainDrawable">@drawable/bg_gradient_arctic</item>
-        <item name="android:windowBackground">@drawable/bg_gradient_arctic</item>
+        <item name="bgMainDrawable">@drawable/bg_lucifer_scene_gradient</item>
+        <item name="android:windowBackground">@drawable/bg_lucifer_scene_gradient</item>
         <item name="colorBgBottomBar">@color/ar_bg_bottom_bar</item>
         <item name="colorBgStatusBar">@color/ar_bg_status_bar</item>
         <item name="colorAccent">?attr/luciferAccent</item>

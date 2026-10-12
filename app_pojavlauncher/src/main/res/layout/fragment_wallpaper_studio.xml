@@ -7,7 +7,7 @@
     android:paddingStart="16dp"
     android:paddingEnd="16dp"
     android:paddingTop="10dp"
-    android:paddingBottom="8dp">
+    android:paddingBottom="8dp" android:background="@android:color/transparent">
 
     <LinearLayout
         android:id="@+id/wallpaper_header"

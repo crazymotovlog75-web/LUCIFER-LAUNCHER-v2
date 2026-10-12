@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:paddingHorizontal="@dimen/_16sdp"
     android:paddingTop="@dimen/_10sdp"
-    android:background="@drawable/bg_lucifer_scene">
+    android:background="@android:color/transparent">
 
     <LinearLayout
         android:id="@+id/server_header"

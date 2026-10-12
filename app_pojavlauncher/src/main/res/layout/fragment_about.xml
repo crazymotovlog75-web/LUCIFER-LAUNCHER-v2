@@ -6,7 +6,7 @@
     android:paddingHorizontal="@dimen/_16sdp"
     android:paddingTop="@dimen/_10sdp"
     android:paddingBottom="@dimen/_8sdp"
-    android:background="@drawable/bg_lucifer_scene">
+    android:background="@android:color/transparent">
 
     <LinearLayout
         android:layout_width="match_parent"

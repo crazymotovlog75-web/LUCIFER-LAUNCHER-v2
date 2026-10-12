@@ -591,7 +591,7 @@
     <string name="wallpaper_card_description">Apply %1$s wallpaper and matching color palette</string>
     <string name="wallpaper_card_selected_description">%1$s wallpaper and palette are selected</string>
     <string-array name="lucifer_wallpaper_names" translatable="false">
-        <item>Aurora Flow</item>
+        <item>Ender Dragon</item>
         <item>Arctic Flux</item>
         <item>Violet Nebula</item>
         <item>Solar Ember</item>

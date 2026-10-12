@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- 01. Aurora Flow -->
-    <color name="wallpaper_01_accent">#71E4D6</color>
-    <color name="wallpaper_01_secondary">#94ADFF</color>
-    <color name="wallpaper_01_highlight">#D4FFF8</color>
-    <color name="wallpaper_01_surface">#07131D</color>
-    <color name="wallpaper_01_surface_high">#1E4146</color>
-    <color name="wallpaper_01_glass">#CC0F242C</color>
-    <color name="wallpaper_01_glass_high">#DB2D5054</color>
-    <color name="wallpaper_01_border">#7A71E4D6</color>
-    <color name="wallpaper_01_accent_dim">#5571E4D6</color>
-    <color name="wallpaper_01_backdrop">#8A07131D</color>
+    <!-- 01. Ender Dragon -->
+    <color name="wallpaper_01_accent">#D28BFF</color>
+    <color name="wallpaper_01_secondary">#FF78E8</color>
+    <color name="wallpaper_01_highlight">#F1D0FF</color>
+    <color name="wallpaper_01_surface">#10071C</color>
+    <color name="wallpaper_01_surface_high">#341A52</color>
+    <color name="wallpaper_01_glass">#CC170A29</color>
+    <color name="wallpaper_01_glass_high">#DB35145A</color>
+    <color name="wallpaper_01_border">#7AD28BFF</color>
+    <color name="wallpaper_01_accent_dim">#55D28BFF</color>
+    <color name="wallpaper_01_backdrop">#8A10061A</color>
 
     <!-- 02. Arctic Flux -->
     <color name="wallpaper_02_accent">#72C8FF</color>
