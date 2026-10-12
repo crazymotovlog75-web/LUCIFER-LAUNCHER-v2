@@ -22,9 +22,9 @@
             android:id="@+id/iv_loading_logo"
             android:layout_width="@dimen/_72sdp"
             android:layout_height="@dimen/_72sdp"
-            android:src="@drawable/bg_hero_minecraft"
+            android:src="@drawable/lucifer_launcher_emblem"
             android:scaleType="fitCenter"
-            android:contentDescription="CS Logo"
+            android:contentDescription="Lucifer Launcher logo"
             android:layout_marginBottom="@dimen/_20sdp" />
 
         <TextView

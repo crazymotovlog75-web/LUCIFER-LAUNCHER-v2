@@ -32,12 +32,12 @@
             android:contentDescription="Lucifer Launcher home">
             <ImageView
                 android:id="@+id/iv_cs_logo"
-                android:layout_width="@dimen/_28sdp"
-                android:layout_height="@dimen/_28sdp"
+                android:layout_width="@dimen/_32sdp"
+                android:layout_height="@dimen/_32sdp"
                 android:layout_gravity="center"
-                android:src="@drawable/ic_lucifer_mark"
+                android:src="@drawable/lucifer_launcher_emblem"
                 android:scaleType="fitCenter"
-                android:contentDescription="Lucifer Launcher" />
+                android:contentDescription="Lucifer Launcher logo" />
         </FrameLayout>
 
         <TextView
