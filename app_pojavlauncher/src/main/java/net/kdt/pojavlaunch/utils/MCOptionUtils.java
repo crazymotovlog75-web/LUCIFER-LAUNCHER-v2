@@ -76,6 +76,24 @@ public class MCOptionUtils {
         sParameterMap.put(key,value);
     }
 
+    /**
+     * Apply conservative Minecraft video options for the FPS-first launcher preset.
+     * Unknown keys are ignored by older Minecraft releases; the shared options are recognized
+     * across supported versions. The preset is intentionally reapplied only while the user has
+     * FPS-first mode enabled.
+     */
+    public static void applyFpsFirstPreset() {
+        set("renderDistance", "6");
+        set("simulationDistance", "4");
+        set("enableVsync", "false");
+        set("maxFps", "260");
+        set("graphicsMode", "fast");
+        set("fancyGraphics", "false");
+        set("entityShadows", "false");
+        set("entityDistanceScaling", "0.5");
+        set("mipmapLevels", "0");
+    }
+
     /** Set an array of String, instead of a simple value. Not supported on all options */
     public static void set(String key, List<String> values){
         sParameterMap.put(key, values.toString());
