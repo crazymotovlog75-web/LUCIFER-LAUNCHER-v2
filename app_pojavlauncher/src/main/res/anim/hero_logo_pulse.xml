@@ -2,7 +2,7 @@
 <!--
     anim/hero_logo_pulse.xml
     ─────────────────────────
-    Subtle breathing / pulse animation for the centre CS logo on the hero banner.
+    Subtle breathing / pulse animation for the Lucifer emblem on the hero banner.
     Scale oscillates between 1.0 and 1.06 — smooth and not distracting.
     Apply with: imageView.startAnimation(AnimationUtils.loadAnimation(ctx, R.anim.hero_logo_pulse))
 -->

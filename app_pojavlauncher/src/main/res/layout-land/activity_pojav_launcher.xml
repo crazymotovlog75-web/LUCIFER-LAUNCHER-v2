@@ -31,7 +31,7 @@
             android:focusable="true"
             android:contentDescription="Lucifer Launcher home">
             <ImageView
-                android:id="@+id/iv_cs_logo"
+                android:id="@+id/iv_lucifer_logo"
                 android:layout_width="@dimen/_32sdp"
                 android:layout_height="@dimen/_32sdp"
                 android:layout_gravity="center"
@@ -45,7 +45,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/_4sdp"
-            android:text="@string/cs_launcher_title"
+            android:text="@string/lucifer_launcher_title"
             android:textSize="@dimen/_12ssp"
             android:textStyle="bold"
             android:textColor="?attr/luciferAccent"

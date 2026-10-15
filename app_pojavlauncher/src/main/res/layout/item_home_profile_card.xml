@@ -5,7 +5,7 @@
     android:layout_height="@dimen/_118sdp"
     android:layout_marginHorizontal="@dimen/_5sdp"
     android:layout_marginVertical="@dimen/_5sdp"
-    android:background="@drawable/bg_lucifer_glass_card"
+    android:background="@drawable/bg_home_profile_card"
     android:clickable="true"
     android:focusable="true"
     android:padding="@dimen/_10sdp">

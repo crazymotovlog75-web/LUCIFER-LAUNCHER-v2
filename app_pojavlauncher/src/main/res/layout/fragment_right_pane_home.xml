@@ -139,7 +139,7 @@
                     android:layout_height="@dimen/_32sdp"
                     android:gravity="center"
                     android:paddingHorizontal="@dimen/_9sdp"
-                    android:background="@drawable/bg_lucifer_nav_item"
+                    android:background="@drawable/bg_home_profile_card"
                     android:text="Choose instance"
                     android:textColor="@color/text_primary_white"
                     android:textSize="@dimen/_9ssp"
@@ -201,14 +201,11 @@
             app:layout_constraintBottom_toBottomOf="parent">
             <ImageView
                 android:id="@+id/iv_home_avatar"
-                android:layout_width="@dimen/_80sdp"
-                android:layout_height="@dimen/_80sdp"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:layout_gravity="center"
-                android:background="@drawable/bg_player_head"
-                android:padding="@dimen/_6sdp"
                 android:scaleType="fitCenter"
-                android:src="@drawable/ic_steve"
-                android:contentDescription="Player skin preview" />
+                android:contentDescription="@string/player_skin_preview" />
         </FrameLayout>
 
         <FrameLayout
@@ -233,7 +230,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="✦"
-                    android:textColor="?attr/luciferAccent"
+                    android:textColor="#FFFFFF"
                     android:textSize="@dimen/_22ssp" />
                 <TextView
                     android:id="@+id/tv_launch_label"

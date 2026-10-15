@@ -98,7 +98,7 @@
         android:id="@+id/tv_fastclient_branding"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="⚡ FastClient by CS Team"
+        android:text="LUCIFER LAUNCHER"
         android:textColor="#444444"
         android:textSize="@dimen/_11ssp"
         android:layout_marginBottom="@dimen/_16sdp"

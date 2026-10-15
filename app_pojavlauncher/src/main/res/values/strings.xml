@@ -563,7 +563,7 @@
     <string name="mod_deps_install_without">Install without deps</string>
 
     <!-- Launcher Landscape Layout Strings -->
-    <string name="cs_launcher_title">Lucifer Launcher</string>
+    <string name="lucifer_launcher_title">Lucifer Launcher</string>
     <string name="cs_launcher_subtitle">YOUR MINECRAFT. YOUR WAY.</string>
     <string name="cs_welcome_back_label">· WELCOME BACK,</string>
     <string name="cs_welcome_username">STEVE</string>
@@ -573,6 +573,7 @@
     <string name="profiles_refreshed">Instances refreshed</string>
     <string name="no_profile_selected">No instance selected</string>
     <string name="choose_minecraft_version">Choose a Minecraft version to get started</string>
+    <string name="player_skin_preview">Full player skin preview</string>
     <string name="vanilla">Vanilla</string>
     <string name="unknown">Unknown</string>
     <string name="ram_summary_gb">RAM %1$.1f GB</string>
@@ -581,7 +582,7 @@
     <string name="instance_load_failed">Could not load instances. Please try again.</string>
     <string name="nav_wallpapers">Wallpapers</string>
     <string name="wallpaper_studio_title">WALLPAPER STUDIO</string>
-    <string name="wallpaper_studio_subtitle">20 curated scenes · each one retunes the launcher colors</string>
+    <string name="wallpaper_studio_subtitle">20 Minecraft worlds · each one retunes the launcher colors</string>
     <string name="wallpaper_palette_live">LIVE PALETTE</string>
     <string name="wallpaper_palette_hint">Accents, glass borders, buttons and controls follow the selected scene.</string>
     <string name="wallpaper_reset_default">Default look</string>
@@ -592,25 +593,25 @@
     <string name="wallpaper_card_selected_description">%1$s wallpaper and palette are selected</string>
     <string-array name="lucifer_wallpaper_names" translatable="false">
         <item>Ender Dragon</item>
-        <item>Arctic Flux</item>
-        <item>Violet Nebula</item>
-        <item>Solar Ember</item>
-        <item>Sakura Glass</item>
-        <item>Emerald Canopy</item>
-        <item>Deep Ocean</item>
-        <item>Magenta Drift</item>
-        <item>Golden Hour</item>
-        <item>Glacier Bloom</item>
-        <item>Crimson Tide</item>
-        <item>Amethyst Veil</item>
-        <item>Jade Current</item>
-        <item>Copper Mirage</item>
-        <item>Opal Horizon</item>
-        <item>Midnight Gold</item>
-        <item>Wildflower</item>
-        <item>Coral Dream</item>
-        <item>Electric Tide</item>
-        <item>Twilight Bloom</item>
+        <item>Snowy Spruce Village</item>
+        <item>Amethyst Geode</item>
+        <item>Desert Temple</item>
+        <item>Cherry Blossom Village</item>
+        <item>Emerald Jungle Ruins</item>
+        <item>Coral Reef</item>
+        <item>Nether Fortress</item>
+        <item>Golden Plains Village</item>
+        <item>Frozen Peaks</item>
+        <item>Crimson Forest</item>
+        <item>Lush Cave</item>
+        <item>Bamboo Grove</item>
+        <item>Badlands Mesa</item>
+        <item>Ancient City</item>
+        <item>Woodland Mansion</item>
+        <item>Wildflower Meadow</item>
+        <item>Mushroom Fields</item>
+        <item>Ocean Monument</item>
+        <item>The End Islands</item>
     </string-array>
 
     <!-- Mod Detail Page Strings -->

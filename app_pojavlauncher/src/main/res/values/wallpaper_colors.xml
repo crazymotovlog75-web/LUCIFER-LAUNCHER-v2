@@ -12,7 +12,7 @@
     <color name="wallpaper_01_accent_dim">#55D28BFF</color>
     <color name="wallpaper_01_backdrop">#8A10061A</color>
 
-    <!-- 02. Arctic Flux -->
+    <!-- 02. Snowy Spruce Village -->
     <color name="wallpaper_02_accent">#72C8FF</color>
     <color name="wallpaper_02_secondary">#7EE7D7</color>
     <color name="wallpaper_02_highlight">#D4F3FF</color>
@@ -24,7 +24,7 @@
     <color name="wallpaper_02_accent_dim">#5572C8FF</color>
     <color name="wallpaper_02_backdrop">#8A07131E</color>
 
-    <!-- 03. Violet Nebula -->
+    <!-- 03. Amethyst Geode -->
     <color name="wallpaper_03_accent">#C69CFF</color>
     <color name="wallpaper_03_secondary">#62DBE7</color>
     <color name="wallpaper_03_highlight">#E9D8FF</color>
@@ -36,7 +36,7 @@
     <color name="wallpaper_03_accent_dim">#55C69CFF</color>
     <color name="wallpaper_03_backdrop">#8A100A1D</color>
 
-    <!-- 04. Solar Ember -->
+    <!-- 04. Desert Temple -->
     <color name="wallpaper_04_accent">#FFB36B</color>
     <color name="wallpaper_04_secondary">#FF668A</color>
     <color name="wallpaper_04_highlight">#FFE0B9</color>
@@ -48,7 +48,7 @@
     <color name="wallpaper_04_accent_dim">#55FFB36B</color>
     <color name="wallpaper_04_backdrop">#8A1C0D08</color>
 
-    <!-- 05. Sakura Glass -->
+    <!-- 05. Cherry Blossom Village -->
     <color name="wallpaper_05_accent">#FF9FC8</color>
     <color name="wallpaper_05_secondary">#A88BFF</color>
     <color name="wallpaper_05_highlight">#FFD5E7</color>
@@ -60,7 +60,7 @@
     <color name="wallpaper_05_accent_dim">#55FF9FC8</color>
     <color name="wallpaper_05_backdrop">#8A1B0916</color>
 
-    <!-- 06. Emerald Canopy -->
+    <!-- 06. Emerald Jungle Ruins -->
     <color name="wallpaper_06_accent">#8DE5A3</color>
     <color name="wallpaper_06_secondary">#66D3C9</color>
     <color name="wallpaper_06_highlight">#C7FFD3</color>
@@ -72,7 +72,7 @@
     <color name="wallpaper_06_accent_dim">#558DE5A3</color>
     <color name="wallpaper_06_backdrop">#8A07140D</color>
 
-    <!-- 07. Deep Ocean -->
+    <!-- 07. Coral Reef -->
     <color name="wallpaper_07_accent">#63CFF0</color>
     <color name="wallpaper_07_secondary">#678BFF</color>
     <color name="wallpaper_07_highlight">#B5F1FF</color>
@@ -84,7 +84,7 @@
     <color name="wallpaper_07_accent_dim">#5563CFF0</color>
     <color name="wallpaper_07_backdrop">#8A04121D</color>
 
-    <!-- 08. Magenta Drift -->
+    <!-- 08. Nether Fortress -->
     <color name="wallpaper_08_accent">#F08CFF</color>
     <color name="wallpaper_08_secondary">#76D9FF</color>
     <color name="wallpaper_08_highlight">#FFD0FF</color>
@@ -96,7 +96,7 @@
     <color name="wallpaper_08_accent_dim">#55F08CFF</color>
     <color name="wallpaper_08_backdrop">#8A12071C</color>
 
-    <!-- 09. Golden Hour -->
+    <!-- 09. Golden Plains Village -->
     <color name="wallpaper_09_accent">#FFD166</color>
     <color name="wallpaper_09_secondary">#FF8D75</color>
     <color name="wallpaper_09_highlight">#FFE9A8</color>
@@ -108,7 +108,7 @@
     <color name="wallpaper_09_accent_dim">#55FFD166</color>
     <color name="wallpaper_09_backdrop">#8A1A1005</color>
 
-    <!-- 10. Glacier Bloom -->
+    <!-- 10. Frozen Peaks -->
     <color name="wallpaper_10_accent">#80C7FF</color>
     <color name="wallpaper_10_secondary">#7FE5D3</color>
     <color name="wallpaper_10_highlight">#C5E7FF</color>
@@ -120,7 +120,7 @@
     <color name="wallpaper_10_accent_dim">#5580C7FF</color>
     <color name="wallpaper_10_backdrop">#8A07131E</color>
 
-    <!-- 11. Crimson Tide -->
+    <!-- 11. Crimson Forest -->
     <color name="wallpaper_11_accent">#FF7B8D</color>
     <color name="wallpaper_11_secondary">#FFB16B</color>
     <color name="wallpaper_11_highlight">#FFC1C9</color>
@@ -132,7 +132,7 @@
     <color name="wallpaper_11_accent_dim">#55FF7B8D</color>
     <color name="wallpaper_11_backdrop">#8A18070D</color>
 
-    <!-- 12. Amethyst Veil -->
+    <!-- 12. Lush Cave -->
     <color name="wallpaper_12_accent">#B49CFF</color>
     <color name="wallpaper_12_secondary">#6EE3CC</color>
     <color name="wallpaper_12_highlight">#DCD1FF</color>
@@ -144,7 +144,7 @@
     <color name="wallpaper_12_accent_dim">#55B49CFF</color>
     <color name="wallpaper_12_backdrop">#8A0D091C</color>
 
-    <!-- 13. Jade Current -->
+    <!-- 13. Bamboo Grove -->
     <color name="wallpaper_13_accent">#65D6B6</color>
     <color name="wallpaper_13_secondary">#E7BF69</color>
     <color name="wallpaper_13_highlight">#B0F9E2</color>
@@ -156,7 +156,7 @@
     <color name="wallpaper_13_accent_dim">#5565D6B6</color>
     <color name="wallpaper_13_backdrop">#8A06130F</color>
 
-    <!-- 14. Copper Mirage -->
+    <!-- 14. Badlands Mesa -->
     <color name="wallpaper_14_accent">#E89B73</color>
     <color name="wallpaper_14_secondary">#E6789F</color>
     <color name="wallpaper_14_highlight">#FFD1A8</color>
@@ -168,7 +168,7 @@
     <color name="wallpaper_14_accent_dim">#55E89B73</color>
     <color name="wallpaper_14_backdrop">#8A170A06</color>
 
-    <!-- 15. Opal Horizon -->
+    <!-- 15. Ancient City -->
     <color name="wallpaper_15_accent">#93E7E0</color>
     <color name="wallpaper_15_secondary">#C49CFF</color>
     <color name="wallpaper_15_highlight">#D1FFF8</color>
@@ -180,7 +180,7 @@
     <color name="wallpaper_15_accent_dim">#5593E7E0</color>
     <color name="wallpaper_15_backdrop">#8A07131B</color>
 
-    <!-- 16. Midnight Gold -->
+    <!-- 16. Woodland Mansion -->
     <color name="wallpaper_16_accent">#E9C66D</color>
     <color name="wallpaper_16_secondary">#78CAD3</color>
     <color name="wallpaper_16_highlight">#FFF0BA</color>
@@ -192,7 +192,7 @@
     <color name="wallpaper_16_accent_dim">#55E9C66D</color>
     <color name="wallpaper_16_backdrop">#8A100D05</color>
 
-    <!-- 17. Wildflower -->
+    <!-- 17. Wildflower Meadow -->
     <color name="wallpaper_17_accent">#BE91FF</color>
     <color name="wallpaper_17_secondary">#74E3A8</color>
     <color name="wallpaper_17_highlight">#E5D1FF</color>
@@ -204,7 +204,7 @@
     <color name="wallpaper_17_accent_dim">#55BE91FF</color>
     <color name="wallpaper_17_backdrop">#8A0D0718</color>
 
-    <!-- 18. Coral Dream -->
+    <!-- 18. Mushroom Fields -->
     <color name="wallpaper_18_accent">#FF8D7B</color>
     <color name="wallpaper_18_secondary">#77CEFF</color>
     <color name="wallpaper_18_highlight">#FFC7B9</color>
@@ -216,7 +216,7 @@
     <color name="wallpaper_18_accent_dim">#55FF8D7B</color>
     <color name="wallpaper_18_backdrop">#8A160806</color>
 
-    <!-- 19. Electric Tide -->
+    <!-- 19. Ocean Monument -->
     <color name="wallpaper_19_accent">#59D8F2</color>
     <color name="wallpaper_19_secondary">#A9EC74</color>
     <color name="wallpaper_19_highlight">#BCF5FF</color>
@@ -228,7 +228,7 @@
     <color name="wallpaper_19_accent_dim">#5559D8F2</color>
     <color name="wallpaper_19_backdrop">#8A04101A</color>
 
-    <!-- 20. Twilight Bloom -->
+    <!-- 20. The End Islands -->
     <color name="wallpaper_20_accent">#D3A5FF</color>
     <color name="wallpaper_20_secondary">#FFAF7B</color>
     <color name="wallpaper_20_highlight">#F0D8FF</color>

@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.SystemClock;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -23,14 +24,20 @@ import net.kdt.pojavlaunch.Tools;
 import net.kdt.pojavlaunch.extra.ExtraConstants;
 import net.kdt.pojavlaunch.extra.ExtraCore;
 import net.kdt.pojavlaunch.prefs.LauncherPreferences;
+import net.kdt.pojavlaunch.utils.MinecraftSkinPreviewRenderer;
 import net.kdt.pojavlaunch.value.MinecraftAccount;
 import net.kdt.pojavlaunch.value.launcherprofiles.LauncherProfiles;
 import net.kdt.pojavlaunch.value.launcherprofiles.MinecraftProfile;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 /**
@@ -41,6 +48,8 @@ public class RightPaneHomeFragment extends Fragment {
 
     public static final String TAG = "RightPaneHomeFragment";
     public static final String CUSTOM_BG_PATH = Tools.DIR_DATA + "/custom_launcher_bg";
+    private static final String TAG_SKIN_PREVIEW = "LuciferSkinPreview";
+    private static final long SKIN_PREVIEW_CACHE_MS = 24L * 60L * 60L * 1000L;
 
     private RecyclerView mRecyclerView;
     private HomeProfileAdapter mAdapter;
@@ -49,6 +58,9 @@ public class RightPaneHomeFragment extends Fragment {
     private TextView mVersion;
     private TextView mLoader;
     private TextView mRam;
+    private int mAvatarBindGeneration;
+    private boolean mAvatarLoadPending;
+    private long mAvatarLoadStartedAt;
     private boolean mProfileLoadPending;
     private long mLastProfileLoadAt;
 
@@ -67,6 +79,7 @@ public class RightPaneHomeFragment extends Fragment {
         mRecyclerView.setItemAnimator(null);
 
         mAvatar = view.findViewById(R.id.iv_home_avatar);
+        showDefaultSkinPreview();
         mProfileName = view.findViewById(R.id.tv_home_profile_name);
         mVersion = view.findViewById(R.id.tv_home_version);
         mLoader = view.findViewById(R.id.tv_home_loader);
@@ -134,6 +147,8 @@ public class RightPaneHomeFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         mRecyclerView = null;
+        mAvatarBindGeneration++;
+        mAvatarLoadPending = false;
         mAvatar = null;
         mProfileName = null;
         mVersion = null;
@@ -253,21 +268,133 @@ public class RightPaneHomeFragment extends Fragment {
         return getString(R.string.vanilla);
     }
 
+    private void showDefaultSkinPreview() {
+        if (mAvatar == null) return;
+        Bitmap preview = createDefaultSkinPreview(requireContext().getApplicationContext());
+        if (preview != null) mAvatar.setImageBitmap(preview);
+        mAvatar.setContentDescription(getString(R.string.player_skin_preview));
+    }
+
     private void bindAccountPreview() {
         if (mAvatar == null) return;
+        long now = SystemClock.elapsedRealtime();
+        if (mAvatarLoadPending && now - mAvatarLoadStartedAt < 1000L) return;
+        mAvatarLoadPending = true;
+        mAvatarLoadStartedAt = now;
         final ImageView avatar = mAvatar;
+        final int bindGeneration = ++mAvatarBindGeneration;
         final Context appContext = requireContext().getApplicationContext();
         PojavApplication.sExecutorService.execute(() -> {
-            Bitmap head = null;
-            try {
-                MinecraftAccount account = PojavProfile.getCurrentProfileContent(appContext, null);
-                if (account != null) head = account.getSkinFace();
-            } catch (Exception ignored) {}
-            final Bitmap result = head;
-            if (result != null) Tools.runOnUiThread(() -> {
-                if (isAdded() && mAvatar == avatar) avatar.setImageBitmap(result);
+            Bitmap preview = loadPlayerSkinPreview(appContext);
+            if (preview == null) preview = createDefaultSkinPreview(appContext);
+            final Bitmap result = preview;
+            Tools.runOnUiThread(() -> {
+                if (mAvatarBindGeneration != bindGeneration) {
+                    if (result != null && !result.isRecycled()) result.recycle();
+                    return;
+                }
+                mAvatarLoadPending = false;
+                if (result != null && isAdded() && mAvatar == avatar) avatar.setImageBitmap(result);
             });
         });
+    }
+
+    @Nullable
+    private static Bitmap loadPlayerSkinPreview(@NonNull Context context) {
+        try {
+            MinecraftAccount account = PojavProfile.getCurrentProfileContent(context, null);
+            if (account == null || account.username == null) return null;
+
+            File customSkin = new File(Tools.DIR_DATA + "/skins/" + account.username + "_skin.png");
+            if (customSkin.isFile()) {
+                Bitmap texture = BitmapFactory.decodeFile(customSkin.getAbsolutePath());
+                if (texture != null) {
+                    Bitmap preview = MinecraftSkinPreviewRenderer.renderFront(
+                            texture, isSlimSkin(account.username));
+                    if (!texture.isRecycled()) texture.recycle();
+                    if (preview != null) return preview;
+                }
+            }
+
+            // Offline profiles use a generated local UUID; only Microsoft accounts have a Mojang
+            // UUID that can be resolved to the account's current remote skin render.
+            if (account.isMicrosoft) return downloadCachedPlayerBody(account.profileId);
+        } catch (Exception error) {
+            Log.d(TAG_SKIN_PREVIEW, "Could not load the account skin preview", error);
+        }
+        return null;
+    }
+
+    private static boolean isSlimSkin(@NonNull String username) {
+        File metadata = new File(Tools.DIR_DATA + "/skins/" + username + "_metadata.json");
+        if (!metadata.isFile()) return false;
+        try {
+            String content = Tools.read(metadata.getAbsolutePath());
+            return content != null && content.toLowerCase(Locale.ROOT).contains("slim");
+        } catch (Exception ignored) {
+            return false;
+        }
+    }
+
+    @Nullable
+    private static Bitmap createDefaultSkinPreview(@NonNull Context context) {
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inScaled = false;
+        Bitmap texture = BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_steve, options);
+        if (texture == null) return null;
+        try {
+            return MinecraftSkinPreviewRenderer.renderFront(texture, false);
+        } finally {
+            if (!texture.isRecycled()) texture.recycle();
+        }
+    }
+
+    @Nullable
+    private static Bitmap downloadCachedPlayerBody(@Nullable String profileId) {
+        if (profileId == null) return null;
+        String uuid = profileId.replace("-", "").trim();
+        if (!uuid.matches("(?i)[0-9a-f]{32}")) return null;
+
+        File cache = new File(Tools.DIR_CACHE, "lucifer_skin_body_" + uuid.toLowerCase(Locale.ROOT) + ".png");
+        Bitmap staleCache = null;
+        if (cache.isFile()) {
+            staleCache = BitmapFactory.decodeFile(cache.getAbsolutePath());
+            if (staleCache != null && System.currentTimeMillis() - cache.lastModified() < SKIN_PREVIEW_CACHE_MS) {
+                return staleCache;
+            }
+        }
+
+        HttpURLConnection connection = null;
+        try {
+            URL url = new URL("https://mc-heads.net/body/" + uuid + "/128");
+            connection = (HttpURLConnection) url.openConnection();
+            connection.setConnectTimeout(5000);
+            connection.setReadTimeout(5000);
+            connection.setRequestProperty("User-Agent", Tools.APP_NAME);
+            connection.setRequestProperty("Accept", "image/png,image/*;q=0.8");
+            if (connection.getResponseCode() != HttpURLConnection.HTTP_OK) return staleCache;
+
+            Bitmap bodyPreview;
+            try (InputStream input = connection.getInputStream()) {
+                bodyPreview = BitmapFactory.decodeStream(input);
+            }
+            if (bodyPreview == null) return staleCache;
+
+            File parent = cache.getParentFile();
+            if (parent != null && !parent.isDirectory()) parent.mkdirs();
+            try (FileOutputStream output = new FileOutputStream(cache)) {
+                bodyPreview.compress(Bitmap.CompressFormat.PNG, 100, output);
+            } catch (Exception cacheError) {
+                Log.d(TAG_SKIN_PREVIEW, "Could not cache the full-body skin preview", cacheError);
+            }
+            if (staleCache != null && !staleCache.isRecycled()) staleCache.recycle();
+            return bodyPreview;
+        } catch (Exception error) {
+            Log.d(TAG_SKIN_PREVIEW, "Remote full-body skin preview is unavailable", error);
+            return staleCache;
+        } finally {
+            if (connection != null) connection.disconnect();
+        }
     }
 
     private void openPane(Class<? extends Fragment> fragmentClass, String tag, @Nullable Bundle args) {
