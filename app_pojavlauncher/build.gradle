@@ -126,6 +126,9 @@ android {
             // multiDexEnabled = true
             if (System.getenv("KEYSTORE_PATH") != null) {
                 signingConfig signingConfigs.release
+            } else {
+                // Keep CI APKs installable while making clear they are not production-signed.
+                signingConfig signingConfigs.customDebug
             }
             resValue "string", "app_name", "LUCIFER LAUNCHER"
             resValue "string", "app_short_name", "LUCIFER LAUNCHER"
