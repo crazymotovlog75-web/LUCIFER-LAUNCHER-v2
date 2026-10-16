@@ -126,12 +126,24 @@ jobs:
             echo "APK size: $(basename "$f") — $SIZE ($SIZE_BYTES bytes)"
           done
 
-      # ── Upload all artifacts ─────────────────────────────────────────────────
-      - name: Upload artifacts
+      # ── Keep the compact user APK separate from the QA build ────────────────
+      - name: Upload compact release APK
         uses: actions/upload-artifact@v4
         with:
-          name: lucifer-launcher-v2-build-${{ github.run_number }}
-          path: out/*
+          name: lucifer-launcher-v2-release-${{ github.run_number }}
+          path: |
+            out/LUCIFER-LAUNCHER-V2.apk
+            out/LUCIFER-LAUNCHER-V2.md5
+            out/LUCIFER-LAUNCHER-V2.sha256
+          retention-days: 30
+
+      - name: Upload debug APK (QA)
+        uses: actions/upload-artifact@v4
+        with:
+          name: lucifer-launcher-v2-debug-${{ github.run_number }}
+          path: |
+            out/LUCIFER-LAUNCHER-V2-DEBUG.apk
+            out/LUCIFER-LAUNCHER-V2-DEBUG.md5
           retention-days: 30
 
       # ── GitHub Release (manual only) ─────────────────────────────────────────
