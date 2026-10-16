@@ -134,7 +134,7 @@ public class ShortcutIconPickerFragment extends Fragment {
             mIconPreview.setImageDrawable(drawable);
             mSelectedIcon = drawableToBitmap(drawable);
         } else {
-            mIconPreview.setImageResource(R.drawable.ic_pojav_full);
+            mIconPreview.setImageResource(R.drawable.lucifer_launcher_emblem);
             mSelectedIcon = null;
         }
 

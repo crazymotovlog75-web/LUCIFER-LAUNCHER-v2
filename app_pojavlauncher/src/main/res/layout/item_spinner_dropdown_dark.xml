@@ -7,4 +7,4 @@
     android:textColor="@color/text_primary_light"
     android:textSize="13sp"
     android:ellipsize="end"
-    android:background="@color/bg_card_dark" />
+    android:background="?attr/luciferSurfaceHigh" />

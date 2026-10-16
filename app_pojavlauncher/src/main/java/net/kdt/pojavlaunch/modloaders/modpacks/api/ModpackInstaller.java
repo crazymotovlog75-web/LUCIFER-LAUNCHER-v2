@@ -76,6 +76,7 @@ public class ModpackInstaller {
         profile.name = modDetail.title;
         profile.lastVersionId = modLoaderInfo.getVersionId();
         profile.icon = ModIconCache.getBase64Image(modDetail.getIconCacheTag());
+        profile.created = MinecraftProfile.currentTimestamp();
 
 
         LauncherProfiles.mainProfileJson.profiles.put(modpackName, profile);
@@ -167,6 +168,7 @@ public class ModpackInstaller {
             profile.gameDir = "./custom_instances/" + modpackName;
             profile.name = packInfoJson.get("name").getAsString();
             profile.lastVersionId = modLoaderInfo.getVersionId();
+            profile.created = MinecraftProfile.currentTimestamp();
             LauncherProfiles.mainProfileJson.profiles.put(modpackName, profile);
             LauncherProfiles.write();
 

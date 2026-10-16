@@ -152,31 +152,50 @@ public class HomeProfileAdapter extends RecyclerView.Adapter<HomeProfileAdapter.
     @Override
     public void onViewRecycled(@NonNull ViewHolder holder) {
         super.onViewRecycled(holder);
-        // Clear image drawable reference to help GC and avoid stale bitmap retention
+        // Clear image and request identity so delayed bitmap decodes cannot land on a recycled row.
+        holder.imgIcon.setTag(null);
         holder.imgIcon.setImageDrawable(null);
     }
 
     /**
-     * Binds the graphical icon resource to the profile card image view.
-     * Falls back to a typed icon (fabric / quilt / default) if the data icon
-     * is missing or invalid, eliminating empty/hollow gray boxes.
+     * Binds cached vector icons synchronously; base64 bitmap icons are decoded off the UI thread.
+     * A typed fallback is shown immediately while large/custom profile icons load.
      */
     private void bindIcon(ImageView target, String profileKey, MinecraftProfile profile) {
-        String icon = profile.icon;
-        Drawable drawable = null;
+        final String icon = profile.icon;
+        if (icon != null && icon.startsWith("data:")) {
+            Drawable fallback = resolveTypeFallback(target, profile.lastVersionId);
+            if (fallback == null) fallback = ContextCompat.getDrawable(
+                    target.getContext(), R.drawable.lucifer_launcher_emblem);
+            target.setTag(profileKey);
+            target.setImageDrawable(fallback);
+            final android.content.res.Resources resources = target.getResources();
+            PojavApplication.sExecutorService.execute(() -> {
+                Drawable decoded = null;
+                try {
+                    decoded = ProfileIconCache.fetchIcon(resources, profileKey, icon);
+                } catch (Exception error) {
+                    Log.w(TAG, "Icon load failed for " + profileKey, error);
+                }
+                final Drawable result = decoded;
+                if (result == null) return;
+                Tools.runOnUiThread(() -> {
+                    if (profileKey.equals(target.getTag())) target.setImageDrawable(result);
+                });
+            });
+            return;
+        }
 
+        Drawable drawable = null;
         try {
             drawable = ProfileIconCache.fetchIcon(target.getResources(), profileKey, icon);
         } catch (Exception e) {
             Log.w(TAG, "Icon load failed for " + profileKey, e);
         }
-
-        if (drawable == null) {
-            drawable = resolveTypeFallback(target, profile.lastVersionId);
-        }
-        if (drawable == null) {
-            drawable = ContextCompat.getDrawable(target.getContext(), R.drawable.ic_pojav_full);
-        }
+        if (drawable == null) drawable = resolveTypeFallback(target, profile.lastVersionId);
+        if (drawable == null) drawable = ContextCompat.getDrawable(
+                target.getContext(), R.drawable.lucifer_launcher_emblem);
+        target.setTag(profileKey);
         target.setImageDrawable(drawable);
     }
 
@@ -191,8 +210,8 @@ public class HomeProfileAdapter extends RecyclerView.Adapter<HomeProfileAdapter.
         int resId = -1;
         if (lower.contains("fabric")) resId = R.drawable.ic_fabric;
         else if (lower.contains("quilt")) resId = R.drawable.ic_quilt;
-        else if (lower.contains("forge")) resId = R.drawable.ic_pojav_full;
-        else if (lower.contains("neoforge")) resId = R.drawable.ic_pojav_full;
+        else if (lower.contains("forge")) resId = R.drawable.lucifer_launcher_emblem;
+        else if (lower.contains("neoforge")) resId = R.drawable.lucifer_launcher_emblem;
         if (resId == -1) return null;
         return ContextCompat.getDrawable(target.getContext(), resId);
     }

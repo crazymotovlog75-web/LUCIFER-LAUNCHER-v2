@@ -29,6 +29,7 @@ import net.kdt.pojavlaunch.extra.ExtraConstants;
 import net.kdt.pojavlaunch.extra.ExtraCore;
 import net.kdt.pojavlaunch.prefs.LauncherPreferences;
 import net.kdt.pojavlaunch.progresskeeper.ProgressKeeper;
+import net.kdt.pojavlaunch.theme.ThemeManager;
 import net.kdt.pojavlaunch.value.launcherprofiles.LauncherProfiles;
 import net.kdt.pojavlaunch.value.launcherprofiles.MinecraftProfile;
 
@@ -98,7 +99,7 @@ public class MainMenuFragment extends Fragment {
     /** Explicitly clears the right pane and resets home UI state */
     public void refreshHomeState() {
         if (getView() == null || !isAdded()) {
-            Log.w("CS_LAUNCHER", "Home state refresh skipped: View not fully inflated yet.");
+            Log.w("LUCIFER_LAUNCHER", "Home state refresh skipped: View not fully inflated yet.");
             return;
         }
         clearRightPane();
@@ -166,7 +167,7 @@ public class MainMenuFragment extends Fragment {
      */
     private void openPane(Class<? extends Fragment> fragmentClass, String tag,
                           @Nullable Bundle args) {
-        if (fragmentClass == ClientFeaturesFragment.class) {
+        if (fragmentClass == CreatorTeamFragment.class) {
             Tools.swapFragment(requireActivity(), fragmentClass, tag, args,
                     R.anim.slide_in_right, R.anim.slide_out_left,
                     R.anim.slide_in_left, R.anim.slide_out_right);
@@ -276,7 +277,7 @@ public class MainMenuFragment extends Fragment {
                     v -> Tools.openURL(requireActivity(), Tools.URL_HOME));
         if (mDiscordButton != null)
             mDiscordButton.setOnClickListener(
-                    v -> Tools.openURL(requireActivity(), getString(R.string.discord_invite)));
+                    v -> Tools.openDiscordInvite(requireActivity(), getString(R.string.discord_invite)));
 
         // Custom controls (always opens as Activity — can't be in the pane)
         if (mCustomControlButton != null) {
@@ -289,15 +290,12 @@ public class MainMenuFragment extends Fragment {
             mCursorCustomButton.setOnClickListener(v ->
                 Tools.swapFragment(requireActivity(), CursorCustomizationFragment.class, CursorCustomizationFragment.TAG, null));
 
-        // Client Features Toggle Button
-        Button btnClientFeatures = view.findViewById(R.id.btn_client_features);
-        if (btnClientFeatures != null && getActivity() instanceof net.kdt.pojavlaunch.LauncherActivity) {
-            final net.kdt.pojavlaunch.ClientFeaturesManager cfm = ((net.kdt.pojavlaunch.LauncherActivity) requireActivity()).getClientFeaturesManager();
-            updateClientFeaturesMenuButton(btnClientFeatures, cfm.isEnabled());
-            btnClientFeatures.setOnClickListener(v -> {
-                openPane(ClientFeaturesFragment.class, ClientFeaturesFragment.TAG, null);
-            });
-            startPremiumButtonPulse(btnClientFeatures);
+        // Pro now opens the creator credits page; the removed client-pack installer is no longer
+        // part of launcher navigation.
+        Button btnCreatorTeam = view.findViewById(R.id.btn_creator_team);
+        if (btnCreatorTeam != null) {
+            btnCreatorTeam.setOnClickListener(v ->
+                    openPane(CreatorTeamFragment.class, CreatorTeamFragment.TAG, null));
         }
 
         // Manage Skin Button
@@ -417,14 +415,6 @@ public class MainMenuFragment extends Fragment {
             });
         }
 
-        View view = getView();
-        if (view != null) {
-            Button btnClientFeatures = view.findViewById(R.id.btn_client_features);
-            if (btnClientFeatures != null && getActivity() instanceof net.kdt.pojavlaunch.LauncherActivity) {
-                final net.kdt.pojavlaunch.ClientFeaturesManager cfm = ((net.kdt.pojavlaunch.LauncherActivity) requireActivity()).getClientFeaturesManager();
-                updateClientFeaturesMenuButton(btnClientFeatures, cfm.isEnabled());
-            }
-        }
     }
 
     // ─── Private helpers ────────────────────────────────────────────────────
@@ -456,9 +446,9 @@ public class MainMenuFragment extends Fragment {
             boolean isActive = (id == activeId);
             btn.setBackgroundResource(isActive ? R.drawable.bg_nav_item_active : 0);
             if (btn instanceof Button) {
-                ((Button) btn).setTextColor(isActive ? 
-                    getResources().getColor(R.color.accent_primary) : 
-                    getResources().getColor(R.color.text_secondary_light));
+                ((Button) btn).setTextColor(isActive
+                    ? ThemeManager.getAccentColor(requireContext())
+                    : getResources().getColor(R.color.text_secondary_light));
             }
         }
     }
@@ -488,36 +478,4 @@ public class MainMenuFragment extends Fragment {
         }
     }
 
-    private void updateClientFeaturesMenuButton(Button btn, boolean enabled) {
-        if (enabled) {
-            btn.setText("✦ Client Features (Enabled)");
-            btn.setBackgroundResource(R.drawable.bg_client_features_btn_filled);
-            btn.setTextColor(0xFF0D0D0D);
-        } else {
-            btn.setText("✦ Enable Client Features");
-            btn.setBackgroundResource(R.drawable.bg_client_features_btn);
-            btn.setTextColor(0xFF39FF14);
-        }
-    }
-
-    private void startPremiumButtonPulse(View btn) {
-        if (btn == null) return;
-        android.view.animation.Animation pulse = android.view.animation.AnimationUtils.loadAnimation(requireContext(), R.anim.pulse_animation);
-        btn.startAnimation(pulse);
-        btn.setOnTouchListener((v, event) -> {
-            switch (event.getAction()) {
-                case android.view.MotionEvent.ACTION_DOWN:
-                    v.clearAnimation();
-                    v.animate().scaleX(0.94f).scaleY(0.94f).alpha(0.85f).setDuration(70).start();
-                    break;
-                case android.view.MotionEvent.ACTION_UP:
-                case android.view.MotionEvent.ACTION_CANCEL:
-                    v.animate().scaleX(1.0f).scaleY(1.0f).alpha(1.0f).setDuration(120).withEndAction(() -> {
-                        if (isAdded()) v.startAnimation(pulse);
-                    }).start();
-                    break;
-            }
-            return false;
-        });
-    }
 }

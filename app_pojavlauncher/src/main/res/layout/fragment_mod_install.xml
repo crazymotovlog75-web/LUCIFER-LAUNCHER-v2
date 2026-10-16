@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/bg_install_screen_gradient"
+    android:background="@android:color/transparent"
     android:clipToPadding="false">
 
     <!-- ════════════════════════════════════════
@@ -31,7 +31,7 @@
             android:padding="@dimen/_8sdp"
             android:scaleType="centerInside"
             android:src="@drawable/ic_arrow_back_white"
-            app:tint="@color/neon_green" />
+            app:tint="?attr/luciferAccent" />
 
         <TextView
             android:id="@+id/install_topbar_title"

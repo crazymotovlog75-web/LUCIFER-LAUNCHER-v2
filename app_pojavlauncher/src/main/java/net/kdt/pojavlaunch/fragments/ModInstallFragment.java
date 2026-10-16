@@ -560,7 +560,7 @@ public class ModInstallFragment extends Fragment {
         File targetDir = getContentDir();
         if (!targetDir.exists()) {
             boolean created = targetDir.mkdirs();
-            if (created) Log.d("CS_LAUNCHER", "Created directory: " + targetDir.getAbsolutePath());
+            if (created) Log.d("LUCIFER_LAUNCHER", "Created directory: " + targetDir.getAbsolutePath());
         }
 
         ProgressLayout.setProgress(ProgressLayout.INSTALL_MODPACK, 0, R.string.global_waiting);

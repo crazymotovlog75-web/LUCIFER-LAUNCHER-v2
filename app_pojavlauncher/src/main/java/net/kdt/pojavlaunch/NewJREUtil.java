@@ -78,11 +78,13 @@ public class NewJREUtil {
 
     /** @return true if everything is good, false otherwise.  */
     public static boolean installNewJreIfNeeded(Activity activity, JMinecraftVersionList.Version versionInfo) {
-        //Now we have the reliable information to check if our runtime settings are good enough
-        if (versionInfo.javaVersion == null || versionInfo.javaVersion.component.equalsIgnoreCase("jre-legacy"))
-            return true;
-
-        int gameRequiredVersion = versionInfo.javaVersion.majorVersion;
+        // Legacy metadata can omit javaVersion or label it jre-legacy; these releases use Java 8.
+        // Check them too so compact builds can fetch a runtime before trying to launch the game.
+        int gameRequiredVersion = versionInfo.javaVersion == null ? 8 : versionInfo.javaVersion.majorVersion;
+        if (gameRequiredVersion <= 0 || (versionInfo.javaVersion != null &&
+                "jre-legacy".equalsIgnoreCase(versionInfo.javaVersion.component))) {
+            gameRequiredVersion = 8;
+        }
 
         LauncherProfiles.load();
         AssetManager assetManager = activity.getAssets();
@@ -110,17 +112,23 @@ public class NewJREUtil {
                 nearestInternalRuntime, nearestInstalledRuntime, (value)->value.rank
         );
 
-        // Check if the selected runtime actually exists in the APK, else download it
-        // If it isn't InternalRuntime then it wasn't in the apk in the first place!
-        if (selectedRankedRuntime.value instanceof InternalRuntime)
+        // Check if the selected runtime actually exists in the APK, else download a compatible
+        // external JRE. Some Minecraft releases request Java 16, while the supported runtime
+        // builds are 8, 17, 21, and 25; choose the nearest supported version at or above the target.
+        if (selectedRankedRuntime != null && selectedRankedRuntime.value instanceof InternalRuntime) {
             if (!checkInternalRuntime(assetManager, (InternalRuntime) selectedRankedRuntime.value)) {
-                if (nearestInstalledRuntime == null) // If this was non-null then it would be a valid runtime and we can leave it be
-                    tryDownloadRuntime(activity, gameRequiredVersion);
-                // This means the internal runtime didn't extract so let's use installed instead
-                // This also refreshes it so after the runtime download, it can find the new runtime
+                if (nearestInstalledRuntime == null) {
+                    int downloadVersion = getDownloadableRuntimeVersion(gameRequiredVersion);
+                    if (downloadVersion < 0) {
+                        showRuntimeFail(activity, versionInfo);
+                        return false;
+                    }
+                    tryDownloadRuntime(activity, downloadVersion);
+                }
+                // The internal runtime was not available; use the compatible installed/downloaded one.
                 selectedRankedRuntime = getNearestInstalledRuntime(gameRequiredVersion);
             }
-
+        }
 
         // No possible selections
         if(selectedRankedRuntime == null) {
@@ -158,9 +166,21 @@ public class NewJREUtil {
         return true;
     }
 
+    private static int getDownloadableRuntimeVersion(int requiredVersion) {
+        int selectedVersion = Integer.MAX_VALUE;
+        for (ExternalRuntime runtime : ExternalRuntime.values()) {
+            if (runtime.majorVersion < requiredVersion) continue;
+            if (getDeviceArchitecture() == Architecture.ARCH_X86 && runtime.majorVersion >= 21) continue;
+            selectedVersion = Math.min(selectedVersion, runtime.majorVersion);
+        }
+        return selectedVersion == Integer.MAX_VALUE ? -1 : selectedVersion;
+    }
+
     private static void showRuntimeFail(Activity activity, JMinecraftVersionList.Version verInfo) {
+        int requiredVersion = verInfo.javaVersion == null ? 8 : verInfo.javaVersion.majorVersion;
+        if (requiredVersion <= 0) requiredVersion = 8;
         Tools.dialogOnUiThread(activity, activity.getString(R.string.global_error),
-                activity.getString(R.string.multirt_nocompatiblert, verInfo.javaVersion.majorVersion));
+                activity.getString(R.string.multirt_nocompatiblert, requiredVersion));
     }
 
     public static boolean isJavaVersionAvailableForDownload(int version) {

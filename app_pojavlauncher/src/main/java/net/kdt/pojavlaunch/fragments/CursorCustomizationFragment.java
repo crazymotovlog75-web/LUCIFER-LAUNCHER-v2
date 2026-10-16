@@ -132,18 +132,18 @@ public class CursorCustomizationFragment extends Fragment {
                     mSelectedCursorStyleRes = R.drawable.ic_gamepad_pointer;
                     mUseCustomBitmap = false;
                     
-                    cardClassic.setBackgroundResource(R.drawable.background_card);
-                    cardGamepad.setBackgroundResource(R.drawable.background_card_neon);
-                    cardCustom.setBackgroundResource(R.drawable.background_card);
+                    cardClassic.setBackgroundResource(R.drawable.bg_lucifer_glass_card);
+                    cardGamepad.setBackgroundResource(R.drawable.bg_lucifer_nav_item);
+                    cardCustom.setBackgroundResource(R.drawable.bg_lucifer_glass_card);
                 } else {
                     try {
                         mCurrentCursorBitmap = BitmapFactory.decodeFile(file.getAbsolutePath());
                         if (mCurrentCursorBitmap != null) {
                             mUseCustomBitmap = true;
                             
-                            cardClassic.setBackgroundResource(R.drawable.background_card);
-                            cardGamepad.setBackgroundResource(R.drawable.background_card);
-                            cardCustom.setBackgroundResource(R.drawable.background_card_neon);
+                            cardClassic.setBackgroundResource(R.drawable.bg_lucifer_glass_card);
+                            cardGamepad.setBackgroundResource(R.drawable.bg_lucifer_glass_card);
+                            cardCustom.setBackgroundResource(R.drawable.bg_lucifer_nav_item);
                             
                             hotspotXSeek.setMax(mCurrentCursorBitmap.getWidth());
                             hotspotYSeek.setMax(mCurrentCursorBitmap.getHeight());
@@ -157,9 +157,9 @@ public class CursorCustomizationFragment extends Fragment {
             mSelectedCursorStyleRes = R.drawable.ic_mouse_pointer;
             mUseCustomBitmap = false;
             
-            cardClassic.setBackgroundResource(R.drawable.background_card_neon);
-            cardGamepad.setBackgroundResource(R.drawable.background_card);
-            cardCustom.setBackgroundResource(R.drawable.background_card);
+            cardClassic.setBackgroundResource(R.drawable.bg_lucifer_nav_item);
+            cardGamepad.setBackgroundResource(R.drawable.bg_lucifer_glass_card);
+            cardCustom.setBackgroundResource(R.drawable.bg_lucifer_glass_card);
         }
 
         // Initialize glow color circles selection state
@@ -180,18 +180,18 @@ public class CursorCustomizationFragment extends Fragment {
         cardClassic.setOnClickListener(v -> {
             mUseCustomBitmap = false;
             mSelectedCursorStyleRes = R.drawable.ic_mouse_pointer;
-            cardClassic.setBackgroundResource(R.drawable.background_card_neon);
-            cardGamepad.setBackgroundResource(R.drawable.background_card);
-            cardCustom.setBackgroundResource(R.drawable.background_card);
+            cardClassic.setBackgroundResource(R.drawable.bg_lucifer_nav_item);
+            cardGamepad.setBackgroundResource(R.drawable.bg_lucifer_glass_card);
+            cardCustom.setBackgroundResource(R.drawable.bg_lucifer_glass_card);
             updateLivePreview();
         });
 
         cardGamepad.setOnClickListener(v -> {
             mUseCustomBitmap = false;
             mSelectedCursorStyleRes = R.drawable.ic_gamepad_pointer;
-            cardClassic.setBackgroundResource(R.drawable.background_card);
-            cardGamepad.setBackgroundResource(R.drawable.background_card_neon);
-            cardCustom.setBackgroundResource(R.drawable.background_card);
+            cardClassic.setBackgroundResource(R.drawable.bg_lucifer_glass_card);
+            cardGamepad.setBackgroundResource(R.drawable.bg_lucifer_nav_item);
+            cardCustom.setBackgroundResource(R.drawable.bg_lucifer_glass_card);
             updateLivePreview();
         });
 
@@ -200,9 +200,9 @@ public class CursorCustomizationFragment extends Fragment {
                 openFilePicker();
             } else {
                 mUseCustomBitmap = true;
-                cardClassic.setBackgroundResource(R.drawable.background_card);
-                cardGamepad.setBackgroundResource(R.drawable.background_card);
-                cardCustom.setBackgroundResource(R.drawable.background_card_neon);
+                cardClassic.setBackgroundResource(R.drawable.bg_lucifer_glass_card);
+                cardGamepad.setBackgroundResource(R.drawable.bg_lucifer_glass_card);
+                cardCustom.setBackgroundResource(R.drawable.bg_lucifer_nav_item);
                 updateLivePreview();
             }
         });
@@ -438,9 +438,9 @@ public class CursorCustomizationFragment extends Fragment {
         View cardGamepad = root.findViewById(R.id.style_gamepad);
         View cardCustom = root.findViewById(R.id.style_custom);
 
-        if (cardClassic != null) cardClassic.setBackgroundResource(R.drawable.background_card_neon);
-        if (cardGamepad != null) cardGamepad.setBackgroundResource(R.drawable.background_card);
-        if (cardCustom != null) cardCustom.setBackgroundResource(R.drawable.background_card);
+        if (cardClassic != null) cardClassic.setBackgroundResource(R.drawable.bg_lucifer_nav_item);
+        if (cardGamepad != null) cardGamepad.setBackgroundResource(R.drawable.bg_lucifer_glass_card);
+        if (cardCustom != null) cardCustom.setBackgroundResource(R.drawable.bg_lucifer_glass_card);
 
         ImageView imgGreen = root.findViewById(R.id.color_green);
         selectGlowColor(mGlowColor, imgGreen);
@@ -576,9 +576,9 @@ public class CursorCustomizationFragment extends Fragment {
                     View cardGamepad = root.findViewById(R.id.style_gamepad);
                     View cardCustom = root.findViewById(R.id.style_custom);
 
-                    if (cardClassic != null) cardClassic.setBackgroundResource(R.drawable.background_card);
-                    if (cardGamepad != null) cardGamepad.setBackgroundResource(R.drawable.background_card);
-                    if (cardCustom != null) cardCustom.setBackgroundResource(R.drawable.background_card_neon);
+                    if (cardClassic != null) cardClassic.setBackgroundResource(R.drawable.bg_lucifer_glass_card);
+                    if (cardGamepad != null) cardGamepad.setBackgroundResource(R.drawable.bg_lucifer_glass_card);
+                    if (cardCustom != null) cardCustom.setBackgroundResource(R.drawable.bg_lucifer_nav_item);
 
                     // Update hotspot seekbars max limits based on loaded image dimensions
                     SeekBar hotspotXSeek = root.findViewById(R.id.seek_hotspot_x);

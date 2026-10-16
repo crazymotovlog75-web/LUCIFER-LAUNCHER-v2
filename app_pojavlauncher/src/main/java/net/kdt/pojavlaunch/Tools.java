@@ -114,7 +114,7 @@ import java.util.Map;
 public final class Tools {
     public  static final float BYTE_TO_MB = 1024 * 1024;
     public static final Handler MAIN_HANDLER = new Handler(Looper.getMainLooper());
-    public static String APP_NAME = "CS Launcher";
+    public static String APP_NAME = "LUCIFER LAUNCHER";
 
     public static final Gson GLOBAL_GSON = new GsonBuilder().setPrettyPrinting().create();
 
@@ -394,8 +394,11 @@ public final class Tools {
         }
 
 
-        Runtime runtime = MultiRTUtils.forceReread(Tools.pickRuntime(minecraftProfile, versionJavaRequirement));
         JMinecraftVersionList.Version versionInfo = Tools.getVersionInfo(versionId);
+        // The compact APK does not bundle a JRE. Ensure a compatible one is installed before
+        // pickRuntime runs, including for already-installed Minecraft versions.
+        if (!NewJREUtil.installNewJreIfNeeded(activity, versionInfo)) return;
+        Runtime runtime = MultiRTUtils.forceReread(Tools.pickRuntime(minecraftProfile, versionJavaRequirement));
 
 
         // Pre-process specific files
@@ -789,13 +792,22 @@ public final class Tools {
             }
         }
 
-        return JSONUtils.insertJSONValueList(
+        String[] resolvedArgs = JSONUtils.insertJSONValueList(
                 splitAndFilterEmpty(
                         versionInfo.minecraftArguments == null ?
                                 fromStringArray(minecraftArgs.toArray(new String[0])):
                                 versionInfo.minecraftArguments
                 ), varArgMap
         );
+
+        // A server hub request is consumed once. Keeping the Quick Play parameters in the
+        // argument list (rather than a shell string) avoids quoting/injection issues.
+        String quickPlayAddress = QuickPlayManager.consumePendingAddress(versionInfo);
+        if (quickPlayAddress == null) return resolvedArgs;
+        List<String> argsWithQuickPlay = new ArrayList<>(Arrays.asList(resolvedArgs));
+        argsWithQuickPlay.add("--quickPlayMultiplayer");
+        argsWithQuickPlay.add(quickPlayAddress);
+        return argsWithQuickPlay.toArray(new String[0]);
     }
 
     public static String fromStringArray(String[] strArr) {
@@ -1093,6 +1105,17 @@ public final class Tools {
     public static void openURL(Activity act, String url) {
         Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
         act.startActivity(browserIntent);
+    }
+
+    /** Prefer the Discord app for invite links, and fall back to the web invite when it is absent. */
+    public static void openDiscordInvite(Activity act, String inviteUrl) {
+        Intent discordIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(inviteUrl));
+        discordIntent.setPackage("com.discord");
+        try {
+            act.startActivity(discordIntent);
+        } catch (android.content.ActivityNotFoundException notInstalled) {
+            openURL(act, inviteUrl);
+        }
     }
 
     private static boolean checkRules(JMinecraftVersionList.Arguments.ArgValue.ArgRules[] rules) {

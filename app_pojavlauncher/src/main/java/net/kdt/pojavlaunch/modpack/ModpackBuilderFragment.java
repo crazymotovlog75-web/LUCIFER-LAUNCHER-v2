@@ -19,6 +19,7 @@ import android.widget.*;
 import net.kdt.pojavlaunch.PojavApplication;
 import net.kdt.pojavlaunch.R;
 import net.kdt.pojavlaunch.Tools;
+import net.kdt.pojavlaunch.theme.ThemeManager;
 
 import org.json.JSONObject;
 import androidx.annotation.NonNull;
@@ -223,7 +224,7 @@ public class ModpackBuilderFragment extends Fragment {
                     getResources().getDimensionPixelSize(R.dimen._24sdp), height);
             clp.gravity = Gravity.CENTER_VERTICAL;
             connector.setLayoutParams(clp);
-            connector.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.m3_ref_palette_primary80));
+            connector.setBackgroundColor(ThemeManager.getAccentColor(requireContext()));
             connector.setAlpha(0.3f);
             // Insert after each step dot except the last
             mStepIndicatorContainer.addView(connector,
@@ -236,7 +237,7 @@ public class ModpackBuilderFragment extends Fragment {
 
     private void updateStepIndicator() {
         int active = mState.currentStep;
-        int primaryColor = ContextCompat.getColor(requireContext(), R.color.m3_ref_palette_primary80);
+        int primaryColor = ThemeManager.getAccentColor(requireContext());
         int inactiveColor = (primaryColor & 0x00FFFFFF) | (0x30 << 24);
 
         for (int i = 0; i < mStepDots.size(); i++) {
@@ -333,7 +334,7 @@ public class ModpackBuilderFragment extends Fragment {
                 boolean isSelected = loaderKey.equals(mState.selectedLoader);
                 card.setChecked(isSelected);
                 card.setCardBackgroundColor(isSelected
-                        ? ContextCompat.getColor(getContext(), R.color.m3_ref_palette_primary80)
+                        ? ThemeManager.getAccentColor(requireContext())
                         : ContextCompat.getColor(getContext(), android.R.color.transparent));
 
                 final int idx = i;

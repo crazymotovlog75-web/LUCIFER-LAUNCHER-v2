@@ -26,7 +26,7 @@
             android:id="@+id/setting_value_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/accent_primary"
+            android:textColor="?attr/luciferAccent"
             android:textSize="14sp"
             android:textStyle="bold"
             android:layout_marginStart="8dp" />
@@ -48,7 +48,7 @@
         android:layout_marginBottom="4dp"
         android:paddingStart="4dp"
         android:paddingEnd="4dp"
-        android:progressTint="@color/accent_primary"
-        android:thumbTint="@color/accent_primary" />
+        android:progressTint="?attr/luciferAccent"
+        android:thumbTint="?attr/luciferAccent" />
 
 </LinearLayout>

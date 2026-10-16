@@ -114,8 +114,13 @@ public class ProfileIconCache {
     }
 
     private static int getStaticIconResource(String icon) {
-        switch (icon) {
-            case "default": return R.drawable.ic_pojav_full;
+        switch (icon.toLowerCase(java.util.Locale.ROOT)) {
+            case "default":
+            case "grass":
+            case "forge":
+            case "neoforge":
+            case "optifine":
+                return R.drawable.lucifer_launcher_emblem;
             case "fabric": return R.drawable.ic_fabric;
             case "quilt": return R.drawable.ic_quilt;
             default: return -1;

@@ -40,7 +40,7 @@
         android:layout_height="20dp"
         android:src="@drawable/ic_arrow_back"
         android:rotation="180"
-        app:tint="@color/accent_primary"
+        app:tint="?attr/luciferAccent"
         android:contentDescription="Action" />
 
 </LinearLayout>

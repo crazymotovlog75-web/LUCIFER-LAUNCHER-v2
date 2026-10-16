@@ -3,9 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/bg_launcher_dark">
+    android:background="@android:color/transparent">
 
-    <!-- CS LAUNCHER v2 Branding -->
+    <!-- Lucifer Launcher branding -->
     <LinearLayout
         android:id="@+id/auth_branding"
         android:layout_width="wrap_content"
@@ -21,7 +21,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="CS LAUNCHER v2"
+            android:text="@string/app_name"
             android:textColor="#A6FF3D"
             android:textSize="@dimen/_18ssp"
             android:textStyle="bold"
@@ -101,7 +101,7 @@
                 android:layout_width="@dimen/_20sdp"
                 android:layout_height="@dimen/_20sdp"
                 android:src="@drawable/ic_play_arrow"
-                android:tint="#FF4081"
+                android:tint="?attr/luciferAccent"
                 android:layout_marginEnd="@dimen/_12sdp"/>
 
             <TextView
@@ -117,13 +117,13 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Skins"
-                android:textColor="#FF4081"
+                android:textColor="?attr/luciferAccent"
                 android:textSize="@dimen/_9ssp"
                 android:textStyle="bold"
                 android:paddingHorizontal="6dp"
                 android:paddingVertical="2dp"
                 android:background="@drawable/bg_badge_online"
-                android:backgroundTint="#20FF4081"
+                android:backgroundTint="?attr/luciferAccentDim"
                 android:layout_marginEnd="8dp"/>
                 
             <ImageView
@@ -154,8 +154,7 @@
             <ImageView
                 android:layout_width="@dimen/_20sdp"
                 android:layout_height="@dimen/_20sdp"
-                android:src="@drawable/ic_pojav_full"
-                android:tint="#AAAAAA"
+                android:src="@drawable/lucifer_launcher_emblem"
                 android:layout_marginEnd="@dimen/_12sdp"/>
 
             <TextView
