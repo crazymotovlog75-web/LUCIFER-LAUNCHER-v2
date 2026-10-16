@@ -22,6 +22,7 @@ import net.kdt.pojavlaunch.utils.JREUtils;
 import java.io.File;
 import java.io.IOException;
 import java.util.LinkedHashMap;
+import java.util.List;
 
 public class LauncherPreferences {
     public static final String PREF_KEY_CURRENT_PROFILE = "currentProfile";
@@ -160,12 +161,15 @@ public class LauncherPreferences {
         if(DEFAULT_PREF.contains("defaultRuntime")) {
             PREF_DEFAULT_RUNTIME = DEFAULT_PREF.getString("defaultRuntime","");
         }else{
-            if(MultiRTUtils.getInstalledRuntimes().isEmpty()) {
+            List<net.kdt.pojavlaunch.multirt.Runtime> installedRuntimes = MultiRTUtils.getInstalledRuntimes();
+            if(installedRuntimes.isEmpty()) {
+                // Compact APKs start without a bundled runtime. Keep loading all other settings;
+                // a compatible JRE is downloaded when a Minecraft version is first launched.
                 PREF_DEFAULT_RUNTIME = "";
-                return;
+            } else {
+                PREF_DEFAULT_RUNTIME = installedRuntimes.get(0).name;
+                LauncherPreferences.DEFAULT_PREF.edit().putString("defaultRuntime",LauncherPreferences.PREF_DEFAULT_RUNTIME).apply();
             }
-            PREF_DEFAULT_RUNTIME = MultiRTUtils.getInstalledRuntimes().get(0).name;
-            LauncherPreferences.DEFAULT_PREF.edit().putString("defaultRuntime",LauncherPreferences.PREF_DEFAULT_RUNTIME).apply();
         }
  
         PREF_CUSTOM_CURSOR_PATH = DEFAULT_PREF.getString("custom_cursor_path", null);

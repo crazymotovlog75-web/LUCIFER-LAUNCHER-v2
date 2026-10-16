@@ -39,7 +39,7 @@ public class AsyncAssetManager {
         try {
             rt_version = Tools.read(am.open("components/jre/version"));
         } catch (IOException e) {
-            Log.e("JREAuto", "JRE was not included on this APK.", e);
+            Log.i("JREAuto", "No bundled Java 8 runtime; a compatible runtime will be installed on demand.");
         }
         String exactJREName = MultiRTUtils.getExactJreName(8);
         if(current_rt_version == null && exactJREName != null && !exactJREName.equals("Internal")/*this clause is for when the internal runtime is goofed*/) return;

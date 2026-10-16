@@ -39,17 +39,6 @@ jobs:
           distribution: 'temurin'
           java-version: '21'
 
-      # ── JRE 8 Runtime ───────────────────────────────────────────────────────
-      - name: Download JRE 8
-        uses: dawidd6/action-download-artifact@v6
-        with:
-          workflow: build.yml
-          path: app_pojavlauncher/src/main/assets/components/jre
-          workflow_conclusion: success
-          repo: AngelAuraMC/angelauramc-openjdk-build
-          branch: buildjre8
-          name: jre8-pojav
-
       # ── Gradle ──────────────────────────────────────────────────────────────
       - name: Set up Gradle
         uses: gradle/actions/setup-gradle@v4
@@ -75,7 +64,7 @@ jobs:
           ./scripts/languagelist_updater.sh
           mkdir -p out
 
-      # ── Release APK (PRIMARY — signed, shrunk) ───────────────────────────────
+      # ── Release APK (PRIMARY — compact, runtime downloaded on demand) ───────
       - name: Build Release APK
         run: |
           SIGNING_ARGS=""
@@ -112,7 +101,7 @@ jobs:
             echo "ERROR: Release APK not found" && exit 1
           fi
 
-      # ── Debug APK (internal / QA only) ───────────────────────────────────────
+      # ── Debug APK (internal / QA only; no bundled runtime) ──────────────────
       - name: Build Debug APK
         run: |
           ./gradlew :app_pojavlauncher:assembleDebug \
@@ -124,25 +113,6 @@ jobs:
             md5sum out/LUCIFER-LAUNCHER-V2-DEBUG.apk > out/LUCIFER-LAUNCHER-V2-DEBUG.md5
           fi
 
-      # ── No-runtime APK ───────────────────────────────────────────────────────
-      - name: Build APK without runtime
-        run: |
-          rm -rf app_pojavlauncher/src/main/assets/components/jre
-          rm -rf app_pojavlauncher/src/main/assets/components/jre-new
-          rm -rf app_pojavlauncher/src/main/assets/components/jre-21
-          rm -rf app_pojavlauncher/src/main/assets/components/jre-25
-
-          ./gradlew :app_pojavlauncher:assembleRelease \
-            -Pandroid.enableR8.fullMode=true \
-            --no-daemon
-
-          NORUNTIME_APK=$(find app_pojavlauncher/build/outputs/apk/release -name "*.apk" | head -n 1)
-          if [ -n "$NORUNTIME_APK" ]; then
-            cp "$NORUNTIME_APK" out/LUCIFER-LAUNCHER-V2-NO-RUNTIME.apk
-            md5sum    out/LUCIFER-LAUNCHER-V2-NO-RUNTIME.apk > out/LUCIFER-LAUNCHER-V2-NO-RUNTIME.md5
-            sha256sum out/LUCIFER-LAUNCHER-V2-NO-RUNTIME.apk > out/LUCIFER-LAUNCHER-V2-NO-RUNTIME.sha256
-          fi
-
       # ── APK size report ──────────────────────────────────────────────────────
       - name: APK size report
         run: |
@@ -151,7 +121,9 @@ jobs:
           echo "|------|------|" >> $GITHUB_STEP_SUMMARY
           for f in out/*.apk; do
             SIZE=$(du -sh "$f" | cut -f1)
+            SIZE_BYTES=$(stat -c%s "$f")
             echo "| $(basename $f) | $SIZE |" >> $GITHUB_STEP_SUMMARY
+            echo "APK size: $(basename "$f") — $SIZE ($SIZE_BYTES bytes)"
           done
 
       # ── Upload all artifacts ─────────────────────────────────────────────────
@@ -167,7 +139,7 @@ jobs:
         uses: ncipollo/release-action@v1
         if: github.event_name == 'workflow_dispatch' && inputs.publish_release == true
         with:
-          artifacts: "out/LUCIFER-LAUNCHER-V2.apk,out/LUCIFER-LAUNCHER-V2.md5,out/LUCIFER-LAUNCHER-V2.sha256,out/LUCIFER-LAUNCHER-V2-NO-RUNTIME.apk,out/LUCIFER-LAUNCHER-V2-NO-RUNTIME.md5,out/LUCIFER-LAUNCHER-V2-NO-RUNTIME.sha256"
+          artifacts: "out/LUCIFER-LAUNCHER-V2.apk,out/LUCIFER-LAUNCHER-V2.md5,out/LUCIFER-LAUNCHER-V2.sha256"
           token: ${{ secrets.GITHUB_TOKEN }}
           tag: "v2.${{ github.run_number }}"
           name: "Lucifer Launcher V2 — Build ${{ github.run_number }}"
@@ -177,11 +149,8 @@ jobs:
             **Branch:** `${{ github.ref_name }}`
             **Commit:** `${{ github.sha }}`
 
-            ### Downloads
-            | File | Description |
-            |------|-------------|
-            | `LUCIFER-LAUNCHER-V2.apk` | ✅ **Recommended** — Signed release build with bundled JRE 8 |
-            | `LUCIFER-LAUNCHER-V2-NO-RUNTIME.apk` | Signed release build without bundled runtime (smaller, requires device JRE) |
+            ### Download
+            `LUCIFER-LAUNCHER-V2.apk` is the compact release build. It downloads the Java runtime required by the selected Minecraft version on demand, so an internet connection and extra storage are needed the first time that runtime is used.
 
             > ℹ️ Verify your download with the `.md5` / `.sha256` checksum files.
           allowUpdates: true

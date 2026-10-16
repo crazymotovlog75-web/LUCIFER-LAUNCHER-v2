@@ -394,8 +394,11 @@ public final class Tools {
         }
 
 
-        Runtime runtime = MultiRTUtils.forceReread(Tools.pickRuntime(minecraftProfile, versionJavaRequirement));
         JMinecraftVersionList.Version versionInfo = Tools.getVersionInfo(versionId);
+        // The compact APK does not bundle a JRE. Ensure a compatible one is installed before
+        // pickRuntime runs, including for already-installed Minecraft versions.
+        if (!NewJREUtil.installNewJreIfNeeded(activity, versionInfo)) return;
+        Runtime runtime = MultiRTUtils.forceReread(Tools.pickRuntime(minecraftProfile, versionJavaRequirement));
 
 
         // Pre-process specific files

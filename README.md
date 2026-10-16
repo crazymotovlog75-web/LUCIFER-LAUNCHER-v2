@@ -90,6 +90,8 @@
 3. 🔑 **Sign in** with your Microsoft account (or play in offline mode)
 4. 🎮 **Pick a version**, hit **Play**, and enjoy Minecraft on Android!
 
+> 📦 The compact APK does not bundle Java. It downloads the compatible runtime on demand, so internet access and extra storage are needed the first time each Java version is used.
+
 <br>
 
 ## 📸 Screenshots
@@ -126,7 +128,7 @@ cd <YOUR_REPO_NAME>
 <br>
 
 #### 1️⃣ Java Runtime Environment (JRE)
-Download the `jre8-pojav` artifact from AngelAuraMC's [CI auto builds](https://github.com/AngelAuraMC/openjdk-build-multiarch/actions) — pre-built JREs for all architectures. To build it yourself, follow [android-openjdk-build-multiarch](https://github.com/AngelAuraMC/openjdk-build-multiarch).
+The standard launcher build omits bundled JRE files; it downloads a compatible Java runtime on demand when a Minecraft version is first launched. For a custom offline APK with Java 8 bundled, add the `jre8-pojav` artifact from AngelAuraMC's [CI auto builds](https://github.com/AngelAuraMC/openjdk-build-multiarch/actions) under `app_pojavlauncher/src/main/assets/components/jre`. To build the runtime yourself, follow [android-openjdk-build-multiarch](https://github.com/AngelAuraMC/openjdk-build-multiarch).
 
 #### 2️⃣ LWJGL
 Build instructions in the [LWJGL repository](https://github.com/AngelAuraMC/lwjgl3).
