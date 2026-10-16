@@ -293,6 +293,7 @@ public class ClientFeaturesFragment extends Fragment {
                 optixProfile.gameDir = "./custom_instances/" + profileName.toLowerCase();
                 optixProfile.type = "modpack";
                 optixProfile.icon = "Fabric";
+                optixProfile.created = MinecraftProfile.currentTimestamp();
 
                 LauncherProfiles.load();
                 LauncherProfiles.mainProfileJson.profiles.put(profileName, optixProfile);

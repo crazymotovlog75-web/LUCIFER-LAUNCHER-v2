@@ -84,7 +84,7 @@
             <ImageView
                 android:layout_width="24dp"
                 android:layout_height="24dp"
-                android:src="@drawable/bg_hero_minecraft"
+                android:src="@drawable/lucifer_launcher_emblem"
                 android:layout_marginEnd="12dp" />
 
             <TextView
@@ -203,8 +203,7 @@
             <ImageView
                 android:layout_width="24dp"
                 android:layout_height="24dp"
-                android:src="@drawable/ic_pojav_full"
-                android:tint="#AAAAAA"
+                android:src="@drawable/lucifer_launcher_emblem"
                 android:layout_marginEnd="12dp" />
 
             <TextView
@@ -230,8 +229,7 @@
             <ImageView
                 android:layout_width="24dp"
                 android:layout_height="24dp"
-                android:src="@drawable/ic_pojav_full"
-                android:tint="#AAAAAA"
+                android:src="@drawable/lucifer_launcher_emblem"
                 android:layout_marginEnd="12dp" />
 
             <TextView

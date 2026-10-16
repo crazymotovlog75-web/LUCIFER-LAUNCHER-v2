@@ -35,7 +35,6 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -96,10 +95,15 @@ public class RightPaneHomeFragment extends Fragment {
 
         View refresh = view.findViewById(R.id.btn_refresh_profiles);
         if (refresh != null) {
-            refresh.setOnClickListener(v -> {
-                setupProfileAdapter(true);
-                Toast.makeText(getContext(), R.string.profiles_refreshed, Toast.LENGTH_SHORT).show();
-            });
+            refresh.setOnClickListener(v -> PojavApplication.sExecutorService.execute(() -> {
+                LauncherProfiles.load();
+                LauncherProfiles.rescanProfiles();
+                Tools.runOnUiThread(() -> {
+                    if (!isAdded()) return;
+                    setupProfileAdapter(true);
+                    Toast.makeText(getContext(), R.string.profiles_refreshed, Toast.LENGTH_SHORT).show();
+                });
+            }));
         }
 
         View chooseInstance = view.findViewById(R.id.btn_home_instances);
@@ -179,14 +183,8 @@ public class RightPaneHomeFragment extends Fragment {
             List<MinecraftProfile> profiles = new ArrayList<>();
 
             if (profilesMap != null) {
-                List<Map.Entry<String, MinecraftProfile>> entries = new ArrayList<>(profilesMap.entrySet());
-                Collections.sort(entries, (left, right) -> {
-                    String leftUsed = left.getValue() != null && left.getValue().lastUsed != null
-                            ? left.getValue().lastUsed : "";
-                    String rightUsed = right.getValue() != null && right.getValue().lastUsed != null
-                            ? right.getValue().lastUsed : "";
-                    return rightUsed.compareTo(leftUsed);
-                });
+                List<Map.Entry<String, MinecraftProfile>> entries =
+                        LauncherProfiles.getProfilesInDisplayOrder();
                 for (Map.Entry<String, MinecraftProfile> entry : entries) {
                     String key = entry.getKey();
                     MinecraftProfile profile = entry.getValue();

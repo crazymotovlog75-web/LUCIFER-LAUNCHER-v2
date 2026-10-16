@@ -154,8 +154,7 @@
             <ImageView
                 android:layout_width="@dimen/_20sdp"
                 android:layout_height="@dimen/_20sdp"
-                android:src="@drawable/ic_pojav_full"
-                android:tint="#AAAAAA"
+                android:src="@drawable/lucifer_launcher_emblem"
                 android:layout_marginEnd="@dimen/_12sdp"/>
 
             <TextView

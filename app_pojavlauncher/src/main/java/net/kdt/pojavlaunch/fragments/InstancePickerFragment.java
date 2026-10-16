@@ -31,7 +31,6 @@ import net.kdt.pojavlaunch.value.launcherprofiles.LauncherProfiles;
 import net.kdt.pojavlaunch.value.launcherprofiles.MinecraftProfile;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -101,10 +100,14 @@ public class InstancePickerFragment extends Fragment {
             Exception failure = null;
             try {
                 LauncherProfiles.load();
+                // Opening the instance directory is an explicit request to discover already
+                // installed versions that do not yet have their own profile entry.
+                LauncherProfiles.rescanProfiles();
                 Map<String, MinecraftProfile> profiles = LauncherProfiles.mainProfileJson != null
                         ? LauncherProfiles.mainProfileJson.profiles : null;
                 if (profiles != null) {
-                    for (Map.Entry<String, MinecraftProfile> entry : profiles.entrySet()) {
+                    for (Map.Entry<String, MinecraftProfile> entry :
+                            LauncherProfiles.getProfilesInDisplayOrder()) {
                         String key = entry.getKey();
                         MinecraftProfile profile = entry.getValue();
                         if (key == null || key.trim().isEmpty() || profile == null ||
@@ -112,8 +115,6 @@ public class InstancePickerFragment extends Fragment {
                         instances.add(new Instance(key, profile));
                     }
                 }
-                Collections.sort(instances, (left, right) ->
-                        right.lastUsed.compareTo(left.lastUsed));
             } catch (Exception error) {
                 failure = error;
             }
@@ -220,12 +221,12 @@ public class InstancePickerFragment extends Fragment {
 
         @Override
         public long getItemId(int position) {
-            return position == 0 ? Long.MIN_VALUE : instances.get(position - 1).key.hashCode();
+            return position == instances.size() ? Long.MIN_VALUE : instances.get(position).key.hashCode();
         }
 
         @Override
         public int getItemViewType(int position) {
-            return position == 0 ? TYPE_CREATE : TYPE_INSTANCE;
+            return position == instances.size() ? TYPE_CREATE : TYPE_INSTANCE;
         }
 
         @Override
@@ -249,7 +250,7 @@ public class InstancePickerFragment extends Fragment {
                 holder.itemView.setOnClickListener(v -> openCreateInstance());
                 return;
             }
-            Instance item = instances.get(position - 1);
+            Instance item = instances.get(position);
             InstanceHolder profileHolder = (InstanceHolder) holder;
             profileHolder.name.setText(item.name);
             profileHolder.version.setText(item.version);
@@ -270,7 +271,8 @@ public class InstancePickerFragment extends Fragment {
         private void bindIcon(ImageView target, Instance instance) {
             String versionId = instance.version.toLowerCase(Locale.ROOT);
             int fallbackResource = versionId.contains("fabric") ? R.drawable.ic_fabric
-                    : versionId.contains("quilt") ? R.drawable.ic_quilt : R.drawable.ic_pojav_full;
+                    : versionId.contains("quilt") ? R.drawable.ic_quilt
+                    : R.drawable.lucifer_launcher_emblem;
             target.setImageResource(fallbackResource);
             target.setTag(instance.key);
             final android.content.res.Resources resources = target.getResources();

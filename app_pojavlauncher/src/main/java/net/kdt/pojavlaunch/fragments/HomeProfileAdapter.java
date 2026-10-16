@@ -165,7 +165,8 @@ public class HomeProfileAdapter extends RecyclerView.Adapter<HomeProfileAdapter.
         final String icon = profile.icon;
         if (icon != null && icon.startsWith("data:")) {
             Drawable fallback = resolveTypeFallback(target, profile.lastVersionId);
-            if (fallback == null) fallback = ContextCompat.getDrawable(target.getContext(), R.drawable.ic_pojav_full);
+            if (fallback == null) fallback = ContextCompat.getDrawable(
+                    target.getContext(), R.drawable.lucifer_launcher_emblem);
             target.setTag(profileKey);
             target.setImageDrawable(fallback);
             final android.content.res.Resources resources = target.getResources();
@@ -192,7 +193,8 @@ public class HomeProfileAdapter extends RecyclerView.Adapter<HomeProfileAdapter.
             Log.w(TAG, "Icon load failed for " + profileKey, e);
         }
         if (drawable == null) drawable = resolveTypeFallback(target, profile.lastVersionId);
-        if (drawable == null) drawable = ContextCompat.getDrawable(target.getContext(), R.drawable.ic_pojav_full);
+        if (drawable == null) drawable = ContextCompat.getDrawable(
+                target.getContext(), R.drawable.lucifer_launcher_emblem);
         target.setTag(profileKey);
         target.setImageDrawable(drawable);
     }
@@ -208,8 +210,8 @@ public class HomeProfileAdapter extends RecyclerView.Adapter<HomeProfileAdapter.
         int resId = -1;
         if (lower.contains("fabric")) resId = R.drawable.ic_fabric;
         else if (lower.contains("quilt")) resId = R.drawable.ic_quilt;
-        else if (lower.contains("forge")) resId = R.drawable.ic_pojav_full;
-        else if (lower.contains("neoforge")) resId = R.drawable.ic_pojav_full;
+        else if (lower.contains("forge")) resId = R.drawable.lucifer_launcher_emblem;
+        else if (lower.contains("neoforge")) resId = R.drawable.lucifer_launcher_emblem;
         if (resId == -1) return null;
         return ContextCompat.getDrawable(target.getContext(), resId);
     }

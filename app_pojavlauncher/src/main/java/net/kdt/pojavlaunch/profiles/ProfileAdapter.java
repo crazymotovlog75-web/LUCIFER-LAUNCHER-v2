@@ -76,7 +76,7 @@ public class ProfileAdapter extends BaseAdapter {
         mProfiles = new HashMap<>();
         mProfileList = new ArrayList<>();
         if (LauncherProfiles.mainProfileJson != null && LauncherProfiles.mainProfileJson.profiles != null) {
-            for (Map.Entry<String, MinecraftProfile> entry : LauncherProfiles.mainProfileJson.profiles.entrySet()) {
+            for (Map.Entry<String, MinecraftProfile> entry : LauncherProfiles.getProfilesInDisplayOrder()) {
                 String key = entry.getKey();
                 MinecraftProfile profile = entry.getValue();
                 if (key == null || key.isEmpty()) continue;
