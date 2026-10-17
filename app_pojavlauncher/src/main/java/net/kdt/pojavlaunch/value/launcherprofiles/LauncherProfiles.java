@@ -10,7 +10,9 @@ import net.kdt.pojavlaunch.prefs.LauncherPreferences;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -60,16 +62,112 @@ public class LauncherProfiles {
         if (mainProfileJson.profiles.size() == 0)
             mainProfileJson.profiles.put(UUID.randomUUID().toString(), MinecraftProfile.getDefaultProfile());
 
+        // Preserve a stable marker for the original profile, including profiles created by older
+        // launcher builds before the marker existed.
+        boolean defaultMarkerAdded = markDefaultProfileIfNeeded();
+
         // Normalize profile names from mod installers
         if(normalizeProfileIds(mainProfileJson)){
             write();
             load();
         } else {
+            if (defaultMarkerAdded) {
+                try {
+                    Tools.write(launcherProfilesFile.getAbsolutePath(), mainProfileJson.toJson());
+                } catch (IOException e) {
+                    Log.e(LauncherProfiles.class.toString(), "Failed to persist default profile marker", e);
+                }
+            }
             // Notify listeners when profiles are reloaded
             for (Runnable listener : new java.util.ArrayList<>(sProfileUpdateListeners)) {
                 if (listener != null) Tools.runOnUiThread(listener);
             }
         }
+    }
+
+    private static boolean markDefaultProfileIfNeeded() {
+        if (mainProfileJson == null || mainProfileJson.profiles == null) return false;
+        for (MinecraftProfile profile : mainProfileJson.profiles.values()) {
+            if (profile != null && profile.isDefault) return false;
+        }
+
+        Map.Entry<String, MinecraftProfile> candidate = null;
+        for (Map.Entry<String, MinecraftProfile> entry : mainProfileJson.profiles.entrySet()) {
+            MinecraftProfile profile = entry.getValue();
+            if (profile != null && profile.name != null &&
+                    "Default".equalsIgnoreCase(profile.name.trim())) {
+                candidate = entry;
+                break;
+            }
+        }
+
+        // Older builds allowed the default profile to be renamed. On first migration, the
+        // selected profile is the best available signal for which existing entry was the original.
+        if (candidate == null) {
+            String selectedKey = LauncherPreferences.DEFAULT_PREF.getString(
+                    LauncherPreferences.PREF_KEY_CURRENT_PROFILE, "");
+            MinecraftProfile selected = mainProfileJson.profiles.get(selectedKey);
+            if (selected != null) candidate = new java.util.AbstractMap.SimpleEntry<>(selectedKey, selected);
+        }
+        if (candidate == null && mainProfileJson.profiles.size() == 1) {
+            Map.Entry<String, MinecraftProfile> onlyEntry = mainProfileJson.profiles.entrySet().iterator().next();
+            if (onlyEntry.getValue() != null) candidate = onlyEntry;
+        }
+        if (candidate == null || candidate.getValue() == null) return false;
+        candidate.getValue().isDefault = true;
+        return true;
+    }
+
+    /**
+     * Returns profiles in a stable display order: the original default first, followed by the
+     * oldest-created instances. Legacy entries without creation timestamps remain ahead of newly
+     * created entries and use name/key as deterministic tie breakers.
+     */
+    @NonNull
+    public static List<Map.Entry<String, MinecraftProfile>> getProfilesInDisplayOrder() {
+        ArrayList<Map.Entry<String, MinecraftProfile>> entries = new ArrayList<>();
+        if (mainProfileJson == null || mainProfileJson.profiles == null) return entries;
+        entries.addAll(mainProfileJson.profiles.entrySet());
+        Collections.sort(entries, (left, right) -> {
+            MinecraftProfile leftProfile = left.getValue();
+            MinecraftProfile rightProfile = right.getValue();
+            boolean leftDefault = isDefaultProfile(leftProfile);
+            boolean rightDefault = isDefaultProfile(rightProfile);
+            if (leftDefault != rightDefault) return leftDefault ? -1 : 1;
+
+            String leftCreated = leftProfile != null && leftProfile.created != null
+                    ? leftProfile.created : "";
+            String rightCreated = rightProfile != null && rightProfile.created != null
+                    ? rightProfile.created : "";
+            int createdOrder;
+            if (leftCreated.isEmpty() != rightCreated.isEmpty()) {
+                createdOrder = leftCreated.isEmpty() ? -1 : 1;
+            } else {
+                createdOrder = leftCreated.compareTo(rightCreated);
+            }
+            if (createdOrder != 0) return createdOrder;
+
+            String leftName = leftProfile != null && leftProfile.name != null
+                    ? leftProfile.name : "";
+            String rightName = rightProfile != null && rightProfile.name != null
+                    ? rightProfile.name : "";
+            int nameOrder = leftName.compareToIgnoreCase(rightName);
+            if (nameOrder != 0) return nameOrder;
+            String leftKey = left.getKey() != null ? left.getKey() : "";
+            String rightKey = right.getKey() != null ? right.getKey() : "";
+            return leftKey.compareTo(rightKey);
+        });
+        return entries;
+    }
+
+    public static boolean isDefaultProfile(@androidx.annotation.Nullable MinecraftProfile profile) {
+        if (profile == null) return false;
+        if (mainProfileJson != null && mainProfileJson.profiles != null) {
+            for (MinecraftProfile candidate : mainProfileJson.profiles.values()) {
+                if (candidate != null && candidate.isDefault) return profile.isDefault;
+            }
+        }
+        return profile.name != null && "Default".equalsIgnoreCase(profile.name.trim());
     }
 
     /**
@@ -116,8 +214,8 @@ public class LauncherProfiles {
             load();
             return;
         }
+        // autoScanProfiles persists only when it actually discovers a new entry.
         autoScanProfiles();
-        write();
     }
 
     /**
@@ -141,7 +239,7 @@ public class LauncherProfiles {
 
         // Helper: check if a version ID looks like a loader version (not a raw MC version)
         java.util.regex.Pattern loaderPattern = java.util.regex.Pattern.compile(
-                "(?i)(fabric|forge|neoforge|quilt|optifine|optix|liteloader)");
+                "(?i)(fabric|forge|neoforge|quilt|optifine|liteloader)");
 
         // 1. Scan versions directory
         File versionsDir = new File(Tools.DIR_GAME_NEW, "versions");
@@ -191,6 +289,10 @@ public class LauncherProfiles {
                         // Create a profile for this version
                         MinecraftProfile profile = new MinecraftProfile();
                         profile.lastVersionId = versionId;
+                        long installedAt = dir.lastModified();
+                        profile.created = installedAt > 0
+                                ? MinecraftProfile.timestampFrom(installedAt)
+                                : MinecraftProfile.currentTimestamp();
 
                         // BRANDING: Show clean "Minecraft X.Y.Z" names, never expose internal
                         // loader version strings like "fabric-loader-0.19.3-1.21.10" to users.
@@ -213,10 +315,6 @@ public class LauncherProfiles {
                         } else if (lower.contains("optifine")) {
                             profile.name = "Minecraft " + mcVer + " (OptiFine)";
                             profile.icon = "OptiFine";
-                            profile.type = "custom";
-                        } else if (lower.contains("optix")) {
-                            profile.name = "Minecraft " + mcVer + " (Optix)";
-                            profile.icon = "Fabric";
                             profile.type = "custom";
                         } else if (lower.contains("quilt")) {
                             profile.name = "Minecraft " + mcVer + " (Quilt)";
@@ -260,21 +358,14 @@ public class LauncherProfiles {
                         MinecraftProfile profile = new MinecraftProfile();
                         profile.gameDir = relativePath;
                         profile.type = "modpack";
+                        long installedAt = dir.lastModified();
+                        profile.created = installedAt > 0
+                                ? MinecraftProfile.timestampFrom(installedAt)
+                                : MinecraftProfile.currentTimestamp();
 
-                        String lower = instName.toLowerCase();
-                        if (lower.contains("optix")) {
-                            profile.name = "Optix Client Instance";
-                            profile.icon = "Fabric";
-                            profile.lastVersionId = findBestVersionForInstance("fabric");
-                        } else if (lower.contains("client")) {
-                            profile.name = "Client Feature Instance";
-                            profile.icon = "Fabric";
-                            profile.lastVersionId = findBestVersionForInstance("fabric");
-                        } else {
-                            profile.name = "Modpack " + instName;
-                            profile.icon = "Grass";
-                            profile.lastVersionId = findBestVersionForInstance(null);
-                        }
+                        profile.name = "Modpack " + instName;
+                        profile.icon = "Grass";
+                        profile.lastVersionId = findBestVersionForInstance(null);
 
                         mainProfileJson.profiles.put(UUID.randomUUID().toString(), profile);
                         changed = true;
@@ -332,6 +423,9 @@ public class LauncherProfiles {
      * @param minecraftProfile the profile to insert
      */
     public static void insertMinecraftProfile(MinecraftProfile minecraftProfile) {
+        if (minecraftProfile.created == null || minecraftProfile.created.isEmpty()) {
+            minecraftProfile.created = MinecraftProfile.currentTimestamp();
+        }
         mainProfileJson.profiles.put(getFreeProfileKey(), minecraftProfile);
     }
 

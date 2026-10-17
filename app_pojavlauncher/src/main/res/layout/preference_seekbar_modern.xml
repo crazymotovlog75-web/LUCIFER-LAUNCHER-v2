@@ -59,7 +59,7 @@
             android:id="@+id/seekbar_value"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/neon_green"
+            android:textColor="?attr/luciferAccent"
             android:textSize="14sp"
             android:textStyle="bold"
             android:layout_marginStart="8dp" />
@@ -72,7 +72,7 @@
         android:layout_marginTop="12dp"
         android:paddingStart="0dp"
         android:paddingEnd="0dp"
-        android:progressTint="@color/neon_green"
-        android:thumbTint="@color/neon_green" />
+        android:progressTint="?attr/luciferAccent"
+        android:thumbTint="?attr/luciferAccent" />
 
 </LinearLayout>

@@ -11,6 +11,8 @@ import android.view.animation.DecelerateInterpolator;
 
 import androidx.annotation.Nullable;
 
+import net.kdt.pojavlaunch.theme.ThemeManager;
+
 public class CustomToggleView extends View {
 
     private boolean mChecked = false;
@@ -18,6 +20,7 @@ public class CustomToggleView extends View {
     private ValueAnimator mAnimator;
     private final Paint mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
     private final RectF mTrackRect = new RectF();
+    private int mAccentColor;
     private OnCheckedChangeListener mListener;
 
     public interface OnCheckedChangeListener {
@@ -40,6 +43,7 @@ public class CustomToggleView extends View {
     }
 
     private void init() {
+        mAccentColor = ThemeManager.getAccentColor(getContext());
         setClickable(true);
         setFocusable(true);
         mAnimProgress = mChecked ? 1f : 0f;
@@ -122,9 +126,9 @@ public class CustomToggleView extends View {
         mTrackRect.set(0, 0, w, h);
         float radius = h / 2f;
 
-        // Transition from dark grey (#222222) to neon green (#39FF14)
+        // Transition from the neutral track to the current Lucifer palette accent.
         int darkBg = 0xFF222222;
-        int activeBg = 0xFF39FF14;
+        int activeBg = mAccentColor;
         int trackColor = blendColors(darkBg, activeBg, mAnimProgress);
 
         mPaint.setStyle(Paint.Style.FILL);
@@ -143,7 +147,8 @@ public class CustomToggleView extends View {
 
         // Draw small shadow/glow if enabled
         if (mAnimProgress > 0.05f) {
-            mPaint.setColor(blendColors(0x0039FF14, 0x4439FF14, mAnimProgress));
+            int accentGlow = (mAccentColor & 0x00FFFFFF) | 0x44000000;
+            mPaint.setColor(blendColors(0x00000000, accentGlow, mAnimProgress));
             canvas.drawCircle(thumbX, thumbY, thumbRadius + padding * 0.5f, mPaint);
         }
 

@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#0D0D0D"
+    android:background="@android:color/transparent"
     android:orientation="vertical">
 
     <!-- ── HEADER ── -->
@@ -30,7 +30,7 @@
                 android:background="?android:attr/selectableItemBackgroundBorderless"
                 android:src="@drawable/ic_arrow_back_white"
                 android:contentDescription="@string/global_back"
-                android:tint="#39FF14" />
+                android:tint="?attr/luciferAccent" />
 
             <TextView
                 android:id="@+id/mod_store_title"
@@ -93,7 +93,7 @@
                 android:background="@drawable/background_card"
                 android:padding="7dp"
                 android:src="@drawable/ic_filter"
-                android:tint="#39FF14" />
+                android:tint="?attr/luciferAccent" />
 
         </LinearLayout>
 
@@ -121,7 +121,7 @@
         android:id="@+id/tab_indicator"
         android:layout_width="0dp"
         android:layout_height="2dp"
-        android:background="#39FF14" />
+        android:background="?attr/luciferAccent" />
 
     <!-- ── VIEWPAGER ── -->
     <androidx.viewpager2.widget.ViewPager2

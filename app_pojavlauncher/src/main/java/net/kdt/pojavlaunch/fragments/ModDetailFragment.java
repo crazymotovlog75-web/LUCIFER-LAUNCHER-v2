@@ -36,6 +36,7 @@ import net.kdt.pojavlaunch.modloaders.modpacks.models.ModItem;
 import net.kdt.pojavlaunch.fragments.ModInstallFragment;
 import net.kdt.pojavlaunch.modloaders.modpacks.models.Constants;
 import net.kdt.pojavlaunch.prefs.LauncherPreferences;
+import net.kdt.pojavlaunch.theme.ThemeManager;
 import net.kdt.pojavlaunch.value.launcherprofiles.LauncherProfiles;
 import net.kdt.pojavlaunch.value.launcherprofiles.MinecraftProfile;
 import net.kdt.pojavlaunch.utils.DownloadUtils;
@@ -279,7 +280,7 @@ public class ModDetailFragment extends Fragment {
             mDownloadButton.setEnabled(true);
             mDownloadButton.setBackgroundResource(R.drawable.background_download_button_enabled);
             mDownloadButton.setText(R.string.detail_download_now);
-            mDownloadButton.setTextColor(ContextCompat.getColor(requireContext(), R.color.neon_green));
+            mDownloadButton.setTextColor(ThemeManager.getAccentColor(requireContext()));
             mDownloadButton.setOnClickListener(v -> handleDownload());
         }
     }
@@ -322,7 +323,7 @@ public class ModDetailFragment extends Fragment {
         if (enabled) {
             mDownloadButton.setBackgroundResource(R.drawable.background_download_button_enabled);
             mDownloadButton.setText(R.string.detail_download_now);
-            mDownloadButton.setTextColor(ContextCompat.getColor(requireContext(), R.color.neon_green));
+            mDownloadButton.setTextColor(ThemeManager.getAccentColor(requireContext()));
 
             // Scale-up bounce animation only on transition from disabled→enabled
             if (!wasEnabled) {

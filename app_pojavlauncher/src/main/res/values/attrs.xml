@@ -8,4 +8,18 @@
     <attr name="colorTextPrimary"   format="color"/>
     <attr name="colorTextSecondary" format="color"/>
     <attr name="bgMainDrawable"     format="reference|color"/>
+
+    <!-- Runtime palette roles used by the wallpaper-matched launcher themes. -->
+    <attr name="luciferAccent" format="color" />
+    <attr name="luciferOnAccent" format="color" />
+    <attr name="luciferSecondary" format="color" />
+    <attr name="luciferHighlight" format="color" />
+    <attr name="luciferAccentDim" format="color" />
+    <attr name="luciferSurface" format="color" />
+    <attr name="luciferSurfaceHigh" format="color" />
+    <attr name="luciferGlass" format="color" />
+    <attr name="luciferGlassHigh" format="color" />
+    <attr name="luciferBorder" format="color" />
+    <attr name="luciferBackdrop" format="color" />
+    <attr name="luciferWallpaper" format="reference" />
 </resources>

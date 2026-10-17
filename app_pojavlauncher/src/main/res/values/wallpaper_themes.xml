@@ -1,0 +1,703 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="AppTheme.Wallpaper01" parent="AppTheme">
+        <item name="luciferAccent">@color/wallpaper_01_accent</item>
+        <item name="luciferSecondary">@color/wallpaper_01_secondary</item>
+        <item name="luciferHighlight">@color/wallpaper_01_highlight</item>
+        <item name="luciferAccentDim">@color/wallpaper_01_accent_dim</item>
+        <item name="luciferSurface">@color/wallpaper_01_surface</item>
+        <item name="luciferSurfaceHigh">@color/wallpaper_01_surface_high</item>
+        <item name="luciferGlass">@color/wallpaper_01_glass</item>
+        <item name="luciferGlassHigh">@color/wallpaper_01_glass_high</item>
+        <item name="luciferBorder">@color/wallpaper_01_border</item>
+        <item name="luciferBackdrop">@color/wallpaper_01_backdrop</item>
+        <item name="luciferWallpaper">@drawable/lucifer_wallpaper_01</item>
+        <item name="android:statusBarColor">@color/wallpaper_01_surface</item>
+        <item name="android:navigationBarColor">@color/wallpaper_01_surface</item>
+        <item name="colorBgApp">@color/wallpaper_01_surface</item>
+        <item name="colorBgBottomBar">@color/wallpaper_01_surface_high</item>
+        <item name="colorBgStatusBar">@color/wallpaper_01_surface</item>
+        <item name="colorDivider">@color/wallpaper_01_border</item>
+        <item name="themeAccent">?attr/luciferAccent</item>
+        <item name="colorAccent">?attr/luciferAccent</item>
+        <item name="colorTextPrimary">@color/primary_text</item>
+        <item name="colorTextSecondary">@color/secondary_text</item>
+        <item name="bgMainDrawable">@drawable/bg_lucifer_scene</item>
+        <item name="android:windowBackground">@drawable/bg_lucifer_scene</item>
+        <item name="colorSurface">@color/wallpaper_01_surface</item>
+        <item name="colorSurfaceVariant">@color/wallpaper_01_surface_high</item>
+        <item name="colorOnSurface">@color/primary_text</item>
+        <item name="colorOnSurfaceVariant">@color/secondary_text</item>
+    </style>
+
+    <style name="AppTheme.Wallpaper01.Gradient" parent="AppTheme.Wallpaper01">
+        <item name="bgMainDrawable">@drawable/bg_lucifer_scene_gradient</item>
+        <item name="android:windowBackground">@drawable/bg_lucifer_scene_gradient</item>
+    </style>
+
+    <style name="AppTheme.Wallpaper02" parent="AppTheme">
+        <item name="luciferAccent">@color/wallpaper_02_accent</item>
+        <item name="luciferSecondary">@color/wallpaper_02_secondary</item>
+        <item name="luciferHighlight">@color/wallpaper_02_highlight</item>
+        <item name="luciferAccentDim">@color/wallpaper_02_accent_dim</item>
+        <item name="luciferSurface">@color/wallpaper_02_surface</item>
+        <item name="luciferSurfaceHigh">@color/wallpaper_02_surface_high</item>
+        <item name="luciferGlass">@color/wallpaper_02_glass</item>
+        <item name="luciferGlassHigh">@color/wallpaper_02_glass_high</item>
+        <item name="luciferBorder">@color/wallpaper_02_border</item>
+        <item name="luciferBackdrop">@color/wallpaper_02_backdrop</item>
+        <item name="luciferWallpaper">@drawable/lucifer_wallpaper_02</item>
+        <item name="android:statusBarColor">@color/wallpaper_02_surface</item>
+        <item name="android:navigationBarColor">@color/wallpaper_02_surface</item>
+        <item name="colorBgApp">@color/wallpaper_02_surface</item>
+        <item name="colorBgBottomBar">@color/wallpaper_02_surface_high</item>
+        <item name="colorBgStatusBar">@color/wallpaper_02_surface</item>
+        <item name="colorDivider">@color/wallpaper_02_border</item>
+        <item name="themeAccent">?attr/luciferAccent</item>
+        <item name="colorAccent">?attr/luciferAccent</item>
+        <item name="colorTextPrimary">@color/primary_text</item>
+        <item name="colorTextSecondary">@color/secondary_text</item>
+        <item name="bgMainDrawable">@drawable/bg_lucifer_scene</item>
+        <item name="android:windowBackground">@drawable/bg_lucifer_scene</item>
+        <item name="colorSurface">@color/wallpaper_02_surface</item>
+        <item name="colorSurfaceVariant">@color/wallpaper_02_surface_high</item>
+        <item name="colorOnSurface">@color/primary_text</item>
+        <item name="colorOnSurfaceVariant">@color/secondary_text</item>
+    </style>
+
+    <style name="AppTheme.Wallpaper02.Gradient" parent="AppTheme.Wallpaper02">
+        <item name="bgMainDrawable">@drawable/bg_lucifer_scene_gradient</item>
+        <item name="android:windowBackground">@drawable/bg_lucifer_scene_gradient</item>
+    </style>
+
+    <style name="AppTheme.Wallpaper03" parent="AppTheme">
+        <item name="luciferAccent">@color/wallpaper_03_accent</item>
+        <item name="luciferSecondary">@color/wallpaper_03_secondary</item>
+        <item name="luciferHighlight">@color/wallpaper_03_highlight</item>
+        <item name="luciferAccentDim">@color/wallpaper_03_accent_dim</item>
+        <item name="luciferSurface">@color/wallpaper_03_surface</item>
+        <item name="luciferSurfaceHigh">@color/wallpaper_03_surface_high</item>
+        <item name="luciferGlass">@color/wallpaper_03_glass</item>
+        <item name="luciferGlassHigh">@color/wallpaper_03_glass_high</item>
+        <item name="luciferBorder">@color/wallpaper_03_border</item>
+        <item name="luciferBackdrop">@color/wallpaper_03_backdrop</item>
+        <item name="luciferWallpaper">@drawable/lucifer_wallpaper_03</item>
+        <item name="android:statusBarColor">@color/wallpaper_03_surface</item>
+        <item name="android:navigationBarColor">@color/wallpaper_03_surface</item>
+        <item name="colorBgApp">@color/wallpaper_03_surface</item>
+        <item name="colorBgBottomBar">@color/wallpaper_03_surface_high</item>
+        <item name="colorBgStatusBar">@color/wallpaper_03_surface</item>
+        <item name="colorDivider">@color/wallpaper_03_border</item>
+        <item name="themeAccent">?attr/luciferAccent</item>
+        <item name="colorAccent">?attr/luciferAccent</item>
+        <item name="colorTextPrimary">@color/primary_text</item>
+        <item name="colorTextSecondary">@color/secondary_text</item>
+        <item name="bgMainDrawable">@drawable/bg_lucifer_scene</item>
+        <item name="android:windowBackground">@drawable/bg_lucifer_scene</item>
+        <item name="colorSurface">@color/wallpaper_03_surface</item>
+        <item name="colorSurfaceVariant">@color/wallpaper_03_surface_high</item>
+        <item name="colorOnSurface">@color/primary_text</item>
+        <item name="colorOnSurfaceVariant">@color/secondary_text</item>
+    </style>
+
+    <style name="AppTheme.Wallpaper03.Gradient" parent="AppTheme.Wallpaper03">
+        <item name="bgMainDrawable">@drawable/bg_lucifer_scene_gradient</item>
+        <item name="android:windowBackground">@drawable/bg_lucifer_scene_gradient</item>
+    </style>
+
+    <style name="AppTheme.Wallpaper04" parent="AppTheme">
+        <item name="luciferAccent">@color/wallpaper_04_accent</item>
+        <item name="luciferSecondary">@color/wallpaper_04_secondary</item>
+        <item name="luciferHighlight">@color/wallpaper_04_highlight</item>
+        <item name="luciferAccentDim">@color/wallpaper_04_accent_dim</item>
+        <item name="luciferSurface">@color/wallpaper_04_surface</item>
+        <item name="luciferSurfaceHigh">@color/wallpaper_04_surface_high</item>
+        <item name="luciferGlass">@color/wallpaper_04_glass</item>
+        <item name="luciferGlassHigh">@color/wallpaper_04_glass_high</item>
+        <item name="luciferBorder">@color/wallpaper_04_border</item>
+        <item name="luciferBackdrop">@color/wallpaper_04_backdrop</item>
+        <item name="luciferWallpaper">@drawable/lucifer_wallpaper_04</item>
+        <item name="android:statusBarColor">@color/wallpaper_04_surface</item>
+        <item name="android:navigationBarColor">@color/wallpaper_04_surface</item>
+        <item name="colorBgApp">@color/wallpaper_04_surface</item>
+        <item name="colorBgBottomBar">@color/wallpaper_04_surface_high</item>
+        <item name="colorBgStatusBar">@color/wallpaper_04_surface</item>
+        <item name="colorDivider">@color/wallpaper_04_border</item>
+        <item name="themeAccent">?attr/luciferAccent</item>
+        <item name="colorAccent">?attr/luciferAccent</item>
+        <item name="colorTextPrimary">@color/primary_text</item>
+        <item name="colorTextSecondary">@color/secondary_text</item>
+        <item name="bgMainDrawable">@drawable/bg_lucifer_scene</item>
+        <item name="android:windowBackground">@drawable/bg_lucifer_scene</item>
+        <item name="colorSurface">@color/wallpaper_04_surface</item>
+        <item name="colorSurfaceVariant">@color/wallpaper_04_surface_high</item>
+        <item name="colorOnSurface">@color/primary_text</item>
+        <item name="colorOnSurfaceVariant">@color/secondary_text</item>
+    </style>
+
+    <style name="AppTheme.Wallpaper04.Gradient" parent="AppTheme.Wallpaper04">
+        <item name="bgMainDrawable">@drawable/bg_lucifer_scene_gradient</item>
+        <item name="android:windowBackground">@drawable/bg_lucifer_scene_gradient</item>
+    </style>
+
+    <style name="AppTheme.Wallpaper05" parent="AppTheme">
+        <item name="luciferAccent">@color/wallpaper_05_accent</item>
+        <item name="luciferSecondary">@color/wallpaper_05_secondary</item>
+        <item name="luciferHighlight">@color/wallpaper_05_highlight</item>
+        <item name="luciferAccentDim">@color/wallpaper_05_accent_dim</item>
+        <item name="luciferSurface">@color/wallpaper_05_surface</item>
+        <item name="luciferSurfaceHigh">@color/wallpaper_05_surface_high</item>
+        <item name="luciferGlass">@color/wallpaper_05_glass</item>
+        <item name="luciferGlassHigh">@color/wallpaper_05_glass_high</item>
+        <item name="luciferBorder">@color/wallpaper_05_border</item>
+        <item name="luciferBackdrop">@color/wallpaper_05_backdrop</item>
+        <item name="luciferWallpaper">@drawable/lucifer_wallpaper_05</item>
+        <item name="android:statusBarColor">@color/wallpaper_05_surface</item>
+        <item name="android:navigationBarColor">@color/wallpaper_05_surface</item>
+        <item name="colorBgApp">@color/wallpaper_05_surface</item>
+        <item name="colorBgBottomBar">@color/wallpaper_05_surface_high</item>
+        <item name="colorBgStatusBar">@color/wallpaper_05_surface</item>
+        <item name="colorDivider">@color/wallpaper_05_border</item>
+        <item name="themeAccent">?attr/luciferAccent</item>
+        <item name="colorAccent">?attr/luciferAccent</item>
+        <item name="colorTextPrimary">@color/primary_text</item>
+        <item name="colorTextSecondary">@color/secondary_text</item>
+        <item name="bgMainDrawable">@drawable/bg_lucifer_scene</item>
+        <item name="android:windowBackground">@drawable/bg_lucifer_scene</item>
+        <item name="colorSurface">@color/wallpaper_05_surface</item>
+        <item name="colorSurfaceVariant">@color/wallpaper_05_surface_high</item>
+        <item name="colorOnSurface">@color/primary_text</item>
+        <item name="colorOnSurfaceVariant">@color/secondary_text</item>
+    </style>
+
+    <style name="AppTheme.Wallpaper05.Gradient" parent="AppTheme.Wallpaper05">
+        <item name="bgMainDrawable">@drawable/bg_lucifer_scene_gradient</item>
+        <item name="android:windowBackground">@drawable/bg_lucifer_scene_gradient</item>
+    </style>
+
+    <style name="AppTheme.Wallpaper06" parent="AppTheme">
+        <item name="luciferAccent">@color/wallpaper_06_accent</item>
+        <item name="luciferSecondary">@color/wallpaper_06_secondary</item>
+        <item name="luciferHighlight">@color/wallpaper_06_highlight</item>
+        <item name="luciferAccentDim">@color/wallpaper_06_accent_dim</item>
+        <item name="luciferSurface">@color/wallpaper_06_surface</item>
+        <item name="luciferSurfaceHigh">@color/wallpaper_06_surface_high</item>
+        <item name="luciferGlass">@color/wallpaper_06_glass</item>
+        <item name="luciferGlassHigh">@color/wallpaper_06_glass_high</item>
+        <item name="luciferBorder">@color/wallpaper_06_border</item>
+        <item name="luciferBackdrop">@color/wallpaper_06_backdrop</item>
+        <item name="luciferWallpaper">@drawable/lucifer_wallpaper_06</item>
+        <item name="android:statusBarColor">@color/wallpaper_06_surface</item>
+        <item name="android:navigationBarColor">@color/wallpaper_06_surface</item>
+        <item name="colorBgApp">@color/wallpaper_06_surface</item>
+        <item name="colorBgBottomBar">@color/wallpaper_06_surface_high</item>
+        <item name="colorBgStatusBar">@color/wallpaper_06_surface</item>
+        <item name="colorDivider">@color/wallpaper_06_border</item>
+        <item name="themeAccent">?attr/luciferAccent</item>
+        <item name="colorAccent">?attr/luciferAccent</item>
+        <item name="colorTextPrimary">@color/primary_text</item>
+        <item name="colorTextSecondary">@color/secondary_text</item>
+        <item name="bgMainDrawable">@drawable/bg_lucifer_scene</item>
+        <item name="android:windowBackground">@drawable/bg_lucifer_scene</item>
+        <item name="colorSurface">@color/wallpaper_06_surface</item>
+        <item name="colorSurfaceVariant">@color/wallpaper_06_surface_high</item>
+        <item name="colorOnSurface">@color/primary_text</item>
+        <item name="colorOnSurfaceVariant">@color/secondary_text</item>
+    </style>
+
+    <style name="AppTheme.Wallpaper06.Gradient" parent="AppTheme.Wallpaper06">
+        <item name="bgMainDrawable">@drawable/bg_lucifer_scene_gradient</item>
+        <item name="android:windowBackground">@drawable/bg_lucifer_scene_gradient</item>
+    </style>
+
+    <style name="AppTheme.Wallpaper07" parent="AppTheme">
+        <item name="luciferAccent">@color/wallpaper_07_accent</item>
+        <item name="luciferSecondary">@color/wallpaper_07_secondary</item>
+        <item name="luciferHighlight">@color/wallpaper_07_highlight</item>
+        <item name="luciferAccentDim">@color/wallpaper_07_accent_dim</item>
+        <item name="luciferSurface">@color/wallpaper_07_surface</item>
+        <item name="luciferSurfaceHigh">@color/wallpaper_07_surface_high</item>
+        <item name="luciferGlass">@color/wallpaper_07_glass</item>
+        <item name="luciferGlassHigh">@color/wallpaper_07_glass_high</item>
+        <item name="luciferBorder">@color/wallpaper_07_border</item>
+        <item name="luciferBackdrop">@color/wallpaper_07_backdrop</item>
+        <item name="luciferWallpaper">@drawable/lucifer_wallpaper_07</item>
+        <item name="android:statusBarColor">@color/wallpaper_07_surface</item>
+        <item name="android:navigationBarColor">@color/wallpaper_07_surface</item>
+        <item name="colorBgApp">@color/wallpaper_07_surface</item>
+        <item name="colorBgBottomBar">@color/wallpaper_07_surface_high</item>
+        <item name="colorBgStatusBar">@color/wallpaper_07_surface</item>
+        <item name="colorDivider">@color/wallpaper_07_border</item>
+        <item name="themeAccent">?attr/luciferAccent</item>
+        <item name="colorAccent">?attr/luciferAccent</item>
+        <item name="colorTextPrimary">@color/primary_text</item>
+        <item name="colorTextSecondary">@color/secondary_text</item>
+        <item name="bgMainDrawable">@drawable/bg_lucifer_scene</item>
+        <item name="android:windowBackground">@drawable/bg_lucifer_scene</item>
+        <item name="colorSurface">@color/wallpaper_07_surface</item>
+        <item name="colorSurfaceVariant">@color/wallpaper_07_surface_high</item>
+        <item name="colorOnSurface">@color/primary_text</item>
+        <item name="colorOnSurfaceVariant">@color/secondary_text</item>
+    </style>
+
+    <style name="AppTheme.Wallpaper07.Gradient" parent="AppTheme.Wallpaper07">
+        <item name="bgMainDrawable">@drawable/bg_lucifer_scene_gradient</item>
+        <item name="android:windowBackground">@drawable/bg_lucifer_scene_gradient</item>
+    </style>
+
+    <style name="AppTheme.Wallpaper08" parent="AppTheme">
+        <item name="luciferAccent">@color/wallpaper_08_accent</item>
+        <item name="luciferSecondary">@color/wallpaper_08_secondary</item>
+        <item name="luciferHighlight">@color/wallpaper_08_highlight</item>
+        <item name="luciferAccentDim">@color/wallpaper_08_accent_dim</item>
+        <item name="luciferSurface">@color/wallpaper_08_surface</item>
+        <item name="luciferSurfaceHigh">@color/wallpaper_08_surface_high</item>
+        <item name="luciferGlass">@color/wallpaper_08_glass</item>
+        <item name="luciferGlassHigh">@color/wallpaper_08_glass_high</item>
+        <item name="luciferBorder">@color/wallpaper_08_border</item>
+        <item name="luciferBackdrop">@color/wallpaper_08_backdrop</item>
+        <item name="luciferWallpaper">@drawable/lucifer_wallpaper_08</item>
+        <item name="android:statusBarColor">@color/wallpaper_08_surface</item>
+        <item name="android:navigationBarColor">@color/wallpaper_08_surface</item>
+        <item name="colorBgApp">@color/wallpaper_08_surface</item>
+        <item name="colorBgBottomBar">@color/wallpaper_08_surface_high</item>
+        <item name="colorBgStatusBar">@color/wallpaper_08_surface</item>
+        <item name="colorDivider">@color/wallpaper_08_border</item>
+        <item name="themeAccent">?attr/luciferAccent</item>
+        <item name="colorAccent">?attr/luciferAccent</item>
+        <item name="colorTextPrimary">@color/primary_text</item>
+        <item name="colorTextSecondary">@color/secondary_text</item>
+        <item name="bgMainDrawable">@drawable/bg_lucifer_scene</item>
+        <item name="android:windowBackground">@drawable/bg_lucifer_scene</item>
+        <item name="colorSurface">@color/wallpaper_08_surface</item>
+        <item name="colorSurfaceVariant">@color/wallpaper_08_surface_high</item>
+        <item name="colorOnSurface">@color/primary_text</item>
+        <item name="colorOnSurfaceVariant">@color/secondary_text</item>
+    </style>
+
+    <style name="AppTheme.Wallpaper08.Gradient" parent="AppTheme.Wallpaper08">
+        <item name="bgMainDrawable">@drawable/bg_lucifer_scene_gradient</item>
+        <item name="android:windowBackground">@drawable/bg_lucifer_scene_gradient</item>
+    </style>
+
+    <style name="AppTheme.Wallpaper09" parent="AppTheme">
+        <item name="luciferAccent">@color/wallpaper_09_accent</item>
+        <item name="luciferSecondary">@color/wallpaper_09_secondary</item>
+        <item name="luciferHighlight">@color/wallpaper_09_highlight</item>
+        <item name="luciferAccentDim">@color/wallpaper_09_accent_dim</item>
+        <item name="luciferSurface">@color/wallpaper_09_surface</item>
+        <item name="luciferSurfaceHigh">@color/wallpaper_09_surface_high</item>
+        <item name="luciferGlass">@color/wallpaper_09_glass</item>
+        <item name="luciferGlassHigh">@color/wallpaper_09_glass_high</item>
+        <item name="luciferBorder">@color/wallpaper_09_border</item>
+        <item name="luciferBackdrop">@color/wallpaper_09_backdrop</item>
+        <item name="luciferWallpaper">@drawable/lucifer_wallpaper_09</item>
+        <item name="android:statusBarColor">@color/wallpaper_09_surface</item>
+        <item name="android:navigationBarColor">@color/wallpaper_09_surface</item>
+        <item name="colorBgApp">@color/wallpaper_09_surface</item>
+        <item name="colorBgBottomBar">@color/wallpaper_09_surface_high</item>
+        <item name="colorBgStatusBar">@color/wallpaper_09_surface</item>
+        <item name="colorDivider">@color/wallpaper_09_border</item>
+        <item name="themeAccent">?attr/luciferAccent</item>
+        <item name="colorAccent">?attr/luciferAccent</item>
+        <item name="colorTextPrimary">@color/primary_text</item>
+        <item name="colorTextSecondary">@color/secondary_text</item>
+        <item name="bgMainDrawable">@drawable/bg_lucifer_scene</item>
+        <item name="android:windowBackground">@drawable/bg_lucifer_scene</item>
+        <item name="colorSurface">@color/wallpaper_09_surface</item>
+        <item name="colorSurfaceVariant">@color/wallpaper_09_surface_high</item>
+        <item name="colorOnSurface">@color/primary_text</item>
+        <item name="colorOnSurfaceVariant">@color/secondary_text</item>
+    </style>
+
+    <style name="AppTheme.Wallpaper09.Gradient" parent="AppTheme.Wallpaper09">
+        <item name="bgMainDrawable">@drawable/bg_lucifer_scene_gradient</item>
+        <item name="android:windowBackground">@drawable/bg_lucifer_scene_gradient</item>
+    </style>
+
+    <style name="AppTheme.Wallpaper10" parent="AppTheme">
+        <item name="luciferAccent">@color/wallpaper_10_accent</item>
+        <item name="luciferSecondary">@color/wallpaper_10_secondary</item>
+        <item name="luciferHighlight">@color/wallpaper_10_highlight</item>
+        <item name="luciferAccentDim">@color/wallpaper_10_accent_dim</item>
+        <item name="luciferSurface">@color/wallpaper_10_surface</item>
+        <item name="luciferSurfaceHigh">@color/wallpaper_10_surface_high</item>
+        <item name="luciferGlass">@color/wallpaper_10_glass</item>
+        <item name="luciferGlassHigh">@color/wallpaper_10_glass_high</item>
+        <item name="luciferBorder">@color/wallpaper_10_border</item>
+        <item name="luciferBackdrop">@color/wallpaper_10_backdrop</item>
+        <item name="luciferWallpaper">@drawable/lucifer_wallpaper_10</item>
+        <item name="android:statusBarColor">@color/wallpaper_10_surface</item>
+        <item name="android:navigationBarColor">@color/wallpaper_10_surface</item>
+        <item name="colorBgApp">@color/wallpaper_10_surface</item>
+        <item name="colorBgBottomBar">@color/wallpaper_10_surface_high</item>
+        <item name="colorBgStatusBar">@color/wallpaper_10_surface</item>
+        <item name="colorDivider">@color/wallpaper_10_border</item>
+        <item name="themeAccent">?attr/luciferAccent</item>
+        <item name="colorAccent">?attr/luciferAccent</item>
+        <item name="colorTextPrimary">@color/primary_text</item>
+        <item name="colorTextSecondary">@color/secondary_text</item>
+        <item name="bgMainDrawable">@drawable/bg_lucifer_scene</item>
+        <item name="android:windowBackground">@drawable/bg_lucifer_scene</item>
+        <item name="colorSurface">@color/wallpaper_10_surface</item>
+        <item name="colorSurfaceVariant">@color/wallpaper_10_surface_high</item>
+        <item name="colorOnSurface">@color/primary_text</item>
+        <item name="colorOnSurfaceVariant">@color/secondary_text</item>
+    </style>
+
+    <style name="AppTheme.Wallpaper10.Gradient" parent="AppTheme.Wallpaper10">
+        <item name="bgMainDrawable">@drawable/bg_lucifer_scene_gradient</item>
+        <item name="android:windowBackground">@drawable/bg_lucifer_scene_gradient</item>
+    </style>
+
+    <style name="AppTheme.Wallpaper11" parent="AppTheme">
+        <item name="luciferAccent">@color/wallpaper_11_accent</item>
+        <item name="luciferSecondary">@color/wallpaper_11_secondary</item>
+        <item name="luciferHighlight">@color/wallpaper_11_highlight</item>
+        <item name="luciferAccentDim">@color/wallpaper_11_accent_dim</item>
+        <item name="luciferSurface">@color/wallpaper_11_surface</item>
+        <item name="luciferSurfaceHigh">@color/wallpaper_11_surface_high</item>
+        <item name="luciferGlass">@color/wallpaper_11_glass</item>
+        <item name="luciferGlassHigh">@color/wallpaper_11_glass_high</item>
+        <item name="luciferBorder">@color/wallpaper_11_border</item>
+        <item name="luciferBackdrop">@color/wallpaper_11_backdrop</item>
+        <item name="luciferWallpaper">@drawable/lucifer_wallpaper_11</item>
+        <item name="android:statusBarColor">@color/wallpaper_11_surface</item>
+        <item name="android:navigationBarColor">@color/wallpaper_11_surface</item>
+        <item name="colorBgApp">@color/wallpaper_11_surface</item>
+        <item name="colorBgBottomBar">@color/wallpaper_11_surface_high</item>
+        <item name="colorBgStatusBar">@color/wallpaper_11_surface</item>
+        <item name="colorDivider">@color/wallpaper_11_border</item>
+        <item name="themeAccent">?attr/luciferAccent</item>
+        <item name="colorAccent">?attr/luciferAccent</item>
+        <item name="colorTextPrimary">@color/primary_text</item>
+        <item name="colorTextSecondary">@color/secondary_text</item>
+        <item name="bgMainDrawable">@drawable/bg_lucifer_scene</item>
+        <item name="android:windowBackground">@drawable/bg_lucifer_scene</item>
+        <item name="colorSurface">@color/wallpaper_11_surface</item>
+        <item name="colorSurfaceVariant">@color/wallpaper_11_surface_high</item>
+        <item name="colorOnSurface">@color/primary_text</item>
+        <item name="colorOnSurfaceVariant">@color/secondary_text</item>
+    </style>
+
+    <style name="AppTheme.Wallpaper11.Gradient" parent="AppTheme.Wallpaper11">
+        <item name="bgMainDrawable">@drawable/bg_lucifer_scene_gradient</item>
+        <item name="android:windowBackground">@drawable/bg_lucifer_scene_gradient</item>
+    </style>
+
+    <style name="AppTheme.Wallpaper12" parent="AppTheme">
+        <item name="luciferAccent">@color/wallpaper_12_accent</item>
+        <item name="luciferSecondary">@color/wallpaper_12_secondary</item>
+        <item name="luciferHighlight">@color/wallpaper_12_highlight</item>
+        <item name="luciferAccentDim">@color/wallpaper_12_accent_dim</item>
+        <item name="luciferSurface">@color/wallpaper_12_surface</item>
+        <item name="luciferSurfaceHigh">@color/wallpaper_12_surface_high</item>
+        <item name="luciferGlass">@color/wallpaper_12_glass</item>
+        <item name="luciferGlassHigh">@color/wallpaper_12_glass_high</item>
+        <item name="luciferBorder">@color/wallpaper_12_border</item>
+        <item name="luciferBackdrop">@color/wallpaper_12_backdrop</item>
+        <item name="luciferWallpaper">@drawable/lucifer_wallpaper_12</item>
+        <item name="android:statusBarColor">@color/wallpaper_12_surface</item>
+        <item name="android:navigationBarColor">@color/wallpaper_12_surface</item>
+        <item name="colorBgApp">@color/wallpaper_12_surface</item>
+        <item name="colorBgBottomBar">@color/wallpaper_12_surface_high</item>
+        <item name="colorBgStatusBar">@color/wallpaper_12_surface</item>
+        <item name="colorDivider">@color/wallpaper_12_border</item>
+        <item name="themeAccent">?attr/luciferAccent</item>
+        <item name="colorAccent">?attr/luciferAccent</item>
+        <item name="colorTextPrimary">@color/primary_text</item>
+        <item name="colorTextSecondary">@color/secondary_text</item>
+        <item name="bgMainDrawable">@drawable/bg_lucifer_scene</item>
+        <item name="android:windowBackground">@drawable/bg_lucifer_scene</item>
+        <item name="colorSurface">@color/wallpaper_12_surface</item>
+        <item name="colorSurfaceVariant">@color/wallpaper_12_surface_high</item>
+        <item name="colorOnSurface">@color/primary_text</item>
+        <item name="colorOnSurfaceVariant">@color/secondary_text</item>
+    </style>
+
+    <style name="AppTheme.Wallpaper12.Gradient" parent="AppTheme.Wallpaper12">
+        <item name="bgMainDrawable">@drawable/bg_lucifer_scene_gradient</item>
+        <item name="android:windowBackground">@drawable/bg_lucifer_scene_gradient</item>
+    </style>
+
+    <style name="AppTheme.Wallpaper13" parent="AppTheme">
+        <item name="luciferAccent">@color/wallpaper_13_accent</item>
+        <item name="luciferSecondary">@color/wallpaper_13_secondary</item>
+        <item name="luciferHighlight">@color/wallpaper_13_highlight</item>
+        <item name="luciferAccentDim">@color/wallpaper_13_accent_dim</item>
+        <item name="luciferSurface">@color/wallpaper_13_surface</item>
+        <item name="luciferSurfaceHigh">@color/wallpaper_13_surface_high</item>
+        <item name="luciferGlass">@color/wallpaper_13_glass</item>
+        <item name="luciferGlassHigh">@color/wallpaper_13_glass_high</item>
+        <item name="luciferBorder">@color/wallpaper_13_border</item>
+        <item name="luciferBackdrop">@color/wallpaper_13_backdrop</item>
+        <item name="luciferWallpaper">@drawable/lucifer_wallpaper_13</item>
+        <item name="android:statusBarColor">@color/wallpaper_13_surface</item>
+        <item name="android:navigationBarColor">@color/wallpaper_13_surface</item>
+        <item name="colorBgApp">@color/wallpaper_13_surface</item>
+        <item name="colorBgBottomBar">@color/wallpaper_13_surface_high</item>
+        <item name="colorBgStatusBar">@color/wallpaper_13_surface</item>
+        <item name="colorDivider">@color/wallpaper_13_border</item>
+        <item name="themeAccent">?attr/luciferAccent</item>
+        <item name="colorAccent">?attr/luciferAccent</item>
+        <item name="colorTextPrimary">@color/primary_text</item>
+        <item name="colorTextSecondary">@color/secondary_text</item>
+        <item name="bgMainDrawable">@drawable/bg_lucifer_scene</item>
+        <item name="android:windowBackground">@drawable/bg_lucifer_scene</item>
+        <item name="colorSurface">@color/wallpaper_13_surface</item>
+        <item name="colorSurfaceVariant">@color/wallpaper_13_surface_high</item>
+        <item name="colorOnSurface">@color/primary_text</item>
+        <item name="colorOnSurfaceVariant">@color/secondary_text</item>
+    </style>
+
+    <style name="AppTheme.Wallpaper13.Gradient" parent="AppTheme.Wallpaper13">
+        <item name="bgMainDrawable">@drawable/bg_lucifer_scene_gradient</item>
+        <item name="android:windowBackground">@drawable/bg_lucifer_scene_gradient</item>
+    </style>
+
+    <style name="AppTheme.Wallpaper14" parent="AppTheme">
+        <item name="luciferAccent">@color/wallpaper_14_accent</item>
+        <item name="luciferSecondary">@color/wallpaper_14_secondary</item>
+        <item name="luciferHighlight">@color/wallpaper_14_highlight</item>
+        <item name="luciferAccentDim">@color/wallpaper_14_accent_dim</item>
+        <item name="luciferSurface">@color/wallpaper_14_surface</item>
+        <item name="luciferSurfaceHigh">@color/wallpaper_14_surface_high</item>
+        <item name="luciferGlass">@color/wallpaper_14_glass</item>
+        <item name="luciferGlassHigh">@color/wallpaper_14_glass_high</item>
+        <item name="luciferBorder">@color/wallpaper_14_border</item>
+        <item name="luciferBackdrop">@color/wallpaper_14_backdrop</item>
+        <item name="luciferWallpaper">@drawable/lucifer_wallpaper_14</item>
+        <item name="android:statusBarColor">@color/wallpaper_14_surface</item>
+        <item name="android:navigationBarColor">@color/wallpaper_14_surface</item>
+        <item name="colorBgApp">@color/wallpaper_14_surface</item>
+        <item name="colorBgBottomBar">@color/wallpaper_14_surface_high</item>
+        <item name="colorBgStatusBar">@color/wallpaper_14_surface</item>
+        <item name="colorDivider">@color/wallpaper_14_border</item>
+        <item name="themeAccent">?attr/luciferAccent</item>
+        <item name="colorAccent">?attr/luciferAccent</item>
+        <item name="colorTextPrimary">@color/primary_text</item>
+        <item name="colorTextSecondary">@color/secondary_text</item>
+        <item name="bgMainDrawable">@drawable/bg_lucifer_scene</item>
+        <item name="android:windowBackground">@drawable/bg_lucifer_scene</item>
+        <item name="colorSurface">@color/wallpaper_14_surface</item>
+        <item name="colorSurfaceVariant">@color/wallpaper_14_surface_high</item>
+        <item name="colorOnSurface">@color/primary_text</item>
+        <item name="colorOnSurfaceVariant">@color/secondary_text</item>
+    </style>
+
+    <style name="AppTheme.Wallpaper14.Gradient" parent="AppTheme.Wallpaper14">
+        <item name="bgMainDrawable">@drawable/bg_lucifer_scene_gradient</item>
+        <item name="android:windowBackground">@drawable/bg_lucifer_scene_gradient</item>
+    </style>
+
+    <style name="AppTheme.Wallpaper15" parent="AppTheme">
+        <item name="luciferAccent">@color/wallpaper_15_accent</item>
+        <item name="luciferSecondary">@color/wallpaper_15_secondary</item>
+        <item name="luciferHighlight">@color/wallpaper_15_highlight</item>
+        <item name="luciferAccentDim">@color/wallpaper_15_accent_dim</item>
+        <item name="luciferSurface">@color/wallpaper_15_surface</item>
+        <item name="luciferSurfaceHigh">@color/wallpaper_15_surface_high</item>
+        <item name="luciferGlass">@color/wallpaper_15_glass</item>
+        <item name="luciferGlassHigh">@color/wallpaper_15_glass_high</item>
+        <item name="luciferBorder">@color/wallpaper_15_border</item>
+        <item name="luciferBackdrop">@color/wallpaper_15_backdrop</item>
+        <item name="luciferWallpaper">@drawable/lucifer_wallpaper_15</item>
+        <item name="android:statusBarColor">@color/wallpaper_15_surface</item>
+        <item name="android:navigationBarColor">@color/wallpaper_15_surface</item>
+        <item name="colorBgApp">@color/wallpaper_15_surface</item>
+        <item name="colorBgBottomBar">@color/wallpaper_15_surface_high</item>
+        <item name="colorBgStatusBar">@color/wallpaper_15_surface</item>
+        <item name="colorDivider">@color/wallpaper_15_border</item>
+        <item name="themeAccent">?attr/luciferAccent</item>
+        <item name="colorAccent">?attr/luciferAccent</item>
+        <item name="colorTextPrimary">@color/primary_text</item>
+        <item name="colorTextSecondary">@color/secondary_text</item>
+        <item name="bgMainDrawable">@drawable/bg_lucifer_scene</item>
+        <item name="android:windowBackground">@drawable/bg_lucifer_scene</item>
+        <item name="colorSurface">@color/wallpaper_15_surface</item>
+        <item name="colorSurfaceVariant">@color/wallpaper_15_surface_high</item>
+        <item name="colorOnSurface">@color/primary_text</item>
+        <item name="colorOnSurfaceVariant">@color/secondary_text</item>
+    </style>
+
+    <style name="AppTheme.Wallpaper15.Gradient" parent="AppTheme.Wallpaper15">
+        <item name="bgMainDrawable">@drawable/bg_lucifer_scene_gradient</item>
+        <item name="android:windowBackground">@drawable/bg_lucifer_scene_gradient</item>
+    </style>
+
+    <style name="AppTheme.Wallpaper16" parent="AppTheme">
+        <item name="luciferAccent">@color/wallpaper_16_accent</item>
+        <item name="luciferSecondary">@color/wallpaper_16_secondary</item>
+        <item name="luciferHighlight">@color/wallpaper_16_highlight</item>
+        <item name="luciferAccentDim">@color/wallpaper_16_accent_dim</item>
+        <item name="luciferSurface">@color/wallpaper_16_surface</item>
+        <item name="luciferSurfaceHigh">@color/wallpaper_16_surface_high</item>
+        <item name="luciferGlass">@color/wallpaper_16_glass</item>
+        <item name="luciferGlassHigh">@color/wallpaper_16_glass_high</item>
+        <item name="luciferBorder">@color/wallpaper_16_border</item>
+        <item name="luciferBackdrop">@color/wallpaper_16_backdrop</item>
+        <item name="luciferWallpaper">@drawable/lucifer_wallpaper_16</item>
+        <item name="android:statusBarColor">@color/wallpaper_16_surface</item>
+        <item name="android:navigationBarColor">@color/wallpaper_16_surface</item>
+        <item name="colorBgApp">@color/wallpaper_16_surface</item>
+        <item name="colorBgBottomBar">@color/wallpaper_16_surface_high</item>
+        <item name="colorBgStatusBar">@color/wallpaper_16_surface</item>
+        <item name="colorDivider">@color/wallpaper_16_border</item>
+        <item name="themeAccent">?attr/luciferAccent</item>
+        <item name="colorAccent">?attr/luciferAccent</item>
+        <item name="colorTextPrimary">@color/primary_text</item>
+        <item name="colorTextSecondary">@color/secondary_text</item>
+        <item name="bgMainDrawable">@drawable/bg_lucifer_scene</item>
+        <item name="android:windowBackground">@drawable/bg_lucifer_scene</item>
+        <item name="colorSurface">@color/wallpaper_16_surface</item>
+        <item name="colorSurfaceVariant">@color/wallpaper_16_surface_high</item>
+        <item name="colorOnSurface">@color/primary_text</item>
+        <item name="colorOnSurfaceVariant">@color/secondary_text</item>
+    </style>
+
+    <style name="AppTheme.Wallpaper16.Gradient" parent="AppTheme.Wallpaper16">
+        <item name="bgMainDrawable">@drawable/bg_lucifer_scene_gradient</item>
+        <item name="android:windowBackground">@drawable/bg_lucifer_scene_gradient</item>
+    </style>
+
+    <style name="AppTheme.Wallpaper17" parent="AppTheme">
+        <item name="luciferAccent">@color/wallpaper_17_accent</item>
+        <item name="luciferSecondary">@color/wallpaper_17_secondary</item>
+        <item name="luciferHighlight">@color/wallpaper_17_highlight</item>
+        <item name="luciferAccentDim">@color/wallpaper_17_accent_dim</item>
+        <item name="luciferSurface">@color/wallpaper_17_surface</item>
+        <item name="luciferSurfaceHigh">@color/wallpaper_17_surface_high</item>
+        <item name="luciferGlass">@color/wallpaper_17_glass</item>
+        <item name="luciferGlassHigh">@color/wallpaper_17_glass_high</item>
+        <item name="luciferBorder">@color/wallpaper_17_border</item>
+        <item name="luciferBackdrop">@color/wallpaper_17_backdrop</item>
+        <item name="luciferWallpaper">@drawable/lucifer_wallpaper_17</item>
+        <item name="android:statusBarColor">@color/wallpaper_17_surface</item>
+        <item name="android:navigationBarColor">@color/wallpaper_17_surface</item>
+        <item name="colorBgApp">@color/wallpaper_17_surface</item>
+        <item name="colorBgBottomBar">@color/wallpaper_17_surface_high</item>
+        <item name="colorBgStatusBar">@color/wallpaper_17_surface</item>
+        <item name="colorDivider">@color/wallpaper_17_border</item>
+        <item name="themeAccent">?attr/luciferAccent</item>
+        <item name="colorAccent">?attr/luciferAccent</item>
+        <item name="colorTextPrimary">@color/primary_text</item>
+        <item name="colorTextSecondary">@color/secondary_text</item>
+        <item name="bgMainDrawable">@drawable/bg_lucifer_scene</item>
+        <item name="android:windowBackground">@drawable/bg_lucifer_scene</item>
+        <item name="colorSurface">@color/wallpaper_17_surface</item>
+        <item name="colorSurfaceVariant">@color/wallpaper_17_surface_high</item>
+        <item name="colorOnSurface">@color/primary_text</item>
+        <item name="colorOnSurfaceVariant">@color/secondary_text</item>
+    </style>
+
+    <style name="AppTheme.Wallpaper17.Gradient" parent="AppTheme.Wallpaper17">
+        <item name="bgMainDrawable">@drawable/bg_lucifer_scene_gradient</item>
+        <item name="android:windowBackground">@drawable/bg_lucifer_scene_gradient</item>
+    </style>
+
+    <style name="AppTheme.Wallpaper18" parent="AppTheme">
+        <item name="luciferAccent">@color/wallpaper_18_accent</item>
+        <item name="luciferSecondary">@color/wallpaper_18_secondary</item>
+        <item name="luciferHighlight">@color/wallpaper_18_highlight</item>
+        <item name="luciferAccentDim">@color/wallpaper_18_accent_dim</item>
+        <item name="luciferSurface">@color/wallpaper_18_surface</item>
+        <item name="luciferSurfaceHigh">@color/wallpaper_18_surface_high</item>
+        <item name="luciferGlass">@color/wallpaper_18_glass</item>
+        <item name="luciferGlassHigh">@color/wallpaper_18_glass_high</item>
+        <item name="luciferBorder">@color/wallpaper_18_border</item>
+        <item name="luciferBackdrop">@color/wallpaper_18_backdrop</item>
+        <item name="luciferWallpaper">@drawable/lucifer_wallpaper_18</item>
+        <item name="android:statusBarColor">@color/wallpaper_18_surface</item>
+        <item name="android:navigationBarColor">@color/wallpaper_18_surface</item>
+        <item name="colorBgApp">@color/wallpaper_18_surface</item>
+        <item name="colorBgBottomBar">@color/wallpaper_18_surface_high</item>
+        <item name="colorBgStatusBar">@color/wallpaper_18_surface</item>
+        <item name="colorDivider">@color/wallpaper_18_border</item>
+        <item name="themeAccent">?attr/luciferAccent</item>
+        <item name="colorAccent">?attr/luciferAccent</item>
+        <item name="colorTextPrimary">@color/primary_text</item>
+        <item name="colorTextSecondary">@color/secondary_text</item>
+        <item name="bgMainDrawable">@drawable/bg_lucifer_scene</item>
+        <item name="android:windowBackground">@drawable/bg_lucifer_scene</item>
+        <item name="colorSurface">@color/wallpaper_18_surface</item>
+        <item name="colorSurfaceVariant">@color/wallpaper_18_surface_high</item>
+        <item name="colorOnSurface">@color/primary_text</item>
+        <item name="colorOnSurfaceVariant">@color/secondary_text</item>
+    </style>
+
+    <style name="AppTheme.Wallpaper18.Gradient" parent="AppTheme.Wallpaper18">
+        <item name="bgMainDrawable">@drawable/bg_lucifer_scene_gradient</item>
+        <item name="android:windowBackground">@drawable/bg_lucifer_scene_gradient</item>
+    </style>
+
+    <style name="AppTheme.Wallpaper19" parent="AppTheme">
+        <item name="luciferAccent">@color/wallpaper_19_accent</item>
+        <item name="luciferSecondary">@color/wallpaper_19_secondary</item>
+        <item name="luciferHighlight">@color/wallpaper_19_highlight</item>
+        <item name="luciferAccentDim">@color/wallpaper_19_accent_dim</item>
+        <item name="luciferSurface">@color/wallpaper_19_surface</item>
+        <item name="luciferSurfaceHigh">@color/wallpaper_19_surface_high</item>
+        <item name="luciferGlass">@color/wallpaper_19_glass</item>
+        <item name="luciferGlassHigh">@color/wallpaper_19_glass_high</item>
+        <item name="luciferBorder">@color/wallpaper_19_border</item>
+        <item name="luciferBackdrop">@color/wallpaper_19_backdrop</item>
+        <item name="luciferWallpaper">@drawable/lucifer_wallpaper_19</item>
+        <item name="android:statusBarColor">@color/wallpaper_19_surface</item>
+        <item name="android:navigationBarColor">@color/wallpaper_19_surface</item>
+        <item name="colorBgApp">@color/wallpaper_19_surface</item>
+        <item name="colorBgBottomBar">@color/wallpaper_19_surface_high</item>
+        <item name="colorBgStatusBar">@color/wallpaper_19_surface</item>
+        <item name="colorDivider">@color/wallpaper_19_border</item>
+        <item name="themeAccent">?attr/luciferAccent</item>
+        <item name="colorAccent">?attr/luciferAccent</item>
+        <item name="colorTextPrimary">@color/primary_text</item>
+        <item name="colorTextSecondary">@color/secondary_text</item>
+        <item name="bgMainDrawable">@drawable/bg_lucifer_scene</item>
+        <item name="android:windowBackground">@drawable/bg_lucifer_scene</item>
+        <item name="colorSurface">@color/wallpaper_19_surface</item>
+        <item name="colorSurfaceVariant">@color/wallpaper_19_surface_high</item>
+        <item name="colorOnSurface">@color/primary_text</item>
+        <item name="colorOnSurfaceVariant">@color/secondary_text</item>
+    </style>
+
+    <style name="AppTheme.Wallpaper19.Gradient" parent="AppTheme.Wallpaper19">
+        <item name="bgMainDrawable">@drawable/bg_lucifer_scene_gradient</item>
+        <item name="android:windowBackground">@drawable/bg_lucifer_scene_gradient</item>
+    </style>
+
+    <style name="AppTheme.Wallpaper20" parent="AppTheme">
+        <item name="luciferAccent">@color/wallpaper_20_accent</item>
+        <item name="luciferSecondary">@color/wallpaper_20_secondary</item>
+        <item name="luciferHighlight">@color/wallpaper_20_highlight</item>
+        <item name="luciferAccentDim">@color/wallpaper_20_accent_dim</item>
+        <item name="luciferSurface">@color/wallpaper_20_surface</item>
+        <item name="luciferSurfaceHigh">@color/wallpaper_20_surface_high</item>
+        <item name="luciferGlass">@color/wallpaper_20_glass</item>
+        <item name="luciferGlassHigh">@color/wallpaper_20_glass_high</item>
+        <item name="luciferBorder">@color/wallpaper_20_border</item>
+        <item name="luciferBackdrop">@color/wallpaper_20_backdrop</item>
+        <item name="luciferWallpaper">@drawable/lucifer_wallpaper_20</item>
+        <item name="android:statusBarColor">@color/wallpaper_20_surface</item>
+        <item name="android:navigationBarColor">@color/wallpaper_20_surface</item>
+        <item name="colorBgApp">@color/wallpaper_20_surface</item>
+        <item name="colorBgBottomBar">@color/wallpaper_20_surface_high</item>
+        <item name="colorBgStatusBar">@color/wallpaper_20_surface</item>
+        <item name="colorDivider">@color/wallpaper_20_border</item>
+        <item name="themeAccent">?attr/luciferAccent</item>
+        <item name="colorAccent">?attr/luciferAccent</item>
+        <item name="colorTextPrimary">@color/primary_text</item>
+        <item name="colorTextSecondary">@color/secondary_text</item>
+        <item name="bgMainDrawable">@drawable/bg_lucifer_scene</item>
+        <item name="android:windowBackground">@drawable/bg_lucifer_scene</item>
+        <item name="colorSurface">@color/wallpaper_20_surface</item>
+        <item name="colorSurfaceVariant">@color/wallpaper_20_surface_high</item>
+        <item name="colorOnSurface">@color/primary_text</item>
+        <item name="colorOnSurfaceVariant">@color/secondary_text</item>
+    </style>
+
+    <style name="AppTheme.Wallpaper20.Gradient" parent="AppTheme.Wallpaper20">
+        <item name="bgMainDrawable">@drawable/bg_lucifer_scene_gradient</item>
+        <item name="android:windowBackground">@drawable/bg_lucifer_scene_gradient</item>
+    </style>
+
+</resources>

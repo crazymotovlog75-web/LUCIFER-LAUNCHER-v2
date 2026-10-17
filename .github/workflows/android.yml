@@ -1,11 +1,21 @@
-name: CS Launcher V2 CI
+name: Lucifer Launcher V2 CI
 
 on:
+  # Temporary branch CI trigger to produce an installable build for this redesign.
+  push:
+    branches:
+      - 'arena/581836b4-lucifer-launcher-v2'
   pull_request:
     branches-ignore:
       - 'l10n_v3_openjdk'
     types: [opened, reopened]
   workflow_dispatch:
+    inputs:
+      publish_release:
+        description: "Publish the signed APKs as a GitHub Release"
+        required: false
+        type: boolean
+        default: false
 
 jobs:
   build:
@@ -29,17 +39,6 @@ jobs:
           distribution: 'temurin'
           java-version: '21'
 
-      # ── JRE 8 Runtime ───────────────────────────────────────────────────────
-      - name: Download JRE 8
-        uses: dawidd6/action-download-artifact@v6
-        with:
-          workflow: build.yml
-          path: app_pojavlauncher/src/main/assets/components/jre
-          workflow_conclusion: success
-          repo: AngelAuraMC/angelauramc-openjdk-build
-          branch: buildjre8
-          name: jre8-pojav
-
       # ── Gradle ──────────────────────────────────────────────────────────────
       - name: Set up Gradle
         uses: gradle/actions/setup-gradle@v4
@@ -50,7 +49,7 @@ jobs:
 
       # ── Signing keystore ─────────────────────────────────────────────────────
       - name: Decode signing keystore
-        if: github.event_name == 'workflow_dispatch'
+        if: github.event_name == 'workflow_dispatch' && inputs.publish_release == true
         run: |
           echo "${{ secrets.SIGNING_KEYSTORE_BASE64 }}" | base64 --decode > keystore.jks
           echo "KEYSTORE_PATH=${{ github.workspace }}/keystore.jks" >> $GITHUB_ENV
@@ -65,7 +64,7 @@ jobs:
           ./scripts/languagelist_updater.sh
           mkdir -p out
 
-      # ── Release APK (PRIMARY — signed, shrunk) ───────────────────────────────
+      # ── Release APK (PRIMARY — compact, runtime downloaded on demand) ───────
       - name: Build Release APK
         run: |
           SIGNING_ARGS=""
@@ -75,21 +74,34 @@ jobs:
                           -PsigningKeyPassword=$KEY_PASSWORD \
                           -PsigningStorePassword=$STORE_PASSWORD"
           fi
+          set +e
           ./gradlew :app_pojavlauncher:assembleRelease $SIGNING_ARGS \
             -Pandroid.enableR8.fullMode=true \
             --no-daemon \
-            --stacktrace
+            --stacktrace 2>&1 | tee "$RUNNER_TEMP/release-gradle.log"
+          GRADLE_STATUS=${PIPESTATUS[0]}
+          set -e
+          if [ "$GRADLE_STATUS" -ne 0 ]; then
+            FAILURE_DETAILS=$(grep -E 'FAILURE:|What went wrong:|Execution failed for task|error:|AAPT:|Could not resolve|Could not find|SDK location not found|Exception' "$RUNNER_TEMP/release-gradle.log" | tail -n 25 || true)
+            if [ -z "$FAILURE_DETAILS" ]; then FAILURE_DETAILS=$(tail -n 35 "$RUNNER_TEMP/release-gradle.log"); fi
+            FAILURE_DETAILS=$(printf '%s' "$FAILURE_DETAILS" | tr '\n' ' ' | cut -c1-10000)
+            FAILURE_DETAILS=${FAILURE_DETAILS//'%'/'%25'}
+            FAILURE_DETAILS=${FAILURE_DETAILS//$'\r'/'%0D'}
+            FAILURE_DETAILS=${FAILURE_DETAILS//$'\n'/'%0A'}
+            echo "::error title=Gradle release build failed::$FAILURE_DETAILS"
+            exit "$GRADLE_STATUS"
+          fi
 
           RELEASE_APK=$(find app_pojavlauncher/build/outputs/apk/release -name "*.apk" | head -n 1)
           if [ -n "$RELEASE_APK" ]; then
-            cp "$RELEASE_APK" out/CS-LAUNCHER-V2.apk
-            md5sum  out/CS-LAUNCHER-V2.apk > out/CS-LAUNCHER-V2.md5
-            sha256sum out/CS-LAUNCHER-V2.apk > out/CS-LAUNCHER-V2.sha256
+            cp "$RELEASE_APK" out/LUCIFER-LAUNCHER-V2.apk
+            md5sum  out/LUCIFER-LAUNCHER-V2.apk > out/LUCIFER-LAUNCHER-V2.md5
+            sha256sum out/LUCIFER-LAUNCHER-V2.apk > out/LUCIFER-LAUNCHER-V2.sha256
           else
             echo "ERROR: Release APK not found" && exit 1
           fi
 
-      # ── Debug APK (internal / QA only) ───────────────────────────────────────
+      # ── Debug APK (internal / QA only; no bundled runtime) ──────────────────
       - name: Build Debug APK
         run: |
           ./gradlew :app_pojavlauncher:assembleDebug \
@@ -97,27 +109,8 @@ jobs:
 
           DEBUG_APK=$(find app_pojavlauncher/build/outputs/apk/debug -name "*.apk" | head -n 1)
           if [ -n "$DEBUG_APK" ]; then
-            cp "$DEBUG_APK" out/CS-LAUNCHER-V2-DEBUG.apk
-            md5sum out/CS-LAUNCHER-V2-DEBUG.apk > out/CS-LAUNCHER-V2-DEBUG.md5
-          fi
-
-      # ── No-runtime APK ───────────────────────────────────────────────────────
-      - name: Build APK without runtime
-        run: |
-          rm -rf app_pojavlauncher/src/main/assets/components/jre
-          rm -rf app_pojavlauncher/src/main/assets/components/jre-new
-          rm -rf app_pojavlauncher/src/main/assets/components/jre-21
-          rm -rf app_pojavlauncher/src/main/assets/components/jre-25
-
-          ./gradlew :app_pojavlauncher:assembleRelease \
-            -Pandroid.enableR8.fullMode=true \
-            --no-daemon
-
-          NORUNTIME_APK=$(find app_pojavlauncher/build/outputs/apk/release -name "*.apk" | head -n 1)
-          if [ -n "$NORUNTIME_APK" ]; then
-            cp "$NORUNTIME_APK" out/CS-LAUNCHER-V2-NO-RUNTIME.apk
-            md5sum    out/CS-LAUNCHER-V2-NO-RUNTIME.apk > out/CS-LAUNCHER-V2-NO-RUNTIME.md5
-            sha256sum out/CS-LAUNCHER-V2-NO-RUNTIME.apk > out/CS-LAUNCHER-V2-NO-RUNTIME.sha256
+            cp "$DEBUG_APK" out/LUCIFER-LAUNCHER-V2-DEBUG.apk
+            md5sum out/LUCIFER-LAUNCHER-V2-DEBUG.apk > out/LUCIFER-LAUNCHER-V2-DEBUG.md5
           fi
 
       # ── APK size report ──────────────────────────────────────────────────────
@@ -128,37 +121,48 @@ jobs:
           echo "|------|------|" >> $GITHUB_STEP_SUMMARY
           for f in out/*.apk; do
             SIZE=$(du -sh "$f" | cut -f1)
+            SIZE_BYTES=$(stat -c%s "$f")
             echo "| $(basename $f) | $SIZE |" >> $GITHUB_STEP_SUMMARY
+            echo "APK size: $(basename "$f") — $SIZE ($SIZE_BYTES bytes)"
           done
 
-      # ── Upload all artifacts ─────────────────────────────────────────────────
-      - name: Upload artifacts
+      # ── Keep the compact user APK separate from the QA build ────────────────
+      - name: Upload compact release APK
         uses: actions/upload-artifact@v4
         with:
-          name: cs-launcher-v2-build-${{ github.run_number }}
-          path: out/*
+          name: lucifer-launcher-v2-release-${{ github.run_number }}
+          path: |
+            out/LUCIFER-LAUNCHER-V2.apk
+            out/LUCIFER-LAUNCHER-V2.md5
+            out/LUCIFER-LAUNCHER-V2.sha256
+          retention-days: 30
+
+      - name: Upload debug APK (QA)
+        uses: actions/upload-artifact@v4
+        with:
+          name: lucifer-launcher-v2-debug-${{ github.run_number }}
+          path: |
+            out/LUCIFER-LAUNCHER-V2-DEBUG.apk
+            out/LUCIFER-LAUNCHER-V2-DEBUG.md5
           retention-days: 30
 
       # ── GitHub Release (manual only) ─────────────────────────────────────────
       - name: Create GitHub Release
         uses: ncipollo/release-action@v1
-        if: github.event_name == 'workflow_dispatch'
+        if: github.event_name == 'workflow_dispatch' && inputs.publish_release == true
         with:
-          artifacts: "out/CS-LAUNCHER-V2.apk,out/CS-LAUNCHER-V2.md5,out/CS-LAUNCHER-V2.sha256,out/CS-LAUNCHER-V2-NO-RUNTIME.apk,out/CS-LAUNCHER-V2-NO-RUNTIME.md5,out/CS-LAUNCHER-V2-NO-RUNTIME.sha256"
+          artifacts: "out/LUCIFER-LAUNCHER-V2.apk,out/LUCIFER-LAUNCHER-V2.md5,out/LUCIFER-LAUNCHER-V2.sha256"
           token: ${{ secrets.GITHUB_TOKEN }}
           tag: "v2.${{ github.run_number }}"
-          name: "CS Launcher V2 — Build ${{ github.run_number }}"
+          name: "Lucifer Launcher V2 — Build ${{ github.run_number }}"
           body: |
-            ## CS Launcher V2 — Build ${{ github.run_number }}
+            ## Lucifer Launcher V2 — Build ${{ github.run_number }}
 
             **Branch:** `${{ github.ref_name }}`
             **Commit:** `${{ github.sha }}`
 
-            ### Downloads
-            | File | Description |
-            |------|-------------|
-            | `CS-LAUNCHER-V2.apk` | ✅ **Recommended** — Signed release build with bundled JRE 8 |
-            | `CS-LAUNCHER-V2-NO-RUNTIME.apk` | Signed release build without bundled runtime (smaller, requires device JRE) |
+            ### Download
+            `LUCIFER-LAUNCHER-V2.apk` is the compact release build. It downloads the Java runtime required by the selected Minecraft version on demand, so an internet connection and extra storage are needed the first time that runtime is used.
 
             > ℹ️ Verify your download with the `.md5` / `.sha256` checksum files.
           allowUpdates: true

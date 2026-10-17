@@ -3,15 +3,15 @@
     <!-- Outer glow border -->
     <item>
         <shape android:shape="rectangle">
-            <solid android:color="#1A1A1A"/>
-            <stroke android:width="2dp" android:color="#00FF41"/>
+            <solid android:color="?attr/luciferGlass"/>
+            <stroke android:width="2dp" android:color="?attr/luciferAccent"/>
             <corners android:radius="10dp"/>
         </shape>
     </item>
     <!-- Inner background -->
     <item android:left="1dp" android:right="1dp" android:top="1dp" android:bottom="1dp">
         <shape android:shape="rectangle">
-            <solid android:color="#1E1E1E"/>
+            <solid android:color="?attr/luciferSurfaceHigh"/>
             <corners android:radius="9dp"/>
         </shape>
     </item>

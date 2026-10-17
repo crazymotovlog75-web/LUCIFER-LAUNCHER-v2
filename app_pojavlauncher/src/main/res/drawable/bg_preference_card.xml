@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ripple xmlns:android="http://schemas.android.com/apk/res/android"
-    android:color="@color/neon_green_dim">
+    android:color="?attr/luciferAccentDim">
     <item android:id="@android:id/mask">
         <shape android:shape="rectangle">
             <corners android:radius="14dp" />
@@ -12,19 +12,19 @@
             <item android:state_pressed="true">
                 <shape android:shape="rectangle">
                     <corners android:radius="14dp" />
-                    <solid android:color="@color/card_bg_pressed" />
+                    <solid android:color="?attr/luciferGlassHigh" />
                     <stroke
                         android:width="1dp"
-                        android:color="@color/stroke_neon" />
+                        android:color="?attr/luciferBorder" />
                 </shape>
             </item>
             <item>
                 <shape android:shape="rectangle">
                     <corners android:radius="14dp" />
-                    <solid android:color="@color/card_bg" />
+                    <solid android:color="?attr/luciferGlass" />
                     <stroke
                         android:width="1dp"
-                        android:color="@color/stroke_neon" />
+                        android:color="?attr/luciferBorder" />
                 </shape>
             </item>
         </selector>

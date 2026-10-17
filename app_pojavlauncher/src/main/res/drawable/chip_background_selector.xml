@@ -2,13 +2,13 @@
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:state_selected="true" >
         <shape android:shape="rectangle">
-            <solid android:color="@color/bg_nav_item_active" />
+            <solid android:color="?attr/luciferAccentDim" />
             <corners android:radius="16dp" />
         </shape>
     </item>
     <item>
         <shape android:shape="rectangle">
-            <solid android:color="@color/bg_card_dark" />
+            <solid android:color="?attr/luciferSurfaceHigh" />
             <corners android:radius="16dp" />
         </shape>
     </item>

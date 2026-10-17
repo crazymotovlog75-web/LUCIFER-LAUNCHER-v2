@@ -54,6 +54,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import android.net.Uri;
 import android.widget.Toast;
@@ -71,6 +72,9 @@ public class ProfileEditorFragment extends Fragment implements CropperUtils.Crop
 
     private String mProfileKey;
     private MinecraftProfile mTempProfile = null;
+    private boolean mCreatingProfile;
+    private String mOriginalVersionId;
+    private String mOriginalProfileName;
     private String mValueToConsume = "";
     private Button mSaveButton, mDeleteButton, mControlSelectButton, mGameDirButton, mVersionSelectButton;
     private ImageButton mModsAddButton, mModsImport, mResourcePacksFolder, mShaderPacksFolder, mResourcePacksImport, mShaderPacksImport;
@@ -176,6 +180,27 @@ public class ProfileEditorFragment extends Fragment implements CropperUtils.Crop
             if (mTempProfile == null) return;
             // 1) Read inputs on the main thread (touching UI state)
             readInputsFromUi();
+            if (!mCreatingProfile && !sameValue(mOriginalVersionId, mTempProfile.lastVersionId)) {
+                // Changing a profile's Minecraft version now forks a new instance instead of
+                // replacing the original. This keeps the default/previous version selectable.
+                MinecraftProfile fork = new MinecraftProfile(mTempProfile);
+                fork.isDefault = false;
+                fork.created = MinecraftProfile.currentTimestamp();
+                fork.lastUsed = null;
+                mTempProfile = fork;
+                mProfileKey = LauncherProfiles.getFreeProfileKey();
+                mCreatingProfile = true;
+                if (sameValue(mOriginalProfileName, fork.name)) {
+                    fork.name = makeUniqueProfileName(suggestProfileName(fork.lastVersionId), mProfileKey);
+                }
+            }
+            if (mTempProfile.created == null || mTempProfile.created.isEmpty()) {
+                mTempProfile.created = MinecraftProfile.currentTimestamp();
+            }
+            if (mTempProfile.name == null || mTempProfile.name.trim().isEmpty()) {
+                mTempProfile.name = makeUniqueProfileName(
+                        suggestProfileName(mTempProfile.lastVersionId), mProfileKey);
+            }
             ProfileIconCache.dropIcon(mProfileKey);
             // 2) Disable button immediately to prevent double-tap
             mSaveButton.setEnabled(false);
@@ -452,19 +477,59 @@ public class ProfileEditorFragment extends Fragment implements CropperUtils.Crop
         });
     }
 
-    private MinecraftProfile getProfile(@NonNull String profile){
-        MinecraftProfile minecraftProfile;
-        if(getArguments() == null) {
-            LauncherProfiles.load();
-            MinecraftProfile originalProfile = LauncherProfiles.mainProfileJson.profiles.get(profile);
-            if(originalProfile != null) minecraftProfile = new MinecraftProfile(originalProfile);
-            else minecraftProfile = MinecraftProfile.createTemplate();
-            mProfileKey = profile;
-        }else{
-            minecraftProfile = MinecraftProfile.createTemplate();
-            mProfileKey = LauncherProfiles.getFreeProfileKey();
+    private boolean sameValue(@Nullable String left, @Nullable String right) {
+        return left == null ? right == null : left.equals(right);
+    }
+
+    private String suggestProfileName(@Nullable String versionId) {
+        if (versionId == null || versionId.trim().isEmpty()) return "Minecraft Instance";
+        String mcVersion = net.kdt.pojavlaunch.utils.ProfileDetection.extractMcFromVersionId(versionId);
+        if (mcVersion != null && !mcVersion.isEmpty()) return "Minecraft " + mcVersion;
+        if (MinecraftProfile.LATEST_RELEASE.equals(versionId)) return "Minecraft Latest Release";
+        if (MinecraftProfile.LATEST_SNAPSHOT.equals(versionId)) return "Minecraft Latest Snapshot";
+        return "Minecraft " + versionId;
+    }
+
+    private String makeUniqueProfileName(@NonNull String baseName, @Nullable String excludedKey) {
+        String candidate = baseName;
+        int suffix = 2;
+        Map<String, MinecraftProfile> profiles = LauncherProfiles.mainProfileJson != null
+                ? LauncherProfiles.mainProfileJson.profiles : null;
+        while (profiles != null && hasProfileName(profiles, candidate, excludedKey)) {
+            candidate = baseName + " (" + suffix++ + ")";
         }
-        return minecraftProfile;
+        return candidate;
+    }
+
+    private boolean hasProfileName(@NonNull Map<String, MinecraftProfile> profiles,
+                                   @NonNull String candidate, @Nullable String excludedKey) {
+        for (Map.Entry<String, MinecraftProfile> entry : profiles.entrySet()) {
+            if (sameValue(excludedKey, entry.getKey())) continue;
+            MinecraftProfile profile = entry.getValue();
+            if (profile != null && profile.name != null &&
+                    candidate.equalsIgnoreCase(profile.name.trim())) return true;
+        }
+        return false;
+    }
+
+    private MinecraftProfile getProfile(@NonNull String profile){
+        LauncherProfiles.load();
+        if (getArguments() == null) {
+            MinecraftProfile originalProfile = LauncherProfiles.mainProfileJson.profiles.get(profile);
+            if (originalProfile != null) {
+                mCreatingProfile = false;
+                mOriginalVersionId = originalProfile.lastVersionId;
+                mOriginalProfileName = originalProfile.name;
+                mProfileKey = profile;
+                return new MinecraftProfile(originalProfile);
+            }
+        }
+
+        mCreatingProfile = true;
+        mOriginalVersionId = null;
+        mOriginalProfileName = null;
+        mProfileKey = LauncherProfiles.getFreeProfileKey();
+        return MinecraftProfile.createTemplate();
     }
 
 

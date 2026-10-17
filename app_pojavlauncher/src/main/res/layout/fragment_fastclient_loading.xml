@@ -5,7 +5,7 @@
     android:id="@+id/layout_fastclient_loading"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#0A0A0A">
+    android:background="@android:color/transparent">
 
     <LinearLayout
         android:layout_width="0dp"
@@ -22,9 +22,9 @@
             android:id="@+id/iv_loading_logo"
             android:layout_width="@dimen/_72sdp"
             android:layout_height="@dimen/_72sdp"
-            android:src="@drawable/bg_hero_minecraft"
+            android:src="@drawable/lucifer_launcher_emblem"
             android:scaleType="fitCenter"
-            android:contentDescription="CS Logo"
+            android:contentDescription="Lucifer Launcher logo"
             android:layout_marginBottom="@dimen/_20sdp" />
 
         <TextView
@@ -43,7 +43,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="v1.6.2"
-            android:textColor="#39FF14"
+            android:textColor="?attr/luciferAccent"
             android:textSize="@dimen/_12ssp"
             android:textStyle="bold"
             android:layout_marginBottom="@dimen/_28sdp" />
@@ -61,7 +61,7 @@
                 android:layout_height="match_parent"
                 android:max="100"
                 android:progress="0"
-                android:progressTint="#39FF14"
+                android:progressTint="?attr/luciferAccent"
                 android:progressBackgroundTint="#1A1A1A" />
 
         </FrameLayout>
@@ -86,7 +86,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="0%"
-                android:textColor="#39FF14"
+                android:textColor="?attr/luciferAccent"
                 android:textSize="@dimen/_11ssp"
                 android:textStyle="bold" />
 
@@ -98,7 +98,7 @@
         android:id="@+id/tv_fastclient_branding"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="⚡ FastClient by CS Team"
+        android:text="LUCIFER LAUNCHER"
         android:textColor="#444444"
         android:textSize="@dimen/_11ssp"
         android:layout_marginBottom="@dimen/_16sdp"

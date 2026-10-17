@@ -266,7 +266,7 @@ public class ProfileShortcutHelper {
         }
 
         // Fallback: use launcher icon
-        Drawable fallback = context.getDrawable(R.drawable.ic_pojav_full);
+        Drawable fallback = context.getDrawable(R.drawable.lucifer_launcher_emblem);
         if (fallback != null) {
             return drawableToBitmap(fallback);
         }

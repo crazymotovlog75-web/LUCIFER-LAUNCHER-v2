@@ -4,73 +4,398 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/bg_launcher_dark">
+    android:background="@android:color/transparent">
 
-    <!-- Custom wallpaper — invisible by default, loaded dynamically -->
+    <!-- Optional user wallpaper remains supported, with a low-alpha veil so UI stays legible. -->
     <ImageView
         android:id="@+id/right_pane_wallpaper"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scaleType="centerCrop"
+        android:alpha="0.22"
         android:visibility="gone"
         android:contentDescription="@null" />
 
-    <!-- Profile Cards -->
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rv_home_profiles"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:clipToPadding="false"
-        android:paddingTop="12dp"
-        android:paddingBottom="96dp"
-        android:overScrollMode="never"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent" />
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/home_shelf_top"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.66" />
 
-    <!-- Floating "+" Create Profile button (bottom-center, hardware-accelerated) -->
-    <FrameLayout
-        android:id="@+id/fab_create_profile"
-        android:layout_width="64dp"
-        android:layout_height="64dp"
-        android:layout_marginBottom="24dp"
-        android:background="@drawable/bg_fab_create_profile"
-        android:clickable="true"
-        android:focusable="true"
-        android:elevation="8dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/home_hero_panel"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginHorizontal="@dimen/_12sdp"
+        android:layout_marginTop="@dimen/_10sdp"
+        android:background="@drawable/bg_lucifer_glass_card"
+        android:padding="@dimen/_14sdp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/home_instances_toolbar">
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/home_guide_info"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.31" />
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/home_guide_avatar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.53" />
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/home_guide_portal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.76" />
+
+        <LinearLayout
+            android:id="@+id/home_intro"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center_vertical"
+            android:paddingStart="@dimen/_4sdp"
+            android:paddingEnd="@dimen/_8sdp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/home_guide_info"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="READY WHEN YOU ARE"
+                android:textColor="?attr/luciferAccent"
+                android:textSize="@dimen/_9ssp"
+                android:textStyle="bold"
+                android:letterSpacing="0.15" />
+
+            <TextView
+                android:id="@+id/tv_home_profile_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_5sdp"
+                android:text="Select an instance"
+                android:textColor="@color/text_primary_white"
+                android:textSize="@dimen/_22ssp"
+                android:textStyle="bold"
+                android:maxLines="2"
+                android:ellipsize="end" />
+
+            <TextView
+                android:id="@+id/tv_home_version"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_3sdp"
+                android:text="Choose a Minecraft version to get started"
+                android:textColor="@color/text_secondary_light"
+                android:textSize="@dimen/_11ssp"
+                android:maxLines="2"
+                android:ellipsize="end" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_10sdp"
+                android:orientation="horizontal">
+                <TextView
+                    android:id="@+id/tv_home_loader"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/_24sdp"
+                    android:gravity="center"
+                    android:paddingHorizontal="@dimen/_8sdp"
+                    android:background="@drawable/bg_chip_dark"
+                    android:text="Vanilla"
+                    android:textColor="?attr/luciferAccent"
+                    android:textSize="@dimen/_9ssp" />
+                <TextView
+                    android:id="@+id/tv_home_ram"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/_24sdp"
+                    android:layout_marginStart="@dimen/_5sdp"
+                    android:gravity="center"
+                    android:paddingHorizontal="@dimen/_8sdp"
+                    android:background="@drawable/bg_chip_dark"
+                    android:text="RAM —"
+                    android:textColor="@color/text_primary_white"
+                    android:textSize="@dimen/_9ssp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_10sdp"
+                android:orientation="horizontal">
+                <TextView
+                    android:id="@+id/btn_home_instances"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/_32sdp"
+                    android:gravity="center"
+                    android:paddingHorizontal="@dimen/_9sdp"
+                    android:background="@drawable/bg_home_profile_card"
+                    android:text="Choose instance"
+                    android:textColor="@color/text_primary_white"
+                    android:textSize="@dimen/_9ssp"
+                    android:clickable="true"
+                    android:focusable="true" />
+                <TextView
+                    android:id="@+id/btn_home_skins"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/_32sdp"
+                    android:layout_marginStart="@dimen/_5sdp"
+                    android:gravity="center"
+                    android:paddingHorizontal="@dimen/_9sdp"
+                    android:background="@drawable/bg_lucifer_nav_item"
+                    android:text="Skins"
+                    android:textColor="@color/text_primary_white"
+                    android:textSize="@dimen/_9ssp"
+                    android:clickable="true"
+                    android:focusable="true" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_8sdp"
+                android:orientation="horizontal">
+                <TextView
+                    android:id="@+id/btn_home_wiki"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Wiki"
+                    android:textColor="?attr/luciferAccent"
+                    android:textSize="@dimen/_9ssp"
+                    android:paddingVertical="@dimen/_3sdp"
+                    android:clickable="true"
+                    android:focusable="true" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <FrameLayout
+            android:id="@+id/home_avatar_shell"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/_128sdp"
+            android:layout_marginHorizontal="@dimen/_5sdp"
+            android:background="@drawable/bg_lucifer_glass_card"
+            app:layout_constraintStart_toEndOf="@id/home_guide_info"
+            app:layout_constraintEnd_toStartOf="@id/home_guide_avatar"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent">
+            <ImageView
+                android:id="@+id/iv_home_avatar"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:scaleType="fitCenter"
+                android:contentDescription="@string/player_skin_preview" />
+        </FrameLayout>
+
+        <FrameLayout
+            android:id="@+id/btn_launch_portal"
+            android:layout_width="@dimen/_122sdp"
+            android:layout_height="@dimen/_122sdp"
+            android:background="@drawable/bg_lucifer_portal"
+            android:clickable="true"
+            android:focusable="true"
+            android:contentDescription="Launch selected Minecraft instance"
+            app:layout_constraintStart_toEndOf="@id/home_guide_avatar"
+            app:layout_constraintEnd_toStartOf="@id/home_guide_portal"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:orientation="vertical">
+                <TextView
+                    android:id="@+id/tv_launch_glyph"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="✦"
+                    android:textColor="#FFFFFF"
+                    android:textSize="@dimen/_22ssp" />
+                <TextView
+                    android:id="@+id/tv_launch_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="LAUNCH"
+                    android:textColor="@color/text_primary_white"
+                    android:textSize="@dimen/_11ssp"
+                    android:textStyle="bold"
+                    android:letterSpacing="0.08" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_2sdp"
+                    android:text="Selected build"
+                    android:textColor="@color/text_secondary_light"
+                    android:textSize="@dimen/_8ssp" />
+            </LinearLayout>
+        </FrameLayout>
+
+        <LinearLayout
+            android:id="@+id/home_community_stack"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/_8sdp"
+            android:orientation="vertical"
+            android:gravity="center_vertical"
+            app:layout_constraintStart_toEndOf="@id/home_guide_portal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent">
+
+            <LinearLayout
+                android:id="@+id/btn_home_discord"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_34sdp"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:paddingHorizontal="@dimen/_10sdp"
+                android:background="@drawable/bg_discord_join"
+                android:clickable="true"
+                android:focusable="true"
+                android:contentDescription="Join the Lucifer Launcher Discord server">
+                <ImageView
+                    android:layout_width="@dimen/_22sdp"
+                    android:layout_height="@dimen/_17sdp"
+                    android:layout_marginEnd="@dimen/_8sdp"
+                    android:src="@drawable/ic_discord_white"
+                    android:contentDescription="@null" />
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Join our Discord"
+                    android:textColor="#FFFFFFFF"
+                    android:textSize="@dimen/_9ssp"
+                    android:textStyle="bold"
+                    android:maxLines="1"
+                    android:ellipsize="end" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/home_server_card"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_5sdp"
+                android:orientation="vertical"
+                android:gravity="center_vertical"
+                android:padding="@dimen/_8sdp"
+                android:background="@drawable/bg_lucifer_glass_card"
+                android:clickable="true"
+                android:focusable="true">
+                <TextView
+                    android:id="@+id/tv_home_server_pitch"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="HERE IS BEST LIFESTEEL SMP CLICK AND PLAY"
+                    android:textColor="@color/text_primary_white"
+                    android:textSize="@dimen/_10ssp"
+                    android:textStyle="bold"
+                    android:maxLines="3"
+                    android:ellipsize="end" />
+                <TextView
+                    android:id="@+id/btn_home_servers"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/_30sdp"
+                    android:layout_marginTop="@dimen/_6sdp"
+                    android:gravity="center"
+                    android:paddingHorizontal="@dimen/_9sdp"
+                    android:background="@drawable/bg_lucifer_action"
+                    android:text="Open Server"
+                    android:textColor="?attr/luciferOnAccent"
+                    android:textSize="@dimen/_9ssp"
+                    android:clickable="true"
+                    android:focusable="true" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_5sdp"
+                android:orientation="horizontal">
+                <TextView
+                    android:id="@+id/btn_refresh_profiles"
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/_30sdp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:paddingHorizontal="@dimen/_5sdp"
+                    android:background="@drawable/bg_lucifer_nav_item"
+                    android:text="↻ Refresh"
+                    android:textColor="?attr/luciferAccent"
+                    android:textSize="@dimen/_8ssp"
+                    android:clickable="true"
+                    android:focusable="true" />
+                <TextView
+                    android:id="@+id/fab_create_profile"
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/_30sdp"
+                    android:layout_marginStart="@dimen/_5sdp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:paddingHorizontal="@dimen/_3sdp"
+                    android:background="@drawable/bg_lucifer_action"
+                    android:text="＋ Add instance"
+                    android:textColor="?attr/luciferOnAccent"
+                    android:textSize="@dimen/_8ssp"
+                    android:textStyle="bold"
+                    android:clickable="true"
+                    android:focusable="true" />
+            </LinearLayout>
+        </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <LinearLayout
+        android:id="@+id/home_instances_toolbar"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/_16sdp"
+        android:layout_marginTop="@dimen/_5sdp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        app:layout_constraintTop_toTopOf="@id/home_shelf_top"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
+        <TextView
+            android:id="@+id/tv_instances_heading"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="YOUR INSTANCES"
+            android:textColor="@color/text_primary_white"
+            android:textSize="@dimen/_11ssp"
+            android:textStyle="bold"
+            android:letterSpacing="0.12" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Tap a tile to edit · launch from the hero"
+            android:textColor="@color/text_secondary_light"
+            android:textSize="@dimen/_8ssp" />
+    </LinearLayout>
 
-        <ImageView
-            android:layout_width="32dp"
-            android:layout_height="32dp"
-            android:layout_gravity="center"
-            android:src="@drawable/ic_add"
-            android:tint="@color/bg_primary"
-            android:contentDescription="Create Profile" />
-    </FrameLayout>
-
-    <!-- Refresh Profiles button -->
-    <FrameLayout
-        android:id="@+id/btn_refresh_profiles"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:layout_marginBottom="32dp"
-        android:layout_marginEnd="24dp"
-        android:background="@drawable/background_image_rounded"
-        android:clickable="true"
-        android:focusable="true"
-        android:elevation="8dp"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_home_profiles"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:clipToPadding="false"
+        android:paddingHorizontal="@dimen/_10sdp"
+        android:paddingTop="@dimen/_4sdp"
+        android:paddingBottom="@dimen/_10sdp"
+        android:overScrollMode="never"
+        app:layout_constraintTop_toBottomOf="@id/home_instances_toolbar"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
-
-        <ImageView
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:layout_gravity="center"
-            android:src="@drawable/ic_redo"
-            android:tint="@color/accent_primary"
-            android:contentDescription="Refresh Profiles" />
-    </FrameLayout>
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

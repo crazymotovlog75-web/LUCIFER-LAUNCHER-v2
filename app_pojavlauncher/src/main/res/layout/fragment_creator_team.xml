@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/transparent"
+    android:fillViewport="true"
+    android:overScrollMode="never"
+    android:scrollbars="none">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingHorizontal="@dimen/_16sdp"
+        android:paddingTop="@dimen/_10sdp"
+        android:paddingBottom="@dimen/_18sdp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:padding="@dimen/_10sdp"
+            android:background="@drawable/bg_lucifer_glass_card">
+            <TextView
+                android:id="@+id/btn_creator_team_back"
+                android:layout_width="@dimen/_36sdp"
+                android:layout_height="@dimen/_36sdp"
+                android:gravity="center"
+                android:text="‹"
+                android:textColor="?attr/luciferAccent"
+                android:textSize="@dimen/_22ssp"
+                android:background="@drawable/bg_lucifer_nav_item"
+                android:clickable="true"
+                android:focusable="true"
+                android:contentDescription="Back" />
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginStart="@dimen/_10sdp"
+                android:text="LAUNCHER CREATOR"
+                android:textColor="@color/text_primary_white"
+                android:textSize="@dimen/_16ssp"
+                android:textStyle="bold"
+                android:letterSpacing="0.04" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_12sdp"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:padding="@dimen/_9sdp"
+            android:background="@drawable/bg_lucifer_glass_card">
+            <ImageView
+                android:layout_width="@dimen/_64sdp"
+                android:layout_height="@dimen/_64sdp"
+                android:scaleType="centerCrop"
+                android:src="@drawable/creator_builder_fireplayz"
+                android:contentDescription="Launcher builder FirePlayz" />
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginStart="@dimen/_12sdp"
+                android:text="I AM LAUNCHER BUILDER FIREPLAYZ"
+                android:textColor="@color/text_primary_white"
+                android:textSize="@dimen/_11ssp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_6sdp"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:padding="@dimen/_9sdp"
+            android:background="@drawable/bg_lucifer_glass_card">
+            <ImageView
+                android:layout_width="@dimen/_64sdp"
+                android:layout_height="@dimen/_64sdp"
+                android:scaleType="centerCrop"
+                android:src="@drawable/creator_co_owner"
+                android:contentDescription="Launcher co-owner" />
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginStart="@dimen/_12sdp"
+                android:text="I AM LAUNCHER CO OWNER"
+                android:textColor="@color/text_primary_white"
+                android:textSize="@dimen/_11ssp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_14sdp"
+            android:layout_marginBottom="@dimen/_8sdp"
+            android:text="BEST FRIEND"
+            android:textColor="@color/text_primary_white"
+            android:textSize="@dimen/_18ssp"
+            android:textStyle="bold"
+            android:letterSpacing="0.04" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:padding="@dimen/_9sdp"
+            android:background="@drawable/bg_lucifer_glass_card">
+            <ImageView
+                android:layout_width="@dimen/_64sdp"
+                android:layout_height="@dimen/_64sdp"
+                android:scaleType="centerCrop"
+                android:src="@drawable/creator_best_friend"
+                android:contentDescription="Best friend of the owner" />
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginStart="@dimen/_12sdp"
+                android:text="I AM best friend of owner"
+                android:textColor="@color/text_primary_white"
+                android:textSize="@dimen/_11ssp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_6sdp"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:padding="@dimen/_9sdp"
+            android:background="@drawable/bg_lucifer_glass_card">
+            <ImageView
+                android:layout_width="@dimen/_64sdp"
+                android:layout_height="@dimen/_64sdp"
+                android:scaleType="centerCrop"
+                android:src="@drawable/creator_owner_first_friend"
+                android:contentDescription="Launcher owner's first friend" />
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginStart="@dimen/_12sdp"
+                android:text="I AM LAUNCHER OWNER 1ST FRIEND"
+                android:textColor="@color/text_primary_white"
+                android:textSize="@dimen/_11ssp"
+                android:textStyle="bold" />
+        </LinearLayout>
+    </LinearLayout>
+</ScrollView>
