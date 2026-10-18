@@ -1,5 +1,8 @@
 package net.kdt.pojavlaunch;
 
+import android.util.Base64;
+
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -19,6 +22,8 @@ public final class MinecraftServerPing {
     private static final int CONNECT_TIMEOUT_MS = 2800;
     private static final int READ_TIMEOUT_MS = 2800;
     private static final int MAX_STATUS_PACKET_BYTES = 1_048_576;
+    private static final int MAX_FAVICON_BYTES = 64 * 1024;
+    private static final int MAX_MOTD_CHARS = 512;
 
     private MinecraftServerPing() {}
 
@@ -35,6 +40,11 @@ public final class MinecraftServerPing {
             String printableHost = host.indexOf(':') >= 0 ? "[" + host + "]" : host;
             return port == DEFAULT_PORT ? printableHost : printableHost + ":" + port;
         }
+
+        /** Stable, case-insensitive host/port key used to reject accidental duplicate entries. */
+        public String normalizedKey() {
+            return host.toLowerCase(java.util.Locale.ROOT) + ":" + port;
+        }
     }
 
     public static final class PingResult {
@@ -42,12 +52,19 @@ public final class MinecraftServerPing {
         public final int onlinePlayers;
         public final int maximumPlayers;
         public final String versionName;
+        /** Plain Minecraft-formatted text, not HTML. */
+        public final String motd;
+        /** Optional, validated PNG bytes supplied by the server status response. */
+        public final byte[] faviconPng;
 
-        PingResult(long latencyMs, int onlinePlayers, int maximumPlayers, String versionName) {
+        PingResult(long latencyMs, int onlinePlayers, int maximumPlayers, String versionName,
+                   String motd, byte[] faviconPng) {
             this.latencyMs = latencyMs;
             this.onlinePlayers = onlinePlayers;
             this.maximumPlayers = maximumPlayers;
             this.versionName = versionName;
+            this.motd = motd;
+            this.faviconPng = faviconPng;
         }
     }
 
@@ -55,7 +72,7 @@ public final class MinecraftServerPing {
         if (input == null) throw new IllegalArgumentException("Enter a server address");
         String value = input.trim();
         if (value.isEmpty() || value.length() > 255 || value.contains(" ") ||
-                value.contains("\n") || value.contains("\r")) {
+                value.contains("\n") || value.contains("\r") || value.contains("\t")) {
             throw new IllegalArgumentException("Enter a valid hostname or IP address");
         }
 
@@ -84,7 +101,7 @@ public final class MinecraftServerPing {
                 host = value;
             }
             if (host.matches("(?i)[0-9a-f:.%]+") && host.contains(":")) {
-                // raw IPv6 literal
+                // Raw IPv6 literal.
             } else {
                 try {
                     host = IDN.toASCII(host, IDN.USE_STD3_ASCII_RULES);
@@ -93,6 +110,12 @@ public final class MinecraftServerPing {
                 }
                 if (host.length() > 253 || !host.matches("(?i)[a-z0-9](?:[a-z0-9.-]*[a-z0-9])?")) {
                     throw new IllegalArgumentException("Enter a valid hostname or IP address");
+                }
+                for (String label : host.split("\\.", -1)) {
+                    if (label.isEmpty() || label.length() > 63 ||
+                            !label.matches("(?i)[a-z0-9](?:[a-z0-9-]*[a-z0-9])?")) {
+                        throw new IllegalArgumentException("Enter a valid hostname or IP address");
+                    }
                 }
             }
         }
@@ -113,7 +136,6 @@ public final class MinecraftServerPing {
 
     public static PingResult ping(String address) throws IOException, JSONException {
         Endpoint endpoint = parseEndpoint(address);
-        long startedAt = android.os.SystemClock.elapsedRealtime();
         try (Socket socket = new Socket()) {
             socket.setTcpNoDelay(true);
             socket.connect(new InetSocketAddress(endpoint.host, endpoint.port), CONNECT_TIMEOUT_MS);
@@ -146,16 +168,121 @@ public final class MinecraftServerPing {
             if (jsonLength < 0 || jsonLength > packetLength) throw new IOException("Invalid status response");
             byte[] jsonBytes = new byte[jsonLength];
             input.readFully(jsonBytes);
-            long latency = Math.max(0L, android.os.SystemClock.elapsedRealtime() - startedAt);
 
             JSONObject status = new JSONObject(new String(jsonBytes, StandardCharsets.UTF_8));
             JSONObject players = status.optJSONObject("players");
             JSONObject version = status.optJSONObject("version");
+            String versionName = version != null ? version.optString("name", "") : "";
+            String motd = flattenDescription(status.opt("description"));
+            byte[] favicon = decodeFavicon(status.optString("favicon", ""));
+
+            // Use the protocol's ping/pong packet for an actual round-trip time rather than
+            // reporting DNS/connect/status-response time as network latency.
+            long pingToken = android.os.SystemClock.elapsedRealtime();
+            long pingStartedAt = pingToken;
+            writeVarInt(output, 9); // packet id (1) + eight-byte payload
+            writeVarInt(output, 1); // Ping packet id
+            output.writeLong(pingToken);
+            output.flush();
+            int pongLength = readVarInt(input);
+            if (pongLength != 9 || readVarInt(input) != 1) {
+                throw new IOException("Unexpected server ping response");
+            }
+            if (input.readLong() != pingToken) throw new IOException("Server ping response did not match");
+            long latency = Math.max(0L, android.os.SystemClock.elapsedRealtime() - pingStartedAt);
             return new PingResult(
                     latency,
                     players != null ? players.optInt("online", -1) : -1,
                     players != null ? players.optInt("max", -1) : -1,
-                    version != null ? version.optString("name", "") : "");
+                    versionName,
+                    motd,
+                    favicon);
+        }
+    }
+
+    private static String flattenDescription(Object value) {
+        StringBuilder out = new StringBuilder();
+        appendDescription(value, out, 0);
+        if (out.length() > MAX_MOTD_CHARS) out.setLength(MAX_MOTD_CHARS);
+        return out.toString().trim();
+    }
+
+    private static void appendDescription(Object value, StringBuilder out, int depth) {
+        if (value == null || depth > 12 || out.length() >= MAX_MOTD_CHARS) return;
+        if (value instanceof String) {
+            String text = (String) value;
+            int remaining = MAX_MOTD_CHARS - out.length();
+            if (remaining > 0) out.append(text, 0, Math.min(text.length(), remaining));
+            return;
+        }
+        if (value instanceof Number || value instanceof Boolean) {
+            out.append(value);
+            return;
+        }
+        if (value instanceof JSONArray) {
+            JSONArray array = (JSONArray) value;
+            for (int i = 0; i < array.length() && out.length() < MAX_MOTD_CHARS; i++) {
+                appendDescription(array.opt(i), out, depth + 1);
+            }
+            return;
+        }
+        if (!(value instanceof JSONObject)) return;
+
+        JSONObject component = (JSONObject) value;
+        String colorValue = component.optString("color", "");
+        String colorCode = colorCodeForName(colorValue);
+        if (colorCode != null) out.append('\u00a7').append(colorCode);
+        else if (colorValue.matches("(?i)#[0-9a-f]{6}")) {
+            out.append("\u00a7x");
+            for (int i = 1; i < colorValue.length(); i++) out.append('\u00a7').append(colorValue.charAt(i));
+        }
+        if (component.optBoolean("bold", false)) out.append("\u00a7l");
+        if (component.optBoolean("italic", false)) out.append("\u00a7o");
+        if (component.optBoolean("underlined", false)) out.append("\u00a7n");
+        if (component.optBoolean("strikethrough", false)) out.append("\u00a7m");
+
+        Object text = component.opt("text");
+        if (text != null) appendDescription(text, out, depth + 1);
+        Object extra = component.opt("extra");
+        if (extra != null) appendDescription(extra, out, depth + 1);
+    }
+
+    private static String colorCodeForName(String color) {
+        switch (color.toLowerCase(java.util.Locale.ROOT)) {
+            case "black": return "0";
+            case "dark_blue": return "1";
+            case "dark_green": return "2";
+            case "dark_aqua": return "3";
+            case "dark_red": return "4";
+            case "dark_purple": return "5";
+            case "gold": return "6";
+            case "gray": return "7";
+            case "dark_gray": return "8";
+            case "blue": return "9";
+            case "green": return "a";
+            case "aqua": return "b";
+            case "red": return "c";
+            case "light_purple": return "d";
+            case "yellow": return "e";
+            case "white": return "f";
+            default: return null;
+        }
+    }
+
+    private static byte[] decodeFavicon(String dataUri) {
+        final String prefix = "data:image/png;base64,";
+        if (dataUri == null || !dataUri.startsWith(prefix) || dataUri.length() > MAX_FAVICON_BYTES * 2) {
+            return null;
+        }
+        try {
+            byte[] png = Base64.decode(dataUri.substring(prefix.length()), Base64.DEFAULT);
+            if (png.length < 8 || png.length > MAX_FAVICON_BYTES ||
+                    (png[0] & 0xff) != 0x89 || png[1] != 'P' || png[2] != 'N' || png[3] != 'G') {
+                return null;
+            }
+            return png;
+        } catch (IllegalArgumentException invalidBase64) {
+            return null;
         }
     }
 

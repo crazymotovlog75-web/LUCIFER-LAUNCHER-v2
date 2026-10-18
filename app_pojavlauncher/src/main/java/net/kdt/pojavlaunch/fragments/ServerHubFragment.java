@@ -1,13 +1,20 @@
 package net.kdt.pojavlaunch.fragments;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.InputType;
+import android.util.Base64;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -27,35 +34,60 @@ import net.kdt.pojavlaunch.Tools;
 import net.kdt.pojavlaunch.extra.ExtraConstants;
 import net.kdt.pojavlaunch.extra.ExtraCore;
 import net.kdt.pojavlaunch.prefs.LauncherPreferences;
+import net.kdt.pojavlaunch.utils.MinecraftServerListStore;
+import net.kdt.pojavlaunch.utils.MinecraftTextFormatter;
 import net.kdt.pojavlaunch.value.launcherprofiles.LauncherProfiles;
 import net.kdt.pojavlaunch.value.launcherprofiles.MinecraftProfile;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
+import java.io.IOException;
+import java.net.ConnectException;
+import java.net.SocketTimeoutException;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.RejectedExecutionException;
+import java.util.concurrent.atomic.AtomicInteger;
 
-/** Saved Minecraft Java server hub with asynchronous status checks and one-shot Quick Play. */
+/** Saved Java server hub with real status pings and profile-aware Minecraft server-list sync. */
 public class ServerHubFragment extends Fragment {
     public static final String TAG = "ServerHubFragment";
     private static final String PREF_SERVERS = "lucifer_server_hub_list";
+    private static final String PREF_MANAGED_SERVERDAT_PREFIX = "lucifer_managed_serverdat_";
     private static final String FEATURED_SERVER_ADDRESS = "play.lucifermc.fun";
     private static final int MAX_SERVERS = 40;
+    private static final AtomicInteger SERVERDAT_GENERATION = new AtomicInteger();
+    private static final Object SERVERDAT_SYNC_LOCK = new Object();
 
     private RecyclerView mRecyclerView;
     private View mEmptyState;
     private TextView mFeaturedStatusView;
+    private TextView mFeaturedPlayersView;
+    private TextView mFeaturedPingView;
+    private TextView mFeaturedMotdView;
     private TextView mServerCountView;
     private TextView mOtherServersHeader;
     private ServerAdapter mAdapter;
+    private ExecutorService mPingExecutor;
     private ServerStatus mFeaturedStatus = ServerStatus.checking();
     private int mFeaturedPingRequestId;
+    private boolean mFeaturedPingInFlight;
     private final ArrayList<ServerEntry> mServers = new ArrayList<>();
     private final Map<String, ServerStatus> mStatuses = new HashMap<>();
     private final Map<String, Integer> mPingRequestIds = new HashMap<>();
+    private final Map<String, Integer> mPingInFlight = new HashMap<>();
     private int mNextPingRequestId = 1;
 
     public ServerHubFragment() {
@@ -64,12 +96,21 @@ public class ServerHubFragment extends Fragment {
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        mPingExecutor = Executors.newFixedThreadPool(3, runnable -> {
+            Thread thread = new Thread(runnable, "ServerHub-Ping");
+            thread.setDaemon(true);
+            return thread;
+        });
         mRecyclerView = view.findViewById(R.id.server_hub_list);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setItemAnimator(null);
         mEmptyState = view.findViewById(R.id.server_hub_empty);
         mFeaturedStatusView = view.findViewById(R.id.featured_server_status);
+        mFeaturedPlayersView = view.findViewById(R.id.featured_server_players);
+        mFeaturedPingView = view.findViewById(R.id.featured_server_ping);
+        mFeaturedMotdView = view.findViewById(R.id.featured_server_motd);
         mServerCountView = view.findViewById(R.id.server_hub_count);
         mOtherServersHeader = view.findViewById(R.id.server_hub_other_servers_title);
         mAdapter = new ServerAdapter();
@@ -82,13 +123,12 @@ public class ServerHubFragment extends Fragment {
         view.findViewById(R.id.btn_featured_server_play).setOnClickListener(v ->
                 quickPlay(FEATURED_SERVER_ADDRESS));
         view.findViewById(R.id.btn_featured_server_discord).setOnClickListener(v ->
-                Tools.openDiscordInvite(requireActivity(), getString(R.string.discord_invite)));
+                openWebOrDiscord(getString(R.string.discord_invite), true));
 
-        // Keep the supplied banner's baked-in OFFLINE text covered with the live status badge.
-        // It starts optimistically as ONLINE for the familiar featured-server card, then the real
-        // ping response below corrects it if the host does not answer.
-        showFeaturedStatus(true);
         loadServers();
+        mFeaturedStatus = ServerStatus.checking();
+        mStatuses.clear();
+        renderFeaturedStatus(mFeaturedStatus);
         updateEmptyState();
         updateServerCount();
     }
@@ -97,15 +137,28 @@ public class ServerHubFragment extends Fragment {
     public void onResume() {
         super.onResume();
         refreshAll();
+        syncServersDatAsync(false);
     }
 
     @Override
     public void onDestroyView() {
         mFeaturedPingRequestId++;
+        mFeaturedPingInFlight = false;
         mPingRequestIds.clear();
+        mPingInFlight.clear();
+        mStatuses.clear();
+        mFeaturedStatus = ServerStatus.checking();
+        if (mPingExecutor != null) {
+            mPingExecutor.shutdownNow();
+            mPingExecutor = null;
+        }
+        if (mRecyclerView != null) mRecyclerView.setAdapter(null);
         mRecyclerView = null;
         mEmptyState = null;
         mFeaturedStatusView = null;
+        mFeaturedPlayersView = null;
+        mFeaturedPingView = null;
+        mFeaturedMotdView = null;
         mServerCountView = null;
         mOtherServersHeader = null;
         mAdapter = null;
@@ -113,30 +166,46 @@ public class ServerHubFragment extends Fragment {
     }
 
     private SharedPreferences preferences() {
-        // Keep using the existing preference file name so saved settings and server data remain
-        // available to users upgrading from the current launcher package.
+        // Preserve the existing preference file and list key for launcher upgrades.
         return requireContext().getSharedPreferences("cslauncher_settings", Context.MODE_PRIVATE);
     }
 
     private void loadServers() {
         mServers.clear();
+        Set<String> ids = new HashSet<>();
+        Set<String> endpointKeys = new HashSet<>();
         try {
             JSONArray array = new JSONArray(preferences().getString(PREF_SERVERS, "[]"));
-            for (int i = 0; i < array.length(); i++) {
+            for (int i = 0; i < array.length() && mServers.size() < MAX_SERVERS; i++) {
                 JSONObject item = array.optJSONObject(i);
                 if (item == null) continue;
                 String name = item.optString("name", "").trim();
-                String address = item.optString("address", "").trim();
-                if (name.isEmpty() || address.isEmpty()) continue;
+                String rawAddress = item.optString("address", "").trim();
+                if (name.isEmpty() || name.length() > 64 || rawAddress.isEmpty()) continue;
+                final MinecraftServerPing.Endpoint endpoint;
                 try {
-                    address = MinecraftServerPing.parseEndpoint(address).toAddress();
+                    endpoint = MinecraftServerPing.parseEndpoint(rawAddress);
                 } catch (IllegalArgumentException invalid) {
                     continue;
                 }
-                mServers.add(new ServerEntry(item.optString("id", UUID.randomUUID().toString()), name, address));
+                if (!endpointKeys.add(endpoint.normalizedKey()) ||
+                        endpoint.normalizedKey().equals(MinecraftServerPing.parseEndpoint(FEATURED_SERVER_ADDRESS).normalizedKey())) {
+                    continue;
+                }
+                String id = item.optString("id", "").trim();
+                if (id.isEmpty() || !ids.add(id)) {
+                    do { id = UUID.randomUUID().toString(); } while (!ids.add(id));
+                }
+                String discordUrl = "";
+                try {
+                    discordUrl = normalizeServerLink(item.optString("discordUrl", ""));
+                } catch (IllegalArgumentException ignored) {
+                    // Ignore stale or invalid optional links without losing the saved server.
+                }
+                mServers.add(new ServerEntry(id, name, endpoint.toAddress(), discordUrl));
             }
-        } catch (Exception ignored) {
-            // Corrupt optional server-hub data should not prevent the launcher from opening.
+        } catch (Exception error) {
+            Log.w(TAG, "Saved server-hub data could not be read; showing an empty custom list", error);
             mServers.clear();
         }
         if (mAdapter != null) mAdapter.notifyDataSetChanged();
@@ -150,8 +219,11 @@ public class ServerHubFragment extends Fragment {
                 item.put("id", entry.id);
                 item.put("name", entry.name);
                 item.put("address", entry.address);
+                item.put("discordUrl", entry.discordUrl);
                 array.put(item);
-            } catch (Exception ignored) {}
+            } catch (JSONException error) {
+                Log.w(TAG, "Could not serialize a saved server", error);
+            }
         }
         preferences().edit().putString(PREF_SERVERS, array.toString()).apply();
         updateEmptyState();
@@ -160,10 +232,7 @@ public class ServerHubFragment extends Fragment {
 
     private void updateEmptyState() {
         if (mEmptyState == null || mRecyclerView == null) return;
-        boolean empty = mServers.isEmpty();
-        mEmptyState.setVisibility(empty ? View.VISIBLE : View.GONE);
-        // Keep the RecyclerView laid out even when empty; the empty-state card overlays its area.
-        // Hiding a match-constraint RecyclerView would collapse the overlay in ConstraintLayout.
+        mEmptyState.setVisibility(mServers.isEmpty() ? View.VISIBLE : View.GONE);
         mRecyclerView.setVisibility(View.VISIBLE);
         if (mOtherServersHeader != null) {
             mOtherServersHeader.setText(mServers.isEmpty()
@@ -174,49 +243,101 @@ public class ServerHubFragment extends Fragment {
 
     private void updateServerCount() {
         if (mServerCountView == null) return;
-        int total = mServers.size() + 1; // LuciferMC is the permanent featured entry.
-        int checked = mFeaturedStatus.checking ? 0 : 1;
-        int online = mFeaturedStatus.online ? 1 : 0;
+        int total = mServers.size() + 1; // LuciferMC is permanently pinned.
+        int online = mFeaturedStatus.state == ServerState.ONLINE ? 1 : 0;
+        int checking = mFeaturedStatus.state == ServerState.CHECKING ? 1 : 0;
         for (ServerEntry entry : mServers) {
             ServerStatus status = mStatuses.get(entry.id);
-            if (status == null || status.checking) continue;
-            checked++;
-            if (status.online) online++;
+            if (status == null || status.state == ServerState.CHECKING) checking++;
+            else if (status.state == ServerState.ONLINE) online++;
         }
         String count = total == 1 ? "1 server" : total + " servers";
-        String state = checked < total ? "checking now" : online + "/" + total + " online";
-        mServerCountView.setText(count + " · " + state);
+        String summary = checking > 0
+                ? online + " online · checking " + checking
+                : online + "/" + total + " online";
+        mServerCountView.setText(count + " · " + summary);
     }
 
-    private void showFeaturedStatus(boolean online) {
-        if (mFeaturedStatusView == null) return;
-        mFeaturedStatusView.setText(online ? "ONLINE" : "OFFLINE");
-        mFeaturedStatusView.setTextColor(android.graphics.Color.parseColor(
-                online ? "#82F59A" : "#FF8790"));
-        mFeaturedStatusView.setBackgroundResource(online
-                ? R.drawable.bg_server_badge_online
-                : R.drawable.bg_server_badge_offline);
-        mFeaturedStatusView.setContentDescription(online
-                ? "LuciferMC server is online"
-                : "LuciferMC server is offline or not responding");
+    private void renderFeaturedStatus(ServerStatus status) {
+        if (mFeaturedStatusView != null) {
+            switch (status.state) {
+                case ONLINE:
+                    setBadge(mFeaturedStatusView, "ONLINE", "#82F59A", R.drawable.bg_server_badge_online,
+                            "LuciferMC responded online to a live ping");
+                    break;
+                case OFFLINE:
+                    setBadge(mFeaturedStatusView, "OFFLINE", "#FF8790", R.drawable.bg_server_badge_offline,
+                            "LuciferMC did not respond to a live ping");
+                    break;
+                case UNKNOWN:
+                    setBadge(mFeaturedStatusView, "UNKNOWN", "#C7CED8", R.drawable.bg_server_badge_unknown,
+                            "LuciferMC status could not be determined");
+                    break;
+                default:
+                    setBadge(mFeaturedStatusView, "CHECKING", "#FFE59A", R.drawable.bg_server_badge_checking,
+                            "Checking LuciferMC server status");
+            }
+        }
+        if (mFeaturedPlayersView == null || mFeaturedPingView == null || mFeaturedMotdView == null) return;
+        if (status.state == ServerState.CHECKING) {
+            mFeaturedPlayersView.setText("Players: checking…");
+            mFeaturedPingView.setText("Ping: checking…");
+            mFeaturedMotdView.setText("Loading MOTD…");
+        } else if (status.ping != null) {
+            mFeaturedPlayersView.setText(formatPlayers(status.ping));
+            mFeaturedPingView.setText("Ping: " + status.ping.latencyMs + " ms");
+            mFeaturedMotdView.setText(MinecraftTextFormatter.format(status.ping.motd));
+        } else {
+            mFeaturedPlayersView.setText("Players unavailable");
+            mFeaturedPingView.setText("Ping unavailable");
+            mFeaturedMotdView.setText("MOTD unavailable");
+        }
+    }
+
+    private static void setBadge(TextView view, String label, String color, int background, String description) {
+        view.setText(label);
+        view.setTextColor(android.graphics.Color.parseColor(color));
+        view.setBackgroundResource(background);
+        view.setContentDescription(description);
+    }
+
+    private static String formatPlayers(MinecraftServerPing.PingResult ping) {
+        if (ping.onlinePlayers >= 0 && ping.maximumPlayers >= 0) {
+            return "Players: " + ping.onlinePlayers + "/" + ping.maximumPlayers;
+        }
+        if (ping.onlinePlayers >= 0) return "Players online: " + ping.onlinePlayers;
+        return "Player count unavailable";
+    }
+
+    private void executePing(Runnable task) {
+        ExecutorService executor = mPingExecutor;
+        if (executor == null || executor.isShutdown()) return;
+        try {
+            executor.execute(task);
+        } catch (RejectedExecutionException rejected) {
+            Log.d(TAG, "Ping task was rejected because the view is closing");
+        }
     }
 
     private void pingFeaturedServer() {
+        if (mFeaturedPingInFlight || mFeaturedStatusView == null) return;
         final int requestId = ++mFeaturedPingRequestId;
+        mFeaturedPingInFlight = true;
         mFeaturedStatus = ServerStatus.checking();
+        renderFeaturedStatus(mFeaturedStatus);
         updateServerCount();
-        PojavApplication.sExecutorService.execute(() -> {
-            ServerStatus result;
+        executePing(() -> {
+            final ServerStatus result;
             try {
-                result = ServerStatus.online(MinecraftServerPing.ping(FEATURED_SERVER_ADDRESS));
+                result = ServerStatus.online(MinecraftServerPing.ping(FEATURED_SERVER_ADDRESS), null);
             } catch (Exception error) {
-                result = ServerStatus.offline();
+                result = ServerStatus.fromFailure(error);
             }
-            final ServerStatus finalResult = result;
             Tools.runOnUiThread(() -> {
-                if (!isAdded() || requestId != mFeaturedPingRequestId) return;
-                mFeaturedStatus = finalResult;
-                showFeaturedStatus(finalResult.online);
+                if (requestId == mFeaturedPingRequestId) mFeaturedPingInFlight = false;
+                if (!isAdded() || requestId != mFeaturedPingRequestId || mFeaturedStatusView == null) return;
+                mFeaturedStatus = result;
+                renderFeaturedStatus(result);
                 updateServerCount();
             });
         });
@@ -246,8 +367,19 @@ public class ServerHubFragment extends Fragment {
         if (editEntry != null) addressInput.setText(editEntry.address);
         LinearLayout.LayoutParams addressParams = new LinearLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        addressParams.topMargin = dp(context, 10);
+        addressParams.topMargin = dp(context, 8);
         form.addView(addressInput, addressParams);
+
+        EditText linkInput = new EditText(context);
+        linkInput.setSingleLine(true);
+        linkInput.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_URI);
+        linkInput.setHint("Server Discord or website HTTPS link (optional)");
+        linkInput.setTextSize(14);
+        if (editEntry != null) linkInput.setText(editEntry.discordUrl);
+        LinearLayout.LayoutParams linkParams = new LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        linkParams.topMargin = dp(context, 8);
+        form.addView(linkInput, linkParams);
 
         AlertDialog dialog = new AlertDialog.Builder(context)
                 .setTitle(editEntry == null ? "Add server" : "Edit server")
@@ -261,63 +393,129 @@ public class ServerHubFragment extends Fragment {
                 nameInput.setError("Enter a name (1–64 characters)");
                 return;
             }
-            final String address;
+            final MinecraftServerPing.Endpoint endpoint;
             try {
-                address = MinecraftServerPing.parseEndpoint(addressInput.getText().toString()).toAddress();
+                endpoint = MinecraftServerPing.parseEndpoint(addressInput.getText().toString());
             } catch (IllegalArgumentException error) {
                 addressInput.setError(error.getMessage());
                 return;
             }
-
+            String address = endpoint.toAddress();
+            if (endpoint.normalizedKey().equals(
+                    MinecraftServerPing.parseEndpoint(FEATURED_SERVER_ADDRESS).normalizedKey())) {
+                addressInput.setError("LuciferMC is already pinned in Server Hub");
+                return;
+            }
+            for (ServerEntry saved : mServers) {
+                if ((editEntry == null || !saved.id.equals(editEntry.id)) &&
+                        endpoint.normalizedKey().equals(MinecraftServerPing.parseEndpoint(saved.address).normalizedKey())) {
+                    addressInput.setError("This server address is already saved");
+                    return;
+                }
+            }
             if (editEntry == null && mServers.size() >= MAX_SERVERS) {
                 Toast.makeText(context, "The server list is full", Toast.LENGTH_SHORT).show();
                 return;
             }
+            final String link;
+            try {
+                link = normalizeServerLink(linkInput.getText().toString());
+            } catch (IllegalArgumentException invalidLink) {
+                linkInput.setError(invalidLink.getMessage());
+                return;
+            }
+
+            final ServerEntry changedEntry;
             if (editEntry == null) {
-                ServerEntry newEntry = new ServerEntry(UUID.randomUUID().toString(), name, address);
-                mServers.add(newEntry);
-                mStatuses.remove(newEntry.id);
+                changedEntry = new ServerEntry(UUID.randomUUID().toString(), name, address, link);
+                mServers.add(changedEntry);
             } else {
-                editEntry.name = name;
-                editEntry.address = address;
-                mStatuses.remove(editEntry.id);
+                changedEntry = editEntry;
+                changedEntry.name = name;
+                changedEntry.address = address;
+                changedEntry.discordUrl = link;
+                mStatuses.remove(changedEntry.id);
+                mPingRequestIds.remove(changedEntry.id);
+                mPingInFlight.remove(changedEntry.id);
             }
             saveServers();
             if (mAdapter != null) mAdapter.notifyDataSetChanged();
             dialog.dismiss();
-            if (editEntry == null) pingServer(mServers.get(mServers.size() - 1));
-            else pingServer(editEntry);
+            syncServersDatAsync(true);
+            pingServer(changedEntry);
         }));
         dialog.show();
     }
 
-    private void refreshAll() {
-        pingFeaturedServer();
-        if (mServers.isEmpty()) {
-            updateEmptyState();
+    private static String normalizeServerLink(String raw) {
+        String value = raw == null ? "" : raw.trim();
+        if (value.isEmpty()) return "";
+        if (value.length() > 2048) throw new IllegalArgumentException("Link is too long");
+        Uri uri = Uri.parse(value);
+        String scheme = uri.getScheme();
+        if (!"https".equalsIgnoreCase(scheme) || uri.getHost() == null || uri.getHost().isEmpty() ||
+                uri.getUserInfo() != null) {
+            throw new IllegalArgumentException("Enter a valid HTTPS URL");
+        }
+        return uri.normalizeScheme().toString();
+    }
+
+    private void openWebOrDiscord(String url, boolean preferDiscord) {
+        if (!isAdded()) return;
+        final Uri uri;
+        try {
+            String normalized = normalizeServerLink(url);
+            uri = Uri.parse(normalized);
+        } catch (IllegalArgumentException invalid) {
+            Toast.makeText(requireContext(), "No valid link is configured", Toast.LENGTH_SHORT).show();
             return;
         }
+        try {
+            if (preferDiscord) {
+                Intent discord = new Intent(Intent.ACTION_VIEW, uri).setPackage("com.discord");
+                startActivity(discord);
+                return;
+            }
+        } catch (android.content.ActivityNotFoundException ignored) {
+            // Fall through to the browser for an invite when the Discord app is not installed.
+        }
+        try {
+            startActivity(new Intent(Intent.ACTION_VIEW, uri));
+        } catch (android.content.ActivityNotFoundException noHandler) {
+            Toast.makeText(requireContext(), "No app is available to open this link", Toast.LENGTH_LONG).show();
+        }
+    }
+
+    private void refreshAll() {
+        if (mRecyclerView == null) return;
+        pingFeaturedServer();
         for (ServerEntry entry : new ArrayList<>(mServers)) pingServer(entry);
     }
 
     private void pingServer(ServerEntry entry) {
+        if (entry == null || mRecyclerView == null || mPingInFlight.containsKey(entry.id)) return;
         final String address = entry.address;
         final int requestId = mNextPingRequestId++;
         mPingRequestIds.put(entry.id, requestId);
+        mPingInFlight.put(entry.id, requestId);
         mStatuses.put(entry.id, ServerStatus.checking());
         notifyEntryChanged(entry.id);
         updateServerCount();
-        PojavApplication.sExecutorService.execute(() -> {
-            ServerStatus result;
+        executePing(() -> {
+            final ServerStatus result;
             try {
                 MinecraftServerPing.PingResult ping = MinecraftServerPing.ping(address);
-                result = ServerStatus.online(ping);
+                result = ServerStatus.online(ping, decodeServerFavicon(ping.faviconPng));
             } catch (Exception error) {
-                result = ServerStatus.offline();
+                result = ServerStatus.fromFailure(error);
+                Log.d(TAG, "Ping did not complete for " + address + ": " + error.getClass().getSimpleName());
             }
-            final ServerStatus finalResult = result;
             Tools.runOnUiThread(() -> {
-                if (!isAdded() || !Integer.valueOf(requestId).equals(mPingRequestIds.get(entry.id))) return;
+                if (Integer.valueOf(requestId).equals(mPingInFlight.get(entry.id))) {
+                    mPingInFlight.remove(entry.id);
+                }
+                if (!isAdded() || mRecyclerView == null ||
+                        !Integer.valueOf(requestId).equals(mPingRequestIds.get(entry.id))) return;
                 boolean stillSaved = false;
                 for (ServerEntry saved : mServers) {
                     if (saved.id.equals(entry.id)) {
@@ -326,11 +524,30 @@ public class ServerHubFragment extends Fragment {
                     }
                 }
                 if (!stillSaved) return;
-                mStatuses.put(entry.id, finalResult);
+                mStatuses.put(entry.id, result);
                 notifyEntryChanged(entry.id);
                 updateServerCount();
             });
         });
+    }
+
+    private static Bitmap decodeServerFavicon(@Nullable byte[] png) {
+        if (png == null || png.length == 0) return null;
+        try {
+            BitmapFactory.Options bounds = new BitmapFactory.Options();
+            bounds.inJustDecodeBounds = true;
+            BitmapFactory.decodeByteArray(png, 0, png.length, bounds);
+            if (bounds.outWidth <= 0 || bounds.outHeight <= 0 || bounds.outWidth > 512 || bounds.outHeight > 512) {
+                return null;
+            }
+            BitmapFactory.Options options = new BitmapFactory.Options();
+            options.inPreferredConfig = Bitmap.Config.ARGB_8888;
+            options.inSampleSize = Math.max(1, Math.max(bounds.outWidth, bounds.outHeight) / 96);
+            return BitmapFactory.decodeByteArray(png, 0, png.length, options);
+        } catch (RuntimeException invalidImage) {
+            Log.w(TAG, "Server sent an invalid favicon", invalidImage);
+            return null;
+        }
     }
 
     private void notifyEntryChanged(String id) {
@@ -344,15 +561,13 @@ public class ServerHubFragment extends Fragment {
     }
 
     private void quickPlay(ServerEntry entry) {
-        boolean serverStillSaved = false;
-        for (ServerEntry saved : mServers) {
-            if (saved.id.equals(entry.id)) {
-                serverStillSaved = true;
-                break;
-            }
-        }
-        if (!serverStillSaved) return;
+        if (entry == null || !containsServer(entry.id)) return;
         quickPlay(entry.address);
+    }
+
+    private boolean containsServer(String id) {
+        for (ServerEntry saved : mServers) if (saved.id.equals(id)) return true;
+        return false;
     }
 
     private void quickPlay(String address) {
@@ -378,16 +593,107 @@ public class ServerHubFragment extends Fragment {
     private void confirmRemove(ServerEntry entry) {
         new AlertDialog.Builder(requireContext())
                 .setTitle("Remove server?")
-                .setMessage("Remove “" + entry.name + "” from Lucifer Launcher?")
+                .setMessage("Remove “" + entry.name + "” from Lucifer Launcher? Its managed servers.dat entry will also be removed from the active profile.")
                 .setNegativeButton(android.R.string.cancel, null)
                 .setPositiveButton(R.string.global_remove, (dialog, which) -> {
                     mServers.remove(entry);
                     mStatuses.remove(entry.id);
                     mPingRequestIds.remove(entry.id);
+                    mPingInFlight.remove(entry.id);
                     saveServers();
                     if (mAdapter != null) mAdapter.notifyDataSetChanged();
+                    syncServersDatAsync(true);
                 })
                 .show();
+    }
+
+    /** Mirrors this Hub snapshot into the currently selected profile's game directory. */
+    private void syncServersDatAsync(boolean notifyUser) {
+        final int generation = SERVERDAT_GENERATION.incrementAndGet();
+        final SharedPreferences prefs = preferences();
+        final ArrayList<MinecraftServerListStore.ServerEntry> desired = new ArrayList<>(mServers.size() + 1);
+        desired.add(new MinecraftServerListStore.ServerEntry("LuciferMC", FEATURED_SERVER_ADDRESS));
+        for (ServerEntry entry : mServers) {
+            desired.add(new MinecraftServerListStore.ServerEntry(entry.name, entry.address));
+        }
+
+        LauncherProfiles.loadAsync(() -> {
+            if (generation != SERVERDAT_GENERATION.get()) return;
+            String profileKey = LauncherPreferences.DEFAULT_PREF.getString(
+                    LauncherPreferences.PREF_KEY_CURRENT_PROFILE, "");
+            MinecraftProfile profile = LauncherProfiles.mainProfileJson != null &&
+                    LauncherProfiles.mainProfileJson.profiles != null
+                    ? LauncherProfiles.mainProfileJson.profiles.get(profileKey) : null;
+            if (profile == null) {
+                reportSyncResult(generation, notifyUser, null,
+                        new IOException("The selected Minecraft profile could not be found"));
+                return;
+            }
+            final String selectedProfileKey = profileKey;
+            File gameDirectory = Tools.getGameDirPath(profile);
+            PojavApplication.sExecutorService.execute(() -> {
+                synchronized (SERVERDAT_SYNC_LOCK) {
+                    if (generation != SERVERDAT_GENERATION.get()) return;
+                    String stillSelected = LauncherPreferences.DEFAULT_PREF.getString(
+                            LauncherPreferences.PREF_KEY_CURRENT_PROFILE, "");
+                    if (!selectedProfileKey.equals(stillSelected)) {
+                        Tools.runOnUiThread(() -> {
+                            if (generation == SERVERDAT_GENERATION.get()) syncServersDatAsync(notifyUser);
+                        });
+                        return;
+                    }
+                    try {
+                        String managedKey = managedPreferenceKey(gameDirectory);
+                        Set<String> previous = new HashSet<>(prefs.getStringSet(managedKey, Collections.emptySet()));
+                        MinecraftServerListStore.SyncResult result = MinecraftServerListStore.sync(
+                                gameDirectory, desired, previous);
+                        boolean savedOwnership = prefs.edit()
+                                .putStringSet(managedKey, new HashSet<>(result.managedKeys))
+                                .commit();
+                        if (!savedOwnership) {
+                            Log.w(TAG, "servers.dat updated, but its managed-entry marker was not persisted");
+                        }
+                        reportSyncResult(generation, notifyUser, result, null);
+                    } catch (Exception error) {
+                        Log.e(TAG, "Could not synchronize servers.dat for the active profile", error);
+                        reportSyncResult(generation, notifyUser, null, error);
+                    }
+                }
+            });
+        });
+    }
+
+    private static String managedPreferenceKey(File gameDirectory) throws IOException {
+        String canonicalPath = gameDirectory.getCanonicalPath();
+        String encoded = Base64.encodeToString(canonicalPath.getBytes(StandardCharsets.UTF_8),
+                Base64.URL_SAFE | Base64.NO_WRAP | Base64.NO_PADDING);
+        return PREF_MANAGED_SERVERDAT_PREFIX + encoded;
+    }
+
+    private void reportSyncResult(int generation, boolean notifyUser,
+                                  @Nullable MinecraftServerListStore.SyncResult result,
+                                  @Nullable Exception error) {
+        if (!notifyUser) return;
+        Tools.runOnUiThread(() -> {
+            if (!isAdded() || getView() == null || generation != SERVERDAT_GENERATION.get()) return;
+            if (error != null) {
+                Toast.makeText(requireContext(),
+                        "Saved in Server Hub, but the active profile's servers.dat could not be updated: " +
+                                safeErrorMessage(error), Toast.LENGTH_LONG).show();
+            } else if (result != null) {
+                String message = result.added > 0 || result.removed > 0
+                        ? "Server Hub synced with the selected profile's Minecraft server list"
+                        : "Saved server list is already synchronized for the selected profile";
+                Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private static String safeErrorMessage(Exception error) {
+        String message = error.getMessage();
+        if (message == null || message.trim().isEmpty()) return "check profile storage access";
+        message = message.replace('\n', ' ').replace('\r', ' ').trim();
+        return message.length() > 110 ? message.substring(0, 110) + "…" : message;
     }
 
     private int dp(Context context, int value) {
@@ -398,29 +704,38 @@ public class ServerHubFragment extends Fragment {
         final String id;
         String name;
         String address;
+        String discordUrl;
 
-        ServerEntry(String id, String name, String address) {
+        ServerEntry(String id, String name, String address, String discordUrl) {
             this.id = id;
             this.name = name;
             this.address = address;
+            this.discordUrl = discordUrl == null ? "" : discordUrl;
         }
     }
 
-    private static final class ServerStatus {
-        final boolean checking;
-        final boolean online;
-        final MinecraftServerPing.PingResult ping;
+    private enum ServerState { CHECKING, ONLINE, OFFLINE, UNKNOWN }
 
-        private ServerStatus(boolean checking, boolean online, MinecraftServerPing.PingResult ping) {
-            this.checking = checking;
-            this.online = online;
+    private static final class ServerStatus {
+        final ServerState state;
+        final MinecraftServerPing.PingResult ping;
+        final Bitmap favicon;
+
+        private ServerStatus(ServerState state, MinecraftServerPing.PingResult ping, Bitmap favicon) {
+            this.state = state;
             this.ping = ping;
+            this.favicon = favicon;
         }
 
-        static ServerStatus checking() { return new ServerStatus(true, false, null); }
-        static ServerStatus offline() { return new ServerStatus(false, false, null); }
-        static ServerStatus online(MinecraftServerPing.PingResult ping) {
-            return new ServerStatus(false, true, ping);
+        static ServerStatus checking() { return new ServerStatus(ServerState.CHECKING, null, null); }
+        static ServerStatus online(MinecraftServerPing.PingResult ping, Bitmap favicon) {
+            return new ServerStatus(ServerState.ONLINE, ping, favicon);
+        }
+        static ServerStatus fromFailure(Exception error) {
+            if (error instanceof SocketTimeoutException || error instanceof ConnectException) {
+                return new ServerStatus(ServerState.OFFLINE, null, null);
+            }
+            return new ServerStatus(ServerState.UNKNOWN, null, null);
         }
     }
 
@@ -438,29 +753,50 @@ public class ServerHubFragment extends Fragment {
             ServerEntry entry = mServers.get(position);
             holder.name.setText(entry.name);
             holder.address.setText(entry.address);
+            holder.logo.setImageResource(R.drawable.ic_server_placeholder);
+            holder.logo.setContentDescription("Generic server logo; no favicon is currently available");
+            holder.bannerPlaceholder.setVisibility(View.VISIBLE);
+            holder.discord.setVisibility(entry.discordUrl.isEmpty() ? View.GONE : View.VISIBLE);
             ServerStatus status = mStatuses.get(entry.id);
-            if (status == null) {
-                holder.status.setText("Not checked · tap refresh");
-                holder.details.setText("Java server");
-                holder.dot.setAlpha(0.35f);
-            } else if (status.checking) {
-                holder.status.setText("Checking live status…");
-                holder.details.setText("Ping in progress");
-                holder.dot.setAlpha(0.65f);
-            } else if (!status.online || status.ping == null) {
-                holder.status.setText("Offline or not responding");
-                holder.details.setText("No response");
-                holder.dot.setAlpha(0.25f);
+
+            if (status == null || status.state == ServerState.CHECKING) {
+                holder.status.setText(status == null ? "Not checked · tap refresh" : "Checking live status…");
+                holder.players.setText(status == null ? "Players unavailable" : "Players: checking…");
+                holder.details.setText("Version unavailable");
+                holder.ping.setText(status == null ? "Ping unavailable" : "Ping: checking…");
+                holder.motd.setText(status == null ? "MOTD unavailable" : "Loading MOTD…");
+                holder.dot.setBackgroundResource(R.drawable.bg_dot_checking);
+            } else if (status.state == ServerState.OFFLINE) {
+                holder.status.setText("Offline · no response");
+                holder.players.setText("Players unavailable");
+                holder.details.setText("Version unavailable");
+                holder.ping.setText("Ping unavailable");
+                holder.motd.setText("MOTD unavailable");
+                holder.dot.setBackgroundResource(R.drawable.bg_dot_offline);
+            } else if (status.state == ServerState.UNKNOWN) {
+                holder.status.setText("Status unknown");
+                holder.players.setText("Players unavailable");
+                holder.details.setText("Version unavailable");
+                holder.ping.setText("Ping unavailable");
+                holder.motd.setText("MOTD unavailable");
+                holder.dot.setBackgroundResource(R.drawable.bg_dot_unknown);
             } else {
-                holder.status.setText("Online · " + status.ping.latencyMs + " ms");
-                holder.details.setText(status.ping.onlinePlayers >= 0
-                        ? status.ping.onlinePlayers + "/" + status.ping.maximumPlayers + " players\n" +
-                          (status.ping.versionName.isEmpty() ? "Java Edition" : status.ping.versionName)
-                        : (status.ping.versionName.isEmpty() ? "Java server" : status.ping.versionName));
-                holder.dot.setAlpha(1f);
+                holder.status.setText("Online");
+                holder.players.setText(formatPlayers(status.ping));
+                holder.details.setText(status.ping.versionName == null || status.ping.versionName.isEmpty()
+                        ? "Java server" : status.ping.versionName);
+                holder.ping.setText("Ping: " + status.ping.latencyMs + " ms");
+                holder.motd.setText(MinecraftTextFormatter.format(status.ping.motd));
+                holder.dot.setBackgroundResource(R.drawable.bg_dot_online);
+                if (status.favicon != null) {
+                    holder.logo.setImageBitmap(status.favicon);
+                    holder.logo.setContentDescription(entry.name + " server favicon");
+                }
             }
 
             holder.connect.setOnClickListener(v -> quickPlay(entry));
+            holder.discord.setOnClickListener(v -> openWebOrDiscord(entry.discordUrl,
+                    entry.discordUrl.toLowerCase(Locale.ROOT).contains("discord")));
             holder.refresh.setOnClickListener(v -> pingServer(entry));
             holder.edit.setOnClickListener(v -> showServerDialog(entry));
             holder.remove.setOnClickListener(v -> confirmRemove(entry));
@@ -472,11 +808,17 @@ public class ServerHubFragment extends Fragment {
 
         final class ServerHolder extends RecyclerView.ViewHolder {
             final View dot;
+            final ImageView logo;
+            final TextView bannerPlaceholder;
             final TextView name;
             final TextView address;
             final TextView status;
+            final TextView players;
             final TextView details;
+            final TextView ping;
+            final TextView motd;
             final TextView connect;
+            final TextView discord;
             final TextView refresh;
             final TextView edit;
             final TextView remove;
@@ -484,11 +826,17 @@ public class ServerHubFragment extends Fragment {
             ServerHolder(@NonNull View itemView) {
                 super(itemView);
                 dot = itemView.findViewById(R.id.server_status_dot);
+                logo = itemView.findViewById(R.id.server_logo);
+                bannerPlaceholder = itemView.findViewById(R.id.server_banner_placeholder_label);
                 name = itemView.findViewById(R.id.tv_server_name);
                 address = itemView.findViewById(R.id.tv_server_address);
                 status = itemView.findViewById(R.id.tv_server_status);
+                players = itemView.findViewById(R.id.tv_server_players);
                 details = itemView.findViewById(R.id.tv_server_details);
+                ping = itemView.findViewById(R.id.tv_server_ping);
+                motd = itemView.findViewById(R.id.tv_server_motd);
                 connect = itemView.findViewById(R.id.btn_server_connect);
+                discord = itemView.findViewById(R.id.btn_server_discord);
                 refresh = itemView.findViewById(R.id.btn_server_ping);
                 edit = itemView.findViewById(R.id.btn_server_edit);
                 remove = itemView.findViewById(R.id.btn_server_delete);

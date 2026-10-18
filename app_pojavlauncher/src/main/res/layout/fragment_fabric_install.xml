@@ -271,7 +271,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Installation failed"
+                            android:text="Could not load compatible versions"
                             android:textColor="#FF6B6B"
                             android:textSize="14sp"
                             android:textStyle="bold"

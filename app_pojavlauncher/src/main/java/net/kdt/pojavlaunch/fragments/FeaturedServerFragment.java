@@ -21,6 +21,10 @@ import net.kdt.pojavlaunch.prefs.LauncherPreferences;
 import net.kdt.pojavlaunch.value.launcherprofiles.LauncherProfiles;
 import net.kdt.pojavlaunch.value.launcherprofiles.MinecraftProfile;
 
+import java.net.ConnectException;
+import java.net.SocketTimeoutException;
+import java.net.UnknownHostException;
+
 /** Full-screen, one-tap join page for the LuciferMC Lifesteel SMP. */
 public class FeaturedServerFragment extends Fragment {
     public static final String TAG = "FeaturedServerFragment";
@@ -28,6 +32,7 @@ public class FeaturedServerFragment extends Fragment {
 
     @Nullable private TextView mOnlineBadge;
     private int mPingGeneration;
+    private boolean mPingInFlight;
 
     public FeaturedServerFragment() {
         super(R.layout.fragment_featured_server);
@@ -40,7 +45,7 @@ public class FeaturedServerFragment extends Fragment {
         view.findViewById(R.id.btn_featured_server_play).setOnClickListener(v -> launchServer());
         view.findViewById(R.id.btn_featured_server_discord).setOnClickListener(v ->
                 Tools.openDiscordInvite(requireActivity(), getString(R.string.discord_invite)));
-        showStatus(true);
+        showStatus(Status.CHECKING);
     }
 
     @Override
@@ -52,38 +57,66 @@ public class FeaturedServerFragment extends Fragment {
     @Override
     public void onDestroyView() {
         mPingGeneration++;
+        mPingInFlight = false;
         mOnlineBadge = null;
         super.onDestroyView();
     }
 
     private void refreshStatus() {
+        if (mPingInFlight || mOnlineBadge == null) return;
         final int request = ++mPingGeneration;
+        mPingInFlight = true;
+        showStatus(Status.CHECKING);
         PojavApplication.sExecutorService.execute(() -> {
-            boolean online;
+            Status result;
             try {
                 MinecraftServerPing.ping(SERVER_ADDRESS);
-                online = true;
-            } catch (Exception ignored) {
-                online = false;
+                result = Status.ONLINE;
+            } catch (Exception error) {
+                if (error instanceof SocketTimeoutException || error instanceof ConnectException) {
+                    result = Status.OFFLINE;
+                } else if (error instanceof UnknownHostException) {
+                    result = Status.UNKNOWN;
+                } else {
+                    result = Status.UNKNOWN;
+                }
             }
-            final boolean result = online;
+            final Status finalResult = result;
             Tools.runOnUiThread(() -> {
+                if (request == mPingGeneration) mPingInFlight = false;
                 if (!isAdded() || request != mPingGeneration) return;
-                showStatus(result);
+                showStatus(finalResult);
             });
         });
     }
 
-    private void showStatus(boolean online) {
+    private void showStatus(Status status) {
         if (mOnlineBadge == null) return;
-        mOnlineBadge.setText(online ? "ONLINE" : "OFFLINE");
-        mOnlineBadge.setTextColor(Color.parseColor(online ? "#82F59A" : "#FF8790"));
-        mOnlineBadge.setBackgroundResource(online
-                ? R.drawable.bg_server_badge_online
-                : R.drawable.bg_server_badge_offline);
-        mOnlineBadge.setContentDescription(online
-                ? "LuciferMC server is online"
-                : "LuciferMC server is offline or not responding");
+        switch (status) {
+            case ONLINE:
+                mOnlineBadge.setText("ONLINE");
+                mOnlineBadge.setTextColor(Color.parseColor("#82F59A"));
+                mOnlineBadge.setBackgroundResource(R.drawable.bg_server_badge_online);
+                mOnlineBadge.setContentDescription("LuciferMC server responded online to a live ping");
+                break;
+            case OFFLINE:
+                mOnlineBadge.setText("OFFLINE");
+                mOnlineBadge.setTextColor(Color.parseColor("#FF8790"));
+                mOnlineBadge.setBackgroundResource(R.drawable.bg_server_badge_offline);
+                mOnlineBadge.setContentDescription("LuciferMC server did not respond to a live ping");
+                break;
+            case UNKNOWN:
+                mOnlineBadge.setText("UNKNOWN");
+                mOnlineBadge.setTextColor(Color.parseColor("#C7CED8"));
+                mOnlineBadge.setBackgroundResource(R.drawable.bg_server_badge_unknown);
+                mOnlineBadge.setContentDescription("LuciferMC server status could not be determined");
+                break;
+            default:
+                mOnlineBadge.setText("CHECKING");
+                mOnlineBadge.setTextColor(Color.parseColor("#FFE59A"));
+                mOnlineBadge.setBackgroundResource(R.drawable.bg_server_badge_checking);
+                mOnlineBadge.setContentDescription("Checking LuciferMC server status");
+        }
     }
 
     private void launchServer() {
@@ -105,4 +138,6 @@ public class FeaturedServerFragment extends Fragment {
             ExtraCore.setValue(ExtraConstants.LAUNCH_GAME, true);
         });
     }
+
+    private enum Status { CHECKING, ONLINE, OFFLINE, UNKNOWN }
 }

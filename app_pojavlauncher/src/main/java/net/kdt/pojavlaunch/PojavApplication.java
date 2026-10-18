@@ -55,15 +55,15 @@ public class PojavApplication extends Application {
 			try {
 				// Write to file, since some devices may not able to show error
 				FileUtils.ensureParentDirectory(crashFile);
-				PrintStream crashStream = new PrintStream(crashFile);
-				crashStream.append("LUCIFER LAUNCHER crash report\n");
-				crashStream.append(" - Time: ").append(DateFormat.getDateTimeInstance().format(new Date())).append("\n");
-				crashStream.append(" - Device: ").append(Build.PRODUCT).append(" ").append(Build.MODEL).append("\n");
-				crashStream.append(" - Android version: ").append(Build.VERSION.RELEASE).append("\n");
-				crashStream.append(" - Crash stack trace:\n");
-				crashStream.append(" - Launcher version: " + BuildConfig.VERSION_NAME + "\n");
-				crashStream.append(Log.getStackTraceString(th));
-				crashStream.close();
+				try (PrintStream crashStream = new PrintStream(crashFile)) {
+					crashStream.append("LUCIFER LAUNCHER crash report\n");
+					crashStream.append(" - Time: ").append(DateFormat.getDateTimeInstance().format(new Date())).append("\n");
+					crashStream.append(" - Device: ").append(Build.PRODUCT).append(" ").append(Build.MODEL).append("\n");
+					crashStream.append(" - Android version: ").append(Build.VERSION.RELEASE).append("\n");
+					crashStream.append(" - Crash stack trace:\n");
+					crashStream.append(" - Launcher version: " + BuildConfig.VERSION_NAME + "\n");
+					crashStream.append(Log.getStackTraceString(th));
+				}
 			} catch (Throwable throwable) {
 				Log.e(CRASH_REPORT_TAG, " - Exception attempt saving crash stack trace:", throwable);
 				Log.e(CRASH_REPORT_TAG, " - The crash stack trace was:", th);
@@ -75,6 +75,12 @@ public class PojavApplication extends Application {
 		
 		try {
 			super.onCreate();
+			if (BuildConfig.DEBUG) {
+				StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder()
+						.detectAll().penaltyLog().build());
+				StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder()
+						.detectAll().penaltyLog().build());
+			}
 			if(Tools.checkStorageRoot(this)){
 				// Implicitly initializes early constants and storage constants.
 				// Required to run the main activity properly.
