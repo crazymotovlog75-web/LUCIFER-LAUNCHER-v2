@@ -79,6 +79,23 @@
             app:layout_constraintGuide_percent="0.951" />
 
         <TextView
+            android:id="@+id/featured_server_pin"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/_8sdp"
+            android:layout_marginTop="@dimen/_8sdp"
+            android:paddingHorizontal="@dimen/_9sdp"
+            android:paddingVertical="@dimen/_4sdp"
+            android:background="@drawable/bg_server_badge_online"
+            android:text="🔒 PINNED"
+            android:textColor="#B9FFC9"
+            android:textSize="@dimen/_8ssp"
+            android:textStyle="bold"
+            android:letterSpacing="0.05"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
             android:id="@+id/featured_server_status"
             android:layout_width="0dp"
             android:layout_height="0dp"

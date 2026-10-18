@@ -42,11 +42,17 @@ import java.util.UUID;
 public class ServerHubFragment extends Fragment {
     public static final String TAG = "ServerHubFragment";
     private static final String PREF_SERVERS = "lucifer_server_hub_list";
+    private static final String FEATURED_SERVER_ADDRESS = "play.lucifermc.fun";
     private static final int MAX_SERVERS = 40;
 
     private RecyclerView mRecyclerView;
     private View mEmptyState;
+    private TextView mFeaturedStatusView;
+    private TextView mServerCountView;
+    private TextView mOtherServersHeader;
     private ServerAdapter mAdapter;
+    private ServerStatus mFeaturedStatus = ServerStatus.checking();
+    private int mFeaturedPingRequestId;
     private final ArrayList<ServerEntry> mServers = new ArrayList<>();
     private final Map<String, ServerStatus> mStatuses = new HashMap<>();
     private final Map<String, Integer> mPingRequestIds = new HashMap<>();
@@ -63,6 +69,9 @@ public class ServerHubFragment extends Fragment {
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setItemAnimator(null);
         mEmptyState = view.findViewById(R.id.server_hub_empty);
+        mFeaturedStatusView = view.findViewById(R.id.featured_server_status);
+        mServerCountView = view.findViewById(R.id.server_hub_count);
+        mOtherServersHeader = view.findViewById(R.id.server_hub_other_servers_title);
         mAdapter = new ServerAdapter();
         mRecyclerView.setAdapter(mAdapter);
 
@@ -70,9 +79,18 @@ public class ServerHubFragment extends Fragment {
                 requireActivity().getOnBackPressedDispatcher().onBackPressed());
         view.findViewById(R.id.btn_server_add).setOnClickListener(v -> showServerDialog(null));
         view.findViewById(R.id.btn_server_refresh_all).setOnClickListener(v -> refreshAll());
+        view.findViewById(R.id.btn_featured_server_play).setOnClickListener(v ->
+                quickPlay(FEATURED_SERVER_ADDRESS));
+        view.findViewById(R.id.btn_featured_server_discord).setOnClickListener(v ->
+                Tools.openDiscordInvite(requireActivity(), getString(R.string.discord_invite)));
 
+        // Keep the supplied banner's baked-in OFFLINE text covered with the live status badge.
+        // It starts optimistically as ONLINE for the familiar featured-server card, then the real
+        // ping response below corrects it if the host does not answer.
+        showFeaturedStatus(true);
         loadServers();
         updateEmptyState();
+        updateServerCount();
     }
 
     @Override
@@ -83,10 +101,15 @@ public class ServerHubFragment extends Fragment {
 
     @Override
     public void onDestroyView() {
-        super.onDestroyView();
+        mFeaturedPingRequestId++;
+        mPingRequestIds.clear();
         mRecyclerView = null;
         mEmptyState = null;
+        mFeaturedStatusView = null;
+        mServerCountView = null;
+        mOtherServersHeader = null;
         mAdapter = null;
+        super.onDestroyView();
     }
 
     private SharedPreferences preferences() {
@@ -132,13 +155,71 @@ public class ServerHubFragment extends Fragment {
         }
         preferences().edit().putString(PREF_SERVERS, array.toString()).apply();
         updateEmptyState();
+        updateServerCount();
     }
 
     private void updateEmptyState() {
         if (mEmptyState == null || mRecyclerView == null) return;
         boolean empty = mServers.isEmpty();
         mEmptyState.setVisibility(empty ? View.VISIBLE : View.GONE);
-        mRecyclerView.setVisibility(empty ? View.GONE : View.VISIBLE);
+        // Keep the RecyclerView laid out even when empty; the empty-state card overlays its area.
+        // Hiding a match-constraint RecyclerView would collapse the overlay in ConstraintLayout.
+        mRecyclerView.setVisibility(View.VISIBLE);
+        if (mOtherServersHeader != null) {
+            mOtherServersHeader.setText(mServers.isEmpty()
+                    ? "OTHER SERVERS"
+                    : "OTHER SERVERS · " + mServers.size());
+        }
+    }
+
+    private void updateServerCount() {
+        if (mServerCountView == null) return;
+        int total = mServers.size() + 1; // LuciferMC is the permanent featured entry.
+        int checked = mFeaturedStatus.checking ? 0 : 1;
+        int online = mFeaturedStatus.online ? 1 : 0;
+        for (ServerEntry entry : mServers) {
+            ServerStatus status = mStatuses.get(entry.id);
+            if (status == null || status.checking) continue;
+            checked++;
+            if (status.online) online++;
+        }
+        String count = total == 1 ? "1 server" : total + " servers";
+        String state = checked < total ? "checking now" : online + "/" + total + " online";
+        mServerCountView.setText(count + " · " + state);
+    }
+
+    private void showFeaturedStatus(boolean online) {
+        if (mFeaturedStatusView == null) return;
+        mFeaturedStatusView.setText(online ? "ONLINE" : "OFFLINE");
+        mFeaturedStatusView.setTextColor(android.graphics.Color.parseColor(
+                online ? "#82F59A" : "#FF8790"));
+        mFeaturedStatusView.setBackgroundResource(online
+                ? R.drawable.bg_server_badge_online
+                : R.drawable.bg_server_badge_offline);
+        mFeaturedStatusView.setContentDescription(online
+                ? "LuciferMC server is online"
+                : "LuciferMC server is offline or not responding");
+    }
+
+    private void pingFeaturedServer() {
+        final int requestId = ++mFeaturedPingRequestId;
+        mFeaturedStatus = ServerStatus.checking();
+        updateServerCount();
+        PojavApplication.sExecutorService.execute(() -> {
+            ServerStatus result;
+            try {
+                result = ServerStatus.online(MinecraftServerPing.ping(FEATURED_SERVER_ADDRESS));
+            } catch (Exception error) {
+                result = ServerStatus.offline();
+            }
+            final ServerStatus finalResult = result;
+            Tools.runOnUiThread(() -> {
+                if (!isAdded() || requestId != mFeaturedPingRequestId) return;
+                mFeaturedStatus = finalResult;
+                showFeaturedStatus(finalResult.online);
+                updateServerCount();
+            });
+        });
     }
 
     private void showServerDialog(@Nullable ServerEntry editEntry) {
@@ -211,6 +292,7 @@ public class ServerHubFragment extends Fragment {
     }
 
     private void refreshAll() {
+        pingFeaturedServer();
         if (mServers.isEmpty()) {
             updateEmptyState();
             return;
@@ -224,6 +306,7 @@ public class ServerHubFragment extends Fragment {
         mPingRequestIds.put(entry.id, requestId);
         mStatuses.put(entry.id, ServerStatus.checking());
         notifyEntryChanged(entry.id);
+        updateServerCount();
         PojavApplication.sExecutorService.execute(() -> {
             ServerStatus result;
             try {
@@ -245,6 +328,7 @@ public class ServerHubFragment extends Fragment {
                 if (!stillSaved) return;
                 mStatuses.put(entry.id, finalResult);
                 notifyEntryChanged(entry.id);
+                updateServerCount();
             });
         });
     }
@@ -268,6 +352,10 @@ public class ServerHubFragment extends Fragment {
             }
         }
         if (!serverStillSaved) return;
+        quickPlay(entry.address);
+    }
+
+    private void quickPlay(String address) {
         LauncherProfiles.loadAsync(() -> {
             if (!isAdded()) return;
             String profileKey = LauncherPreferences.DEFAULT_PREF.getString(
@@ -279,7 +367,7 @@ public class ServerHubFragment extends Fragment {
                 Toast.makeText(requireContext(), R.string.error_no_version, Toast.LENGTH_LONG).show();
                 return;
             }
-            if (!QuickPlayManager.request(entry.address)) {
+            if (!QuickPlayManager.request(address)) {
                 Toast.makeText(requireContext(), "Could not prepare the server connection", Toast.LENGTH_LONG).show();
                 return;
             }
