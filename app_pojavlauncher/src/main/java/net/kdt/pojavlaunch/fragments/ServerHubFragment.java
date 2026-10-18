@@ -327,17 +327,18 @@ public class ServerHubFragment extends Fragment {
         renderFeaturedStatus(mFeaturedStatus);
         updateServerCount();
         executePing(() -> {
-            final ServerStatus result;
+            ServerStatus result;
             try {
                 result = ServerStatus.online(MinecraftServerPing.ping(FEATURED_SERVER_ADDRESS), null);
             } catch (Exception error) {
                 result = ServerStatus.fromFailure(error);
             }
+            final ServerStatus completedStatus = result;
             Tools.runOnUiThread(() -> {
                 if (requestId == mFeaturedPingRequestId) mFeaturedPingInFlight = false;
                 if (!isAdded() || requestId != mFeaturedPingRequestId || mFeaturedStatusView == null) return;
-                mFeaturedStatus = result;
-                renderFeaturedStatus(result);
+                mFeaturedStatus = completedStatus;
+                renderFeaturedStatus(completedStatus);
                 updateServerCount();
             });
         });
@@ -502,7 +503,7 @@ public class ServerHubFragment extends Fragment {
         notifyEntryChanged(entry.id);
         updateServerCount();
         executePing(() -> {
-            final ServerStatus result;
+            ServerStatus result;
             try {
                 MinecraftServerPing.PingResult ping = MinecraftServerPing.ping(address);
                 result = ServerStatus.online(ping, decodeServerFavicon(ping.faviconPng));
@@ -510,6 +511,7 @@ public class ServerHubFragment extends Fragment {
                 result = ServerStatus.fromFailure(error);
                 Log.d(TAG, "Ping did not complete for " + address + ": " + error.getClass().getSimpleName());
             }
+            final ServerStatus completedStatus = result;
             Tools.runOnUiThread(() -> {
                 if (Integer.valueOf(requestId).equals(mPingInFlight.get(entry.id))) {
                     mPingInFlight.remove(entry.id);
@@ -524,7 +526,7 @@ public class ServerHubFragment extends Fragment {
                     }
                 }
                 if (!stillSaved) return;
-                mStatuses.put(entry.id, result);
+                mStatuses.put(entry.id, completedStatus);
                 notifyEntryChanged(entry.id);
                 updateServerCount();
             });
