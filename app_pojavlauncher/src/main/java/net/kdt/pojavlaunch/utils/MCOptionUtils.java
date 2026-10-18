@@ -83,7 +83,7 @@ public class MCOptionUtils {
      * FPS-first mode enabled.
      */
     public static void applyFpsFirstPreset() {
-        set("renderDistance", "6");
+        set("renderDistance", "4");
         set("simulationDistance", "4");
         set("enableVsync", "false");
         set("maxFps", "260");
@@ -92,6 +92,11 @@ public class MCOptionUtils {
         set("entityShadows", "false");
         set("entityDistanceScaling", "0.5");
         set("mipmapLevels", "0");
+        set("particles", "2");
+        set("biomeBlendRadius", "0");
+        set("ao", "false");
+        set("fovEffectScale", "0.0");
+        set("distortionEffectScale", "0.0");
     }
 
     /** Set an array of String, instead of a simple value. Not supported on all options */

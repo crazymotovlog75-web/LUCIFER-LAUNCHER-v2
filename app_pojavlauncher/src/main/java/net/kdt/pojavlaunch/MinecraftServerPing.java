@@ -21,6 +21,7 @@ public final class MinecraftServerPing {
     private static final int DEFAULT_PORT = 25565;
     private static final int CONNECT_TIMEOUT_MS = 2800;
     private static final int READ_TIMEOUT_MS = 2800;
+    private static final int OPTIONAL_PING_TIMEOUT_MS = 1200;
     private static final int MAX_STATUS_PACKET_BYTES = 1_048_576;
     private static final int MAX_FAVICON_BYTES = 64 * 1024;
     private static final int MAX_MOTD_CHARS = 512;
@@ -176,20 +177,27 @@ public final class MinecraftServerPing {
             String motd = flattenDescription(status.opt("description"));
             byte[] favicon = decodeFavicon(status.optString("favicon", ""));
 
-            // Use the protocol's ping/pong packet for an actual round-trip time rather than
-            // reporting DNS/connect/status-response time as network latency.
-            long pingToken = android.os.SystemClock.elapsedRealtime();
-            long pingStartedAt = pingToken;
-            writeVarInt(output, 9); // packet id (1) + eight-byte payload
-            writeVarInt(output, 1); // Ping packet id
-            output.writeLong(pingToken);
-            output.flush();
-            int pongLength = readVarInt(input);
-            if (pongLength != 9 || readVarInt(input) != 1) {
-                throw new IOException("Unexpected server ping response");
+            // A valid status JSON response already proves the server is online. Measure latency
+            // with the optional ping/pong packet when supported, but do not mislabel a server as
+            // offline merely because a proxy closes the socket or omits that optional reply.
+            long latency = -1L;
+            try {
+                socket.setSoTimeout(OPTIONAL_PING_TIMEOUT_MS);
+                long pingToken = android.os.SystemClock.elapsedRealtime();
+                writeVarInt(output, 9); // packet id (1) + eight-byte payload
+                writeVarInt(output, 1); // Ping packet id
+                output.writeLong(pingToken);
+                output.flush();
+                int pongLength = readVarInt(input);
+                if (pongLength != 9 || readVarInt(input) != 1 || input.readLong() != pingToken) {
+                    throw new IOException("Unexpected server ping response");
+                }
+                latency = Math.max(0L, android.os.SystemClock.elapsedRealtime() - pingToken);
+            } catch (IOException pingUnavailable) {
+                android.util.Log.d("MinecraftServerPing",
+                        "Status response received; round-trip ping unavailable: " +
+                                pingUnavailable.getClass().getSimpleName());
             }
-            if (input.readLong() != pingToken) throw new IOException("Server ping response did not match");
-            long latency = Math.max(0L, android.os.SystemClock.elapsedRealtime() - pingStartedAt);
             return new PingResult(
                     latency,
                     players != null ? players.optInt("online", -1) : -1,

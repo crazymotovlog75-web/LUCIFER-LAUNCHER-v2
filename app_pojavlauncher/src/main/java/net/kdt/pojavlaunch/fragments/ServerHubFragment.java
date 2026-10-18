@@ -124,6 +124,8 @@ public class ServerHubFragment extends Fragment {
                 quickPlay(FEATURED_SERVER_ADDRESS));
         view.findViewById(R.id.btn_featured_server_discord).setOnClickListener(v ->
                 openWebOrDiscord(getString(R.string.discord_invite), true));
+        view.findViewById(R.id.featured_server_community).setOnClickListener(v ->
+                openWebOrDiscord(getString(R.string.discord_invite), true));
 
         loadServers();
         mFeaturedStatus = ServerStatus.checking();
@@ -285,7 +287,7 @@ public class ServerHubFragment extends Fragment {
             mFeaturedMotdView.setText("Loading MOTD…");
         } else if (status.ping != null) {
             mFeaturedPlayersView.setText(formatPlayers(status.ping));
-            mFeaturedPingView.setText("Ping: " + status.ping.latencyMs + " ms");
+            mFeaturedPingView.setText(formatPing(status.ping));
             mFeaturedMotdView.setText(MinecraftTextFormatter.format(status.ping.motd));
         } else {
             mFeaturedPlayersView.setText("Players unavailable");
@@ -307,6 +309,10 @@ public class ServerHubFragment extends Fragment {
         }
         if (ping.onlinePlayers >= 0) return "Players online: " + ping.onlinePlayers;
         return "Player count unavailable";
+    }
+
+    private static String formatPing(MinecraftServerPing.PingResult ping) {
+        return ping.latencyMs >= 0 ? "Ping: " + ping.latencyMs + " ms" : "Ping unavailable";
     }
 
     private void executePing(Runnable task) {
@@ -360,16 +366,36 @@ public class ServerHubFragment extends Fragment {
         form.addView(nameInput, new LinearLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
 
+        MinecraftServerPing.Endpoint existingEndpoint = null;
+        if (editEntry != null) {
+            try {
+                existingEndpoint = MinecraftServerPing.parseEndpoint(editEntry.address);
+            } catch (IllegalArgumentException ignored) {
+                // Saved entries are validated on load; leave blank if an old entry is malformed.
+            }
+        }
+
         EditText addressInput = new EditText(context);
         addressInput.setSingleLine(true);
         addressInput.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_URI);
-        addressInput.setHint("Address · for example play.example.net:25565");
+        addressInput.setHint("Server IP or hostname (IPv6 supported)");
         addressInput.setTextSize(14);
-        if (editEntry != null) addressInput.setText(editEntry.address);
+        if (existingEndpoint != null) addressInput.setText(existingEndpoint.host);
         LinearLayout.LayoutParams addressParams = new LinearLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         addressParams.topMargin = dp(context, 8);
         form.addView(addressInput, addressParams);
+
+        EditText portInput = new EditText(context);
+        portInput.setSingleLine(true);
+        portInput.setInputType(InputType.TYPE_CLASS_NUMBER);
+        portInput.setHint("Port (default 25565)");
+        portInput.setTextSize(14);
+        portInput.setText(existingEndpoint == null ? "25565" : Integer.toString(existingEndpoint.port));
+        LinearLayout.LayoutParams portParams = new LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        portParams.topMargin = dp(context, 4);
+        form.addView(portInput, portParams);
 
         EditText linkInput = new EditText(context);
         linkInput.setSingleLine(true);
@@ -379,7 +405,7 @@ public class ServerHubFragment extends Fragment {
         if (editEntry != null) linkInput.setText(editEntry.discordUrl);
         LinearLayout.LayoutParams linkParams = new LinearLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        linkParams.topMargin = dp(context, 8);
+        linkParams.topMargin = dp(context, 4);
         form.addView(linkInput, linkParams);
 
         AlertDialog dialog = new AlertDialog.Builder(context)
@@ -396,9 +422,13 @@ public class ServerHubFragment extends Fragment {
             }
             final MinecraftServerPing.Endpoint endpoint;
             try {
-                endpoint = MinecraftServerPing.parseEndpoint(addressInput.getText().toString());
+                endpoint = parseEndpointFields(addressInput.getText().toString(), portInput.getText().toString());
             } catch (IllegalArgumentException error) {
-                addressInput.setError(error.getMessage());
+                if (error.getMessage() != null && error.getMessage().toLowerCase(Locale.ROOT).contains("port")) {
+                    portInput.setError(error.getMessage());
+                } else {
+                    addressInput.setError(error.getMessage());
+                }
                 return;
             }
             String address = endpoint.toAddress();
@@ -446,6 +476,22 @@ public class ServerHubFragment extends Fragment {
             pingServer(changedEntry);
         }));
         dialog.show();
+    }
+
+    private static MinecraftServerPing.Endpoint parseEndpointFields(String rawHost, String rawPort) {
+        String host = rawHost == null ? "" : rawHost.trim();
+        if (host.isEmpty()) throw new IllegalArgumentException("Enter a server IP or hostname");
+        final int port;
+        try {
+            port = Integer.parseInt(rawPort == null ? "" : rawPort.trim());
+        } catch (NumberFormatException invalidPort) {
+            throw new IllegalArgumentException("Port must be between 1 and 65535");
+        }
+        if (port < 1 || port > 65535) {
+            throw new IllegalArgumentException("Port must be between 1 and 65535");
+        }
+        if (host.indexOf(':') >= 0 && !host.startsWith("[")) host = "[" + host + "]";
+        return MinecraftServerPing.parseEndpoint(host + ":" + port);
     }
 
     private static String normalizeServerLink(String raw) {
@@ -787,7 +833,7 @@ public class ServerHubFragment extends Fragment {
                 holder.players.setText(formatPlayers(status.ping));
                 holder.details.setText(status.ping.versionName == null || status.ping.versionName.isEmpty()
                         ? "Java server" : status.ping.versionName);
-                holder.ping.setText("Ping: " + status.ping.latencyMs + " ms");
+                holder.ping.setText(formatPing(status.ping));
                 holder.motd.setText(MinecraftTextFormatter.format(status.ping.motd));
                 holder.dot.setBackgroundResource(R.drawable.bg_dot_online);
                 if (status.favicon != null) {

@@ -11,7 +11,7 @@
 
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="@dimen/_76sdp"
+        android:layout_height="@dimen/server_hub_banner_height"
         android:background="#11141C">
         <ImageView
             android:id="@+id/featured_server_banner"
@@ -19,7 +19,7 @@
             android:layout_height="match_parent"
             android:scaleType="centerCrop"
             android:src="@drawable/lucifermc_server_banner"
-            android:contentDescription="LuciferMC Lifesteel SMP server banner" />
+            android:contentDescription="LuciferMC Lifesteal SMP server banner" />
         <TextView
             android:id="@+id/featured_server_pin"
             android:layout_width="wrap_content"
@@ -114,12 +114,47 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/_2sdp"
-                android:text="Lifesteel SMP · Java Edition"
+                android:text="Lifesteal SMP · Java Edition"
                 android:textColor="@color/text_secondary_light"
                 android:textSize="@dimen/_8ssp"
                 android:maxLines="1"
                 android:ellipsize="end" />
         </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/featured_server_community"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="@dimen/_50sdp"
+        android:layout_marginTop="@dimen/_6sdp"
+        android:paddingHorizontal="@dimen/_10sdp"
+        android:paddingVertical="@dimen/_5sdp"
+        android:gravity="center_vertical"
+        android:orientation="vertical"
+        android:background="@drawable/bg_server_community"
+        android:clickable="true"
+        android:focusable="true"
+        android:contentDescription="Open the LuciferMC Discord invite">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="LUCIFERMC  |  discord.gg/crfVegmMH8"
+            android:textColor="#FFFF4763"
+            android:textSize="@dimen/_10ssp"
+            android:textStyle="bold"
+            android:maxLines="1"
+            android:ellipsize="end" />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_2sdp"
+            android:text="⚔  LIFESTEAL SMP  ⚔"
+            android:textColor="@color/text_primary_white"
+            android:textSize="@dimen/_11ssp"
+            android:textStyle="bold"
+            android:letterSpacing="0.03"
+            android:maxLines="1" />
     </LinearLayout>
 
     <LinearLayout
@@ -188,7 +223,7 @@
             android:background="@drawable/bg_server_play"
             android:clickable="true"
             android:focusable="true"
-            android:contentDescription="Play and join LuciferMC Lifesteel SMP" />
+            android:contentDescription="Play and join LuciferMC Lifesteal SMP" />
         <TextView
             android:id="@+id/btn_featured_server_discord"
             android:layout_width="@dimen/_92sdp"
@@ -198,6 +233,8 @@
             android:textColor="#FFFFFF"
             android:textSize="@dimen/_9ssp"
             android:textStyle="bold"
+            android:drawableStart="@drawable/ic_discord_white"
+            android:drawablePadding="@dimen/_4sdp"
             android:background="@drawable/bg_discord_join"
             android:clickable="true"
             android:focusable="true"

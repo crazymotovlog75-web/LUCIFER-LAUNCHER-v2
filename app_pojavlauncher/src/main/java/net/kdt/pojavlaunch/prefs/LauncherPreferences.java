@@ -110,7 +110,8 @@ public class LauncherPreferences {
         PREF_RAM_ALLOCATION = DEFAULT_PREF.getInt("allocation", findBestRAMAllocation(ctx));
         PREF_CUSTOM_JAVA_ARGS = DEFAULT_PREF.getString("javaArgs", "");
         PREF_FPS_FIRST_MODE = DEFAULT_PREF.getBoolean("fpsFirstMode", Tools.getTotalDeviceMemory(ctx) <= 4096);
-        PREF_SUSTAINED_PERFORMANCE = DEFAULT_PREF.getBoolean("sustainedPerformance", isDevicePowerful);
+        PREF_SUSTAINED_PERFORMANCE = DEFAULT_PREF.getBoolean(
+                "sustainedPerformance", Tools.getTotalDeviceMemory(ctx) <= 4096);
         PREF_VIRTUAL_MOUSE_START = DEFAULT_PREF.getBoolean("mouse_start", false);
         PREF_ARC_CAPES = DEFAULT_PREF.getBoolean("arc_capes",false);
         PREF_USE_ALTERNATE_SURFACE = DEFAULT_PREF.getBoolean("alternate_surface", isDevicePowerful);
@@ -127,9 +128,9 @@ public class LauncherPreferences {
             DisplayMetrics displayMetrics = ctx.getResources().getDisplayMetrics();
             int shortSide = Math.min(displayMetrics.widthPixels, displayMetrics.heightPixels);
             if (shortSide > 0) {
-                // Keep the render buffer near 540 px on the short edge for GPU-bound devices.
+                // Keep the render buffer near 480 px on the short edge for GPU-bound devices.
                 // Never upscale or go below the resolution slider's supported 25% floor.
-                float fpsResolutionScale = Math.max(0.25f, Math.min(1f, 540f / shortSide));
+                float fpsResolutionScale = Math.max(0.25f, Math.min(1f, 480f / shortSide));
                 PREF_SCALE_FACTOR = Math.min(PREF_SCALE_FACTOR, fpsResolutionScale);
             }
             // SurfaceView avoids the extra app-window composition pass used by TextureView.
@@ -146,6 +147,11 @@ public class LauncherPreferences {
         PREF_VERIFY_MANIFEST = DEFAULT_PREF.getBoolean("verifyManifest", true);
         PREF_SKIP_NOTIFICATION_PERMISSION_CHECK = DEFAULT_PREF.getBoolean(PREF_KEY_SKIP_NOTIFICATION_CHECK, false);
         PREF_VSYNC_IN_ZINK = DEFAULT_PREF.getBoolean("vsync_in_zink", true);
+        if (PREF_FPS_FIRST_MODE) {
+            // The Zink-specific override is separate from FORCE_VSYNC; disable both for the
+            // low-latency preset so one backend cannot silently keep frames locked to refresh.
+            PREF_VSYNC_IN_ZINK = false;
+        }
         PREF_FORCE_ENABLE_TOUCHCONTROLLER = DEFAULT_PREF.getBoolean("forceEnableTouchController", false);
         PREF_TOUCHCONTROLLER_VIBRATE_LENGTH = DEFAULT_PREF.getInt("touchControllerVibrateLength", 100);
         PREF_MOUSE_GRAB_FORCE = DEFAULT_PREF.getBoolean("always_grab_mouse", false);

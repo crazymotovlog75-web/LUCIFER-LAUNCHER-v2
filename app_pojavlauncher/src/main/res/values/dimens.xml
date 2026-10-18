@@ -31,4 +31,5 @@
     <dimen name="fragment_padding_medium">@dimen/_10sdp</dimen>
     <!-- Misc paddings -->
     <dimen name="profile_editor_image_padding">@dimen/padding_small</dimen>
+    <dimen name="server_hub_banner_height">76dp</dimen>
 </resources>

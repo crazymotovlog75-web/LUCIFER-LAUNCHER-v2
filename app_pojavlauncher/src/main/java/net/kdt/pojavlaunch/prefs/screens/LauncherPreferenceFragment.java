@@ -258,10 +258,10 @@ public class LauncherPreferenceFragment extends Fragment {
                     graphicsItems.add(new SettingItem("mg_renderer_setting_glsl_cache_size", SettingItem.TYPE_INPUT, getString(R.string.mg_renderer_glsl_cache), "Input cache size limit", "128"));
                     graphicsItems.add(new SettingItem("ignoreNotch", SettingItem.TYPE_SWITCH, getString(R.string.mcl_setting_title_ignore_notch), getString(R.string.mcl_setting_subtitle_ignore_notch), false));
                     graphicsItems.add(new SettingItem("resolutionRatio", SettingItem.TYPE_SLIDER, getString(R.string.mcl_setting_title_resolution_scaler), getString(R.string.mcl_setting_subtitle_resolution_scaler), 100).setSliderConfig(25, 100, 5, " %"));
-                    graphicsItems.add(new SettingItem("sustainedPerformance", SettingItem.TYPE_SWITCH, getString(R.string.preference_sustained_performance_title), getString(R.string.preference_sustained_performance_description), false));
+                    graphicsItems.add(new SettingItem("sustainedPerformance", SettingItem.TYPE_SWITCH, getString(R.string.preference_sustained_performance_title), getString(R.string.preference_sustained_performance_description), defaultFpsFirstMode));
                     graphicsItems.add(new SettingItem("alternate_surface", SettingItem.TYPE_SWITCH, getString(R.string.mcl_setting_title_use_surface_view), getString(R.string.mcl_setting_subtitle_use_surface_view), true));
                     graphicsItems.add(new SettingItem("force_vsync", SettingItem.TYPE_SWITCH, getString(R.string.preference_force_vsync_title), getString(R.string.preference_force_vsync_description), false));
-                    graphicsItems.add(new SettingItem("vsync_in_zink", SettingItem.TYPE_SWITCH, getString(R.string.preference_vsync_in_zink_title), getString(R.string.preference_vsync_in_zink_description), true));
+                    graphicsItems.add(new SettingItem("vsync_in_zink", SettingItem.TYPE_SWITCH, getString(R.string.preference_vsync_in_zink_title), getString(R.string.preference_vsync_in_zink_description), !defaultFpsFirstMode));
                     categories.add(new SettingCategory("Graphics Settings", graphicsItems));
                     break;
 
