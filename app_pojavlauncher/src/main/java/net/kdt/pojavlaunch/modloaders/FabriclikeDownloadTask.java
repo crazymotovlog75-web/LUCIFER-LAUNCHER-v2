@@ -56,13 +56,13 @@ public class FabriclikeDownloadTask implements Runnable, Tools.DownloaderFeedbac
             return;
         }
 
-        ProgressLayout progressLayout = ProgressLayout.INSTALL_MODPACK;
         try {
             Log.d(TAG, "Starting " + mUtils.getName() + " install for Minecraft " + mGameVersion);
             mProgressWrapper = new net.kdt.pojavlaunch.progresskeeper.DownloaderProgressWrapper(
-                    R.string.fabric_dl_progress, progressLayout);
+                    R.string.fabric_dl_progress, ProgressLayout.INSTALL_MODPACK);
             mProgressWrapper.extraString = mUtils.getName();
-            ProgressKeeper.submitProgress(progressLayout, 0, R.string.fabric_dl_progress, mUtils.getName());
+            ProgressKeeper.submitProgress(ProgressLayout.INSTALL_MODPACK, 0,
+                    R.string.fabric_dl_progress, mUtils.getName());
             runCatching();
             mModloaderDownloadListener.onDownloadFinished(null);
         } catch (Exception error) {
@@ -70,7 +70,7 @@ public class FabriclikeDownloadTask implements Runnable, Tools.DownloaderFeedbac
             mModloaderDownloadListener.onDownloadError(error);
         } finally {
             ACTIVE_INSTALLS.remove(installKey);
-            ProgressLayout.clearProgress(progressLayout);
+            ProgressLayout.clearProgress(ProgressLayout.INSTALL_MODPACK);
         }
     }
 
