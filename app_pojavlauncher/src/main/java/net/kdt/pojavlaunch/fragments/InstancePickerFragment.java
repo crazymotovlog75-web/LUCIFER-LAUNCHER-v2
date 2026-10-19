@@ -258,8 +258,10 @@ public class InstancePickerFragment extends Fragment {
                     ? "Not launched yet" : "Last played · " + formatDate(item.lastUsed));
             boolean selected = item.key.equals(selectedKey);
             profileHolder.active.setVisibility(selected ? View.VISIBLE : View.GONE);
+            profileHolder.root.setSelected(selected);
             profileHolder.root.setBackgroundResource(selected
-                    ? R.drawable.bg_lucifer_nav_item : R.drawable.bg_lucifer_glass_card);
+                    ? R.drawable.bg_home_profile_card_selected : R.drawable.bg_lucifer_glass_card);
+            if (selected) profileHolder.active.setBackgroundResource(R.drawable.bg_server_badge_online);
             bindIcon(profileHolder.icon, item);
             profileHolder.root.setOnClickListener(v -> selectInstance(item.key));
         }

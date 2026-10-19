@@ -62,6 +62,16 @@
                 android:text="Installed Mods: 0" />
         </LinearLayout>
 
+        <ImageButton
+            android:id="@+id/btn_profile_edit"
+            android:layout_width="@dimen/_26sdp"
+            android:layout_height="@dimen/_26sdp"
+            android:layout_marginStart="@dimen/_4sdp"
+            android:background="?android:attr/selectableItemBackgroundBorderless"
+            android:contentDescription="Edit instance"
+            android:padding="@dimen/_4sdp"
+            android:src="@drawable/ic_edit_profile" />
+
         <FrameLayout
             android:id="@+id/btn_profile_play"
             android:layout_width="@dimen/_58sdp"

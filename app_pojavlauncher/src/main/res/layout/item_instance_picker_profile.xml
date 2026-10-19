@@ -62,9 +62,9 @@
         android:layout_marginStart="@dimen/_8sdp"
         android:gravity="center"
         android:paddingHorizontal="@dimen/_9sdp"
-        android:background="@drawable/bg_lucifer_nav_item"
-        android:text="ACTIVE"
-        android:textColor="?attr/luciferAccent"
+        android:background="@drawable/bg_server_badge_online"
+        android:text="SELECTED"
+        android:textColor="#82F59A"
         android:textSize="@dimen/_8ssp"
         android:textStyle="bold"
         android:visibility="gone" />

@@ -5,6 +5,7 @@ import static net.kdt.pojavlaunch.Tools.hasOnlineProfile;
 import static net.kdt.pojavlaunch.Tools.openPath;
 import static net.kdt.pojavlaunch.Tools.shareLog;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -167,8 +168,14 @@ public class MainMenuFragment extends Fragment {
      */
     private void openPane(Class<? extends Fragment> fragmentClass, String tag,
                           @Nullable Bundle args) {
-        if (fragmentClass == CreatorTeamFragment.class ||
-                fragmentClass == FeaturedServerFragment.class) {
+        // Retire the old artwork-only server page: all server entry points now open the
+        // functional Server Hub with the pinned server, Add button, and scrollable server list.
+        if (fragmentClass == FeaturedServerFragment.class) {
+            fragmentClass = ServerHubFragment.class;
+            tag = ServerHubFragment.TAG;
+            args = null;
+        }
+        if (fragmentClass == CreatorTeamFragment.class) {
             Tools.swapFragment(requireActivity(), fragmentClass, tag, args,
                     R.anim.slide_in_right, R.anim.slide_out_left,
                     R.anim.slide_in_left, R.anim.slide_out_right);
@@ -234,6 +241,7 @@ public class MainMenuFragment extends Fragment {
         Button mInstallJarButton   = view.findViewById(R.id.install_jar_button);
         Button mShareLogsButton    = view.findViewById(R.id.share_logs_button);
         Button mOpenDirectoryButton = view.findViewById(R.id.open_directory_button);
+        Button mOpenModsFolderButton = view.findViewById(R.id.open_mods_folder_button);
         Button mModStoreButton      = view.findViewById(R.id.mod_store_button);
         Button mCursorCustomButton  = view.findViewById(R.id.cursor_customization_button);
         Button mHomeButton          = view.findViewById(R.id.home_button);
@@ -344,6 +352,9 @@ public class MainMenuFragment extends Fragment {
                 }
             });
         }
+        if (mOpenModsFolderButton != null) {
+            mOpenModsFolderButton.setOnClickListener(v -> openSelectedModsFolder(v.getContext()));
+        }
 
         // Edit profile — always full-screen
         if (mEditProfileBtn != null) {
@@ -370,7 +381,7 @@ public class MainMenuFragment extends Fragment {
 
         // Apply Premium Mobile Animations
         applyPremiumTouchAnimation(mHomeButton, mModStoreButton, mCursorCustomButton, mCustomControlButton, mInstallJarButton,
-                                   mShareLogsButton, mOpenDirectoryButton,
+                                   mShareLogsButton, mOpenDirectoryButton, mOpenModsFolderButton,
                                    mPlayBtn, mEditProfileBtn, mVersionSpinner);
 
         // Play
@@ -419,6 +430,36 @@ public class MainMenuFragment extends Fragment {
     }
 
     // ─── Private helpers ────────────────────────────────────────────────────
+
+    /** Open the selected Minecraft profile's mods directory in Android's document/file viewer. */
+    public static void openSelectedModsFolder(@NonNull Context context) {
+        String profileKey = LauncherPreferences.DEFAULT_PREF.getString(
+                LauncherPreferences.PREF_KEY_CURRENT_PROFILE, "");
+        if (!Tools.isValidString(profileKey)) {
+            Toast.makeText(context, R.string.please_select_version, Toast.LENGTH_LONG).show();
+            return;
+        }
+        try {
+            if (LauncherProfiles.mainProfileJson == null || LauncherProfiles.mainProfileJson.profiles == null) {
+                LauncherProfiles.load();
+            }
+            MinecraftProfile profile = LauncherProfiles.mainProfileJson == null ||
+                    LauncherProfiles.mainProfileJson.profiles == null
+                    ? null : LauncherProfiles.mainProfileJson.profiles.get(profileKey);
+            if (profile == null) {
+                Toast.makeText(context, R.string.please_select_version, Toast.LENGTH_LONG).show();
+                return;
+            }
+            File modsDirectory = new File(Tools.getGameDirPath(profile), "mods");
+            if (!modsDirectory.isDirectory() && !modsDirectory.mkdirs() && !modsDirectory.isDirectory()) {
+                throw new java.io.IOException("Could not create mods directory");
+            }
+            Tools.openPath(context, modsDirectory, false);
+        } catch (Exception error) {
+            Log.w(TAG, "Could not open the selected profile's mods directory", error);
+            Toast.makeText(context, R.string.open_mods_folder_failed, Toast.LENGTH_LONG).show();
+        }
+    }
 
     private File getCurrentProfileDirectory() {
         String currentProfile = LauncherPreferences.DEFAULT_PREF

@@ -7,8 +7,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 
-import androidx.core.graphics.ColorUtils;
-
 import net.kdt.pojavlaunch.R;
 import net.kdt.pojavlaunch.Tools;
 import net.kdt.pojavlaunch.prefs.LauncherPreferences;
@@ -126,11 +124,18 @@ public class ProfileAdapter extends BaseAdapter {
             extendedTextView.setText(versionName);
         else extendedTextView.setText(String.format("%s - %s", profileName, versionName));
 
-        // Set selected background if needed
-        if(displaySelection){
-            String selectedProfile = LauncherPreferences.DEFAULT_PREF.getString(LauncherPreferences.PREF_KEY_CURRENT_PROFILE,"");
-            extendedTextView.setBackgroundColor(selectedProfile.equals(nm) ? ColorUtils.setAlphaComponent(Color.WHITE,60) : Color.TRANSPARENT);
-        }else extendedTextView.setBackgroundColor(Color.TRANSPARENT);
+        // Keep the active instance visibly marked in the launcher version selector.
+        if (displaySelection) {
+            String selectedProfile = LauncherPreferences.DEFAULT_PREF.getString(
+                    LauncherPreferences.PREF_KEY_CURRENT_PROFILE, "");
+            if (selectedProfile.equals(nm)) {
+                extendedTextView.setBackgroundResource(R.drawable.bg_home_profile_card_selected);
+            } else {
+                extendedTextView.setBackgroundColor(Color.TRANSPARENT);
+            }
+        } else {
+            extendedTextView.setBackgroundColor(Color.TRANSPARENT);
+        }
     }
 
     public void setViewExtra(View v, ProfileAdapterExtra extra) {

@@ -110,8 +110,9 @@ public class LauncherPreferences {
         PREF_RAM_ALLOCATION = DEFAULT_PREF.getInt("allocation", findBestRAMAllocation(ctx));
         PREF_CUSTOM_JAVA_ARGS = DEFAULT_PREF.getString("javaArgs", "");
         PREF_FPS_FIRST_MODE = DEFAULT_PREF.getBoolean("fpsFirstMode", Tools.getTotalDeviceMemory(ctx) <= 4096);
-        PREF_SUSTAINED_PERFORMANCE = DEFAULT_PREF.getBoolean(
-                "sustainedPerformance", Tools.getTotalDeviceMemory(ctx) <= 4096);
+        // Sustained mode may lower peak clocks on some phones; keep it opt-in so FPS-first
+        // does not trade the user's peak frame rate for a steadier but lower ceiling.
+        PREF_SUSTAINED_PERFORMANCE = DEFAULT_PREF.getBoolean("sustainedPerformance", false);
         PREF_VIRTUAL_MOUSE_START = DEFAULT_PREF.getBoolean("mouse_start", false);
         PREF_ARC_CAPES = DEFAULT_PREF.getBoolean("arc_capes",false);
         PREF_USE_ALTERNATE_SURFACE = DEFAULT_PREF.getBoolean("alternate_surface", isDevicePowerful);

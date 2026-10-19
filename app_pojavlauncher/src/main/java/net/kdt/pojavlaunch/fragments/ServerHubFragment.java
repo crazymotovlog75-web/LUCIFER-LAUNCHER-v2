@@ -472,6 +472,14 @@ public class ServerHubFragment extends Fragment {
             saveServers();
             if (mAdapter != null) mAdapter.notifyDataSetChanged();
             dialog.dismiss();
+            if (editEntry == null && mRecyclerView != null) {
+                int newServerPosition = mServers.size() - 1;
+                mRecyclerView.post(() -> {
+                    if (mRecyclerView != null && newServerPosition >= 0) {
+                        mRecyclerView.smoothScrollToPosition(newServerPosition);
+                    }
+                });
+            }
             syncServersDatAsync(true);
             pingServer(changedEntry);
         }));
@@ -626,8 +634,9 @@ public class ServerHubFragment extends Fragment {
             MinecraftProfile profile = LauncherProfiles.mainProfileJson != null &&
                     LauncherProfiles.mainProfileJson.profiles != null
                     ? LauncherProfiles.mainProfileJson.profiles.get(profileKey) : null;
-            if (profile == null || profile.lastVersionId == null) {
-                Toast.makeText(requireContext(), R.string.error_no_version, Toast.LENGTH_LONG).show();
+            if (profile == null || profile.lastVersionId == null || profile.lastVersionId.trim().isEmpty() ||
+                    "Unknown".equalsIgnoreCase(profile.lastVersionId)) {
+                Toast.makeText(requireContext(), R.string.please_select_version, Toast.LENGTH_LONG).show();
                 return;
             }
             if (!QuickPlayManager.request(address)) {

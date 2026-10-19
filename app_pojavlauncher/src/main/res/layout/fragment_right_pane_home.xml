@@ -297,7 +297,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:text="HERE IS BEST LIFESTEEL SMP CLICK AND PLAY"
+                    android:text="LuciferMC · Lifesteal SMP"
                     android:textColor="@color/text_primary_white"
                     android:textSize="@dimen/_10ssp"
                     android:textStyle="bold"
@@ -311,7 +311,7 @@
                     android:gravity="center"
                     android:paddingHorizontal="@dimen/_9sdp"
                     android:background="@drawable/bg_lucifer_action"
-                    android:text="Open Server"
+                    android:text="Server Hub"
                     android:textColor="?attr/luciferOnAccent"
                     android:textSize="@dimen/_9ssp"
                     android:clickable="true"
@@ -377,11 +377,21 @@
             android:textStyle="bold"
             android:letterSpacing="0.12" />
         <TextView
+            android:id="@+id/btn_open_mods_folder"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Tap a tile to edit · launch from the hero"
-            android:textColor="@color/text_secondary_light"
-            android:textSize="@dimen/_8ssp" />
+            android:layout_height="@dimen/_30sdp"
+            android:drawableStart="@drawable/ic_folder"
+            android:drawablePadding="@dimen/_4sdp"
+            android:gravity="center"
+            android:paddingHorizontal="@dimen/_9sdp"
+            android:text="Mods Folder"
+            android:textColor="?attr/luciferAccent"
+            android:textSize="@dimen/_8ssp"
+            android:textStyle="bold"
+            android:background="@drawable/bg_lucifer_nav_item"
+            android:clickable="true"
+            android:focusable="true"
+            android:contentDescription="Open the selected instance mods folder in the file manager" />
     </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView

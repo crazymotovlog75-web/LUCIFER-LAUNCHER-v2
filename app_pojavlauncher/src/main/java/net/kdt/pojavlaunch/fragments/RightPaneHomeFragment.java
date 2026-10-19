@@ -115,9 +115,15 @@ public class RightPaneHomeFragment extends Fragment {
         View openServerHub = view.findViewById(R.id.btn_home_servers);
         View serverCard = view.findViewById(R.id.home_server_card);
         View.OnClickListener serverHubListener = v -> openPane(
-                FeaturedServerFragment.class, FeaturedServerFragment.TAG, null);
+                ServerHubFragment.class, ServerHubFragment.TAG, null);
         if (openServerHub != null) openServerHub.setOnClickListener(serverHubListener);
         if (serverCard != null) serverCard.setOnClickListener(serverHubListener);
+
+        View openModsFolder = view.findViewById(R.id.btn_open_mods_folder);
+        if (openModsFolder != null) {
+            openModsFolder.setOnClickListener(v ->
+                    MainMenuFragment.openSelectedModsFolder(requireContext()));
+        }
 
         View manageSkins = view.findViewById(R.id.btn_home_skins);
         if (manageSkins != null) {
@@ -141,6 +147,10 @@ public class RightPaneHomeFragment extends Fragment {
         // Instance selection is stored synchronously by the picker; refresh its hero from the
         // already-loaded map even when the short adapter-refresh guard is active.
         refreshSelectedInstanceFromLoadedProfiles();
+        if (mAdapter != null) {
+            mAdapter.setSelectedProfileKey(LauncherPreferences.DEFAULT_PREF.getString(
+                    LauncherPreferences.PREF_KEY_CURRENT_PROFILE, ""));
+        }
         // Avoid re-reading the same profile file twice during the initial fragment resume. A
         // later return from the profile editor still refreshes the shelf after the short guard.
         setupProfileAdapter(false);
@@ -201,18 +211,19 @@ public class RightPaneHomeFragment extends Fragment {
 
             mAdapter = new HomeProfileAdapter(keys, profiles, new HomeProfileAdapter.OnProfileActionListener() {
                 @Override
+                public void onProfileSelect(String profileKey, MinecraftProfile profile) {
+                    selectHomeProfile(profileKey, profile);
+                }
+
+                @Override
                 public void onProfilePlay(String profileKey, MinecraftProfile profile) {
-                    LauncherPreferences.DEFAULT_PREF.edit()
-                            .putString(LauncherPreferences.PREF_KEY_CURRENT_PROFILE, profileKey)
-                            .apply();
+                    selectHomeProfile(profileKey, profile);
                     ExtraCore.setValue(ExtraConstants.LAUNCH_GAME, true);
                 }
 
                 @Override
                 public void onProfileEdit(String profileKey, MinecraftProfile profile) {
-                    LauncherPreferences.DEFAULT_PREF.edit()
-                            .putString(LauncherPreferences.PREF_KEY_CURRENT_PROFILE, profileKey)
-                            .apply();
+                    selectHomeProfile(profileKey, profile);
                     Tools.swapFragment(requireActivity(), ProfileEditorFragment.class,
                             ProfileEditorFragment.TAG, null);
                 }
@@ -226,9 +237,26 @@ public class RightPaneHomeFragment extends Fragment {
                             net.kdt.pojavlaunch.shortcuts.ShortcutIconPickerFragment.TAG, args);
                 }
             });
+            mAdapter.setSelectedProfileKey(currentKey);
             mRecyclerView.setAdapter(mAdapter);
             mLastProfileLoadAt = SystemClock.elapsedRealtime();
         });
+    }
+
+    private void selectHomeProfile(String profileKey, MinecraftProfile profile) {
+        LauncherPreferences.DEFAULT_PREF.edit()
+                .putString(LauncherPreferences.PREF_KEY_CURRENT_PROFILE, profileKey)
+                .apply();
+        if (mAdapter != null) mAdapter.setSelectedProfileKey(profileKey);
+        updateSelectedInstance(profileKey, profile);
+
+        Fragment parent = getParentFragment();
+        while (parent != null && !(parent instanceof MainMenuFragment)) {
+            parent = parent.getParentFragment();
+        }
+        if (parent instanceof MainMenuFragment) {
+            ((MainMenuFragment) parent).selectInstance(profileKey);
+        }
     }
 
     private void updateSelectedInstance(String profileKey, @Nullable MinecraftProfile profile) {

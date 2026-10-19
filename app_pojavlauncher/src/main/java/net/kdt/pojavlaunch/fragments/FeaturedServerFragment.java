@@ -127,8 +127,9 @@ public class FeaturedServerFragment extends Fragment {
             MinecraftProfile profile = LauncherProfiles.mainProfileJson != null &&
                     LauncherProfiles.mainProfileJson.profiles != null
                     ? LauncherProfiles.mainProfileJson.profiles.get(profileKey) : null;
-            if (profile == null || profile.lastVersionId == null) {
-                Toast.makeText(requireContext(), R.string.error_no_version, Toast.LENGTH_LONG).show();
+            if (profile == null || profile.lastVersionId == null || profile.lastVersionId.trim().isEmpty() ||
+                    "Unknown".equalsIgnoreCase(profile.lastVersionId)) {
+                Toast.makeText(requireContext(), R.string.please_select_version, Toast.LENGTH_LONG).show();
                 return;
             }
             if (!QuickPlayManager.request(SERVER_ADDRESS)) {

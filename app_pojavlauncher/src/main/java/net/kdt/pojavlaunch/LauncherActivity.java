@@ -162,14 +162,19 @@ public class LauncherActivity extends BaseActivity {
             return false;
         }
 
-        String selectedProfile = LauncherPreferences.DEFAULT_PREF.getString(LauncherPreferences.PREF_KEY_CURRENT_PROFILE,"");
-        if (LauncherProfiles.mainProfileJson == null || !LauncherProfiles.mainProfileJson.profiles.containsKey(selectedProfile)){
-            Toast.makeText(this, R.string.error_no_version, Toast.LENGTH_LONG).show();
+        String selectedProfile = LauncherPreferences.DEFAULT_PREF.getString(
+                LauncherPreferences.PREF_KEY_CURRENT_PROFILE, "");
+        if (selectedProfile == null || selectedProfile.trim().isEmpty() ||
+                LauncherProfiles.mainProfileJson == null ||
+                LauncherProfiles.mainProfileJson.profiles == null ||
+                !LauncherProfiles.mainProfileJson.profiles.containsKey(selectedProfile)) {
+            Toast.makeText(this, R.string.please_select_version, Toast.LENGTH_LONG).show();
             return false;
         }
         MinecraftProfile prof = LauncherProfiles.mainProfileJson.profiles.get(selectedProfile);
-        if (prof == null || prof.lastVersionId == null || "Unknown".equals(prof.lastVersionId)){
-            Toast.makeText(this, R.string.error_no_version, Toast.LENGTH_LONG).show();
+        if (prof == null || prof.lastVersionId == null || prof.lastVersionId.trim().isEmpty() ||
+                "Unknown".equalsIgnoreCase(prof.lastVersionId)) {
+            Toast.makeText(this, R.string.please_select_version, Toast.LENGTH_LONG).show();
             return false;
         }
 

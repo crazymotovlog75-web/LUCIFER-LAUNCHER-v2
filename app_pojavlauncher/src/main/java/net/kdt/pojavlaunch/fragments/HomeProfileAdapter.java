@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -31,11 +32,13 @@ public class HomeProfileAdapter extends RecyclerView.Adapter<HomeProfileAdapter.
     private final List<MinecraftProfile> mProfileList;
     private final List<String> mProfileKeys;
     private final OnProfileActionListener mListener;
+    private String mSelectedProfileKey = "";
     // Pre-computed mod counts (0 = not loaded yet or no mods). Populated on background thread.
     private final int[] mModCountCache;
     private boolean mModCountsReady;
 
     public interface OnProfileActionListener {
+        void onProfileSelect(String profileKey, MinecraftProfile profile);
         void onProfilePlay(String profileKey, MinecraftProfile profile);
         void onProfileEdit(String profileKey, MinecraftProfile profile);
         void onProfileAddShortcut(String profileKey, MinecraftProfile profile);
@@ -50,6 +53,13 @@ public class HomeProfileAdapter extends RecyclerView.Adapter<HomeProfileAdapter.
         setHasStableIds(true);
         // Kick off background loading of mod counts
         preloadModCounts();
+    }
+
+    public void setSelectedProfileKey(String profileKey) {
+        String normalized = profileKey == null ? "" : profileKey;
+        if (normalized.equals(mSelectedProfileKey)) return;
+        mSelectedProfileKey = normalized;
+        notifyDataSetChanged();
     }
 
     @Override
@@ -112,6 +122,10 @@ public class HomeProfileAdapter extends RecyclerView.Adapter<HomeProfileAdapter.
 
         MinecraftProfile profile = mProfileList.get(position);
         String profileKey = mProfileKeys.get(position);
+        boolean selectedProfile = profileKey.equals(mSelectedProfileKey);
+        holder.cardRoot.setSelected(selectedProfile);
+        holder.cardRoot.setBackgroundResource(selectedProfile
+                ? R.drawable.bg_home_profile_card_selected : R.drawable.bg_home_profile_card);
 
         holder.tvName.setText(profile.name != null ? profile.name : "");
 
@@ -134,6 +148,9 @@ public class HomeProfileAdapter extends RecyclerView.Adapter<HomeProfileAdapter.
         bindIcon(holder.imgIcon, profileKey, profile);
 
         holder.cardRoot.setOnClickListener(v -> {
+            if (mListener != null) mListener.onProfileSelect(profileKey, profile);
+        });
+        holder.btnEdit.setOnClickListener(v -> {
             if (mListener != null) mListener.onProfileEdit(profileKey, profile);
         });
 
@@ -227,6 +244,7 @@ public class HomeProfileAdapter extends RecyclerView.Adapter<HomeProfileAdapter.
         final TextView tvName;
         final TextView tvMeta;
         final TextView tvModCount;
+        final ImageButton btnEdit;
         final FrameLayout btnPlay;
 
         ViewHolder(View itemView) {
@@ -236,6 +254,7 @@ public class HomeProfileAdapter extends RecyclerView.Adapter<HomeProfileAdapter.
             tvName = itemView.findViewById(R.id.tv_profile_name);
             tvMeta = itemView.findViewById(R.id.tv_profile_meta);
             tvModCount = itemView.findViewById(R.id.tv_profile_mod_count);
+            btnEdit = itemView.findViewById(R.id.btn_profile_edit);
             btnPlay = itemView.findViewById(R.id.btn_profile_play);
         }
     }
