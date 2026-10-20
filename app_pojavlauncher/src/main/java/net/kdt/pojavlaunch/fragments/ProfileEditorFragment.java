@@ -582,15 +582,15 @@ public class ProfileEditorFragment extends Fragment implements CropperUtils.Crop
         return false;
     }
 
-    private MinecraftProfile getProfile(@NonNull String profile){
+    private MinecraftProfile getProfile(@NonNull String profileKey){
         LauncherProfiles.load();
         if (getArguments() == null) {
-            MinecraftProfile originalProfile = LauncherProfiles.mainProfileJson.profiles.get(profile);
+            MinecraftProfile originalProfile = LauncherProfiles.mainProfileJson.profiles.get(profileKey);
             if (originalProfile != null) {
                 mCreatingProfile = false;
                 mOriginalVersionId = originalProfile.lastVersionId;
                 mOriginalProfileName = originalProfile.name;
-                mProfileKey = profile;
+                mProfileKey = profileKey;
                 return new MinecraftProfile(originalProfile);
             }
         }
