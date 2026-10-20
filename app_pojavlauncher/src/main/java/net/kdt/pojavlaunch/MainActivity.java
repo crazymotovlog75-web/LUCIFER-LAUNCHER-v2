@@ -144,11 +144,6 @@ public class MainActivity extends BaseActivity implements ControlButtonMenuListe
 
         String gameDirPath = Tools.getGameDirPath(minecraftProfile).getAbsolutePath();
         MCOptionUtils.load(gameDirPath);
-        if (LauncherPreferences.PREF_FPS_FIRST_MODE) {
-            MCOptionUtils.applyFpsFirstPreset();
-            MCOptionUtils.save();
-            Log.i("FPSFirst", "Applied FPS-first Minecraft video preset to " + gameDirPath);
-        }
         if (Tools.hasTouchController(new File(gameDirPath)) || LauncherPreferences.PREF_FORCE_ENABLE_TOUCHCONTROLLER) {
             TouchControllerUtils.initialize(this);
         }

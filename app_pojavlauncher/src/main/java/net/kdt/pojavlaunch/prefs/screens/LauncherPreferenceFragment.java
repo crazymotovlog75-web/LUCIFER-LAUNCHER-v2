@@ -197,7 +197,7 @@ public class LauncherPreferenceFragment extends Fragment {
     private String getCategorySubtitle(String category) {
         switch (category) {
             case "Launcher Settings": return "Configure language, updates, and downloads";
-            case "Video & Graphics": return "Configure renderers, resolution, VSync, and FPS-first mode";
+            case "Video & Graphics": return "Configure renderers, resolution, and VSync options";
             case "Controls": return "Customize touch overlays, cursors, and gyroscope controls";
             case "Java Runtime": return "Manage memory allocations, JREs, and Java options";
             case "Audio": return "Adjust volume levels and sound output parameters";
@@ -241,10 +241,6 @@ public class LauncherPreferenceFragment extends Fragment {
 
                 case "Video & Graphics":
                     List<SettingItem> graphicsItems = new ArrayList<>();
-                    boolean defaultFpsFirstMode = getTotalDeviceMemory(requireContext()) <= 4096;
-                    graphicsItems.add(new SettingItem("fpsFirstMode", SettingItem.TYPE_SWITCH,
-                            getString(R.string.preference_fps_first_mode_title),
-                            getString(R.string.preference_fps_first_mode_description), defaultFpsFirstMode));
                     graphicsItems.add(new SettingItem("mg_renderer_setting_angle", SettingItem.TYPE_DROPDOWN, getString(R.string.mg_renderer_angle), "Select backend ANGLE configuration", "1").setDropdownOptions(new String[]{"Vulkan", "OpenGL (System)", "OpenGLES"}, new String[]{"1", "2", "3"}));
                     graphicsItems.add(new SettingItem("mg_renderer_setting_multidraw", SettingItem.TYPE_DROPDOWN, getString(R.string.mg_renderer_multidraw), "Select multidraw emulation style", "0").setDropdownOptions(new String[]{"None", "Emulate glMultiDraw", "glMultiDraw Indirect"}, new String[]{"0", "1", "2"}));
                     graphicsItems.add(new SettingItem("mg_renderer_setting_fsr", SettingItem.TYPE_DROPDOWN, getString(R.string.mg_renderer_title_fsr), "Enable AMD FSR scaler", "0").setDropdownOptions(new String[]{"Disabled", "25%", "50%", "75%", "100%"}, new String[]{"0", "1", "2", "3", "4"}));
@@ -264,7 +260,7 @@ public class LauncherPreferenceFragment extends Fragment {
                             getString(R.string.preference_share_instance_cache_description), true));
                     graphicsItems.add(new SettingItem("alternate_surface", SettingItem.TYPE_SWITCH, getString(R.string.mcl_setting_title_use_surface_view), getString(R.string.mcl_setting_subtitle_use_surface_view), true));
                     graphicsItems.add(new SettingItem("force_vsync", SettingItem.TYPE_SWITCH, getString(R.string.preference_force_vsync_title), getString(R.string.preference_force_vsync_description), false));
-                    graphicsItems.add(new SettingItem("vsync_in_zink", SettingItem.TYPE_SWITCH, getString(R.string.preference_vsync_in_zink_title), getString(R.string.preference_vsync_in_zink_description), !defaultFpsFirstMode));
+                    graphicsItems.add(new SettingItem("vsync_in_zink", SettingItem.TYPE_SWITCH, getString(R.string.preference_vsync_in_zink_title), getString(R.string.preference_vsync_in_zink_description), true));
                     categories.add(new SettingCategory("Graphics Settings", graphicsItems));
                     break;
 

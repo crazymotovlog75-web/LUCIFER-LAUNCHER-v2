@@ -218,13 +218,11 @@
     <string name="preference_misc_description">Version list and libraries check</string>
     <string name="preference_experimental_description">Use things there with consideration, no support</string>
     <string name="preference_sustained_performance_title">Enable sustained performance mode</string>
-    <string name="preference_sustained_performance_description">Optional Android sustained mode may lower heat during longer sessions but can reduce peak FPS. It is off by default; enable it only if your device throttles.</string>
+    <string name="preference_sustained_performance_description">Limit thermal throttling by limiting peak performance.</string>
     <string name="preference_share_instance_cache_title">Share assets and libraries between instances</string>
     <string name="preference_share_instance_cache_description">Enabled by default to save storage. Instances keep separate versions, natives, mods, saves, config, logs and options. Turn off to store assets and libraries inside each instance.</string>
     <string name="preference_force_vsync_title">Force enable VSync</string>
     <string name="preference_force_vsync_description">Limit thermal throttling by limiting peak performance.</string>
-    <string name="preference_fps_first_mode_title">FPS-first mode (lower graphics)</string>
-    <string name="preference_fps_first_mode_description">More aggressive low-RAM preset: up to 480 px on the short edge, 4-chunk view and simulation distance, minimal particles, fast graphics, and VSync off for GL and Zink. Sustained-performance mode is off by default because it can reduce peak FPS. Video options are rewritten on each launch while enabled. Image quality is lower; actual FPS depends on the phone\'s GPU, game version, mods, display, and temperature. 200+ FPS cannot be guaranteed.</string>
     <string name="preference_force_english_title">Force language to English</string>
     <string name="preference_force_english_description">Allows you to see original strings, as intended by developers. Requires a restart.</string>
     <string name="preference_edit_controls_title">Edit custom controls</string>
