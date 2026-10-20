@@ -138,7 +138,7 @@ public final class Tools {
     // New since 3.0.0
     public static String DIRNAME_HOME_JRE = "lib";
 
-    // New since 2.4.2
+    // Legacy .minecraft/versions source only; managed version writes must use an instance root.
     public static String DIR_HOME_VERSION;
     public static String DIR_HOME_LIBRARY;
 
@@ -262,11 +262,19 @@ public final class Tools {
         return LauncherProfiles.mainProfileJson.profiles.get(key);
     }
 
-    public static File getVersionRoot(@Nullable MinecraftProfile profile) {
-        if (profile != null && isValidString(profile.instanceId)) {
-            return getInstanceManager().paths().getVersionsRoot(profile.instanceId);
+    @NonNull
+    private static MinecraftProfile requireManagedInstanceProfile(@Nullable MinecraftProfile profile) {
+        MinecraftProfile resolved = profile != null ? profile : getCurrentMinecraftProfile();
+        if (resolved == null || !isValidString(resolved.instanceId)) {
+            throw new IllegalStateException(
+                    "No managed Minecraft instance is selected; refusing to use global .minecraft/versions");
         }
-        return new File(DIR_HOME_VERSION);
+        return resolved;
+    }
+
+    public static File getVersionRoot(@Nullable MinecraftProfile profile) {
+        MinecraftProfile managedProfile = requireManagedInstanceProfile(profile);
+        return getInstanceManager().paths().getVersionsRoot(managedProfile.instanceId);
     }
 
     public static File getCurrentVersionRoot() {
@@ -274,36 +282,30 @@ public final class Tools {
     }
 
     public static File getVersionDirectory(@Nullable MinecraftProfile profile, String versionId) {
-        if (profile != null && isValidString(profile.instanceId)) {
-            return getInstanceManager().paths().getVersionDirectory(profile.instanceId, versionId);
-        }
-        return new File(getVersionRoot(profile), versionId);
+        MinecraftProfile managedProfile = requireManagedInstanceProfile(profile);
+        return getInstanceManager().paths().getVersionDirectory(managedProfile.instanceId, versionId);
     }
 
     public static File getVersionJsonFile(@Nullable MinecraftProfile profile, String versionId) {
-        if (profile != null && isValidString(profile.instanceId)) {
-            InstanceManager manager = getInstanceManager();
-            try {
-                manager.ensureVersionImported(profile.instanceId, versionId);
-            } catch (IOException error) {
-                Log.w(APP_NAME, "Could not import legacy version metadata " + versionId, error);
-            }
-            return manager.paths().getVersionJson(profile.instanceId, versionId);
+        MinecraftProfile managedProfile = requireManagedInstanceProfile(profile);
+        InstanceManager manager = getInstanceManager();
+        try {
+            manager.ensureVersionImported(managedProfile.instanceId, versionId);
+        } catch (IOException error) {
+            Log.w(APP_NAME, "Could not import legacy version metadata " + versionId, error);
         }
-        return new File(new File(DIR_HOME_VERSION, versionId), versionId + ".json");
+        return manager.paths().getVersionJson(managedProfile.instanceId, versionId);
     }
 
     public static File getVersionJarFile(@Nullable MinecraftProfile profile, String versionId) {
-        if (profile != null && isValidString(profile.instanceId)) {
-            InstanceManager manager = getInstanceManager();
-            try {
-                manager.ensureVersionImported(profile.instanceId, versionId);
-            } catch (IOException error) {
-                Log.w(APP_NAME, "Could not import legacy version jar " + versionId, error);
-            }
-            return manager.paths().getVersionJar(profile.instanceId, versionId);
+        MinecraftProfile managedProfile = requireManagedInstanceProfile(profile);
+        InstanceManager manager = getInstanceManager();
+        try {
+            manager.ensureVersionImported(managedProfile.instanceId, versionId);
+        } catch (IOException error) {
+            Log.w(APP_NAME, "Could not import legacy version jar " + versionId, error);
         }
-        return new File(new File(DIR_HOME_VERSION, versionId), versionId + ".jar");
+        return manager.paths().getVersionJar(managedProfile.instanceId, versionId);
     }
 
     public static File getLibrariesRoot(@Nullable MinecraftProfile profile) {
@@ -342,19 +344,9 @@ public final class Tools {
 
     public static Map<String, String> getInstanceLaunchVariables(@Nullable MinecraftProfile profile,
                                                                   String versionId) {
-        if (profile != null && isValidString(profile.instanceId)) {
-            return getInstanceManager().paths().getLaunchArgumentVariables(profile.instanceId, versionId);
-        }
-        Map<String, String> variables = new ArrayMap<>();
-        variables.put("game_directory", profile != null
-                ? getGameDirPath(profile).getAbsolutePath() : new File(DIR_GAME_NEW).getAbsolutePath());
-        variables.put("assets_root", getAssetsRoot(profile).getAbsolutePath());
-        variables.put("library_directory", getLibrariesRoot(profile).getAbsolutePath());
-        variables.put("natives_directory", getNativesRoot(profile, versionId).getAbsolutePath());
-        variables.put("client_jar", getVersionJarFile(profile, versionId).getAbsolutePath());
-        variables.put("version_json", getVersionJsonFile(profile, versionId).getAbsolutePath());
-        variables.put("version_name", versionId);
-        return variables;
+        MinecraftProfile managedProfile = requireManagedInstanceProfile(profile);
+        return getInstanceManager().paths().getLaunchArgumentVariables(
+                managedProfile.instanceId, versionId);
     }
 
     @SuppressLint("PrivateApi")

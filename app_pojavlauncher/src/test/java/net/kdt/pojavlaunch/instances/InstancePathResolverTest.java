@@ -37,6 +37,8 @@ public class InstancePathResolverTest {
         assertFalse(new File(second, "saves/World/level.dat").exists());
         assertFalse(paths.getVersionDirectory("instance-one", "1.20.1")
                 .equals(paths.getVersionDirectory("instance-two", "1.20.1")));
+        assertEquals(new File(first, "versions"), paths.getVersionsRoot("instance-one"));
+        assertFalse(paths.getVersionsRoot("instance-one").equals(paths.getLegacyVersionsRoot()));
         assertEquals(new File(paths.getInstanceRoot("instance-one"), "instance.json"),
                 new File(first, "instance.json"));
     }
