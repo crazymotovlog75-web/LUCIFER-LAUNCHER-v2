@@ -85,6 +85,7 @@ public class ModloaderInstallTracker implements SharedPreferences.OnSharedPrefer
         editor.putInt("modLoaderType", modLoader.modLoaderType);
         editor.putString("modLoaderVersion", modLoader.modLoaderVersion);
         editor.putString("minecraftVersion", modLoader.minecraftVersion);
+        editor.putString("targetGameDirectory", modLoader.targetGameDirectory);
         editor.putString("modInstallerJar", modInstallFile.getAbsolutePath());
         editor.putBoolean("modLoaderAvailable", true);
         editor.commit();
@@ -94,9 +95,11 @@ public class ModloaderInstallTracker implements SharedPreferences.OnSharedPrefer
         if(!sharedPreferences.contains("modLoaderType") ||
         !sharedPreferences.contains("modLoaderVersion") ||
         !sharedPreferences.contains("minecraftVersion")) return null;
-        return new ModLoader(sharedPreferences.getInt("modLoaderType", -1),
+        ModLoader modLoader = new ModLoader(sharedPreferences.getInt("modLoaderType", -1),
                 sharedPreferences.getString("modLoaderVersion", ""),
                 sharedPreferences.getString("minecraftVersion", ""));
+        modLoader.targetGameDirectory = sharedPreferences.getString("targetGameDirectory", null);
+        return modLoader;
     }
 
     private static File deserializeInstallFile(SharedPreferences sharedPreferences) {

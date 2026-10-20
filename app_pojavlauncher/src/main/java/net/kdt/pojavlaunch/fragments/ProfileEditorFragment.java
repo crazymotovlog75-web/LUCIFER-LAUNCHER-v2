@@ -36,6 +36,8 @@ import net.kdt.pojavlaunch.R;
 import net.kdt.pojavlaunch.Tools;
 import net.kdt.pojavlaunch.extra.ExtraConstants;
 import net.kdt.pojavlaunch.extra.ExtraCore;
+import net.kdt.pojavlaunch.instances.InstanceManager;
+import net.kdt.pojavlaunch.instances.InstancePathResolver;
 import net.kdt.pojavlaunch.modloaders.InstalledModAdapter;
 import net.kdt.pojavlaunch.modloaders.LocalPackAdapter;
 import net.kdt.pojavlaunch.multirt.MultiRTUtils;
@@ -54,6 +56,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import android.net.Uri;
 import android.widget.Toast;
@@ -71,6 +74,9 @@ public class ProfileEditorFragment extends Fragment implements CropperUtils.Crop
 
     private String mProfileKey;
     private MinecraftProfile mTempProfile = null;
+    private boolean mCreatingProfile;
+    private String mOriginalVersionId;
+    private String mOriginalProfileName;
     private String mValueToConsume = "";
     private Button mSaveButton, mDeleteButton, mControlSelectButton, mGameDirButton, mVersionSelectButton;
     private ImageButton mModsAddButton, mModsImport, mResourcePacksFolder, mShaderPacksFolder, mResourcePacksImport, mShaderPacksImport;
@@ -176,16 +182,69 @@ public class ProfileEditorFragment extends Fragment implements CropperUtils.Crop
             if (mTempProfile == null) return;
             // 1) Read inputs on the main thread (touching UI state)
             readInputsFromUi();
+            String sourceInstanceIdForFork = null;
+            if (!mCreatingProfile && !sameValue(mOriginalVersionId, mTempProfile.lastVersionId)) {
+                // Changing a profile's Minecraft version now forks a new isolated copy.
+                sourceInstanceIdForFork = mTempProfile.instanceId;
+                MinecraftProfile fork = new MinecraftProfile(mTempProfile);
+                fork.isDefault = false;
+                fork.created = MinecraftProfile.currentTimestamp();
+                fork.lastUsed = null;
+                mTempProfile = fork;
+                mProfileKey = LauncherProfiles.getFreeProfileKey();
+                fork.instanceId = InstancePathResolver.instanceIdForProfileKey(mProfileKey);
+                fork.gameDir = InstancePathResolver.gameDirectoryValue(fork.instanceId);
+                mCreatingProfile = true;
+                if (sameValue(mOriginalProfileName, fork.name)) {
+                    fork.name = makeUniqueProfileName(suggestProfileName(fork.lastVersionId), mProfileKey);
+                }
+            }
+            if (mTempProfile.instanceId == null || mTempProfile.instanceId.trim().isEmpty()) {
+                mTempProfile.instanceId = InstancePathResolver.instanceIdForProfileKey(mProfileKey);
+            }
+            mTempProfile.gameDir = InstancePathResolver.gameDirectoryValue(mTempProfile.instanceId);
+            if (mTempProfile.created == null || mTempProfile.created.isEmpty()) {
+                mTempProfile.created = MinecraftProfile.currentTimestamp();
+            }
+            if (mTempProfile.name == null || mTempProfile.name.trim().isEmpty()) {
+                mTempProfile.name = makeUniqueProfileName(
+                        suggestProfileName(mTempProfile.lastVersionId), mProfileKey);
+            }
             ProfileIconCache.dropIcon(mProfileKey);
+            final String saveKey = mProfileKey;
+            final MinecraftProfile profileToSave = mTempProfile;
+            final String forkSourceInstanceId = sourceInstanceIdForFork;
             // 2) Disable button immediately to prevent double-tap
             mSaveButton.setEnabled(false);
-            // 3) JSON write on background thread (expensive)
+            // 3) Initialize/copy the instance and persist its profile off the UI thread.
             mBgExecutor.execute(() -> {
-                LauncherProfiles.mainProfileJson.profiles.put(mProfileKey, mTempProfile);
-                LauncherProfiles.write();
-                ExtraCore.setValue(ExtraConstants.REFRESH_VERSION_SPINNER, mProfileKey);
+                Exception failure = null;
+                try {
+                    InstanceManager manager = Tools.getInstanceManager();
+                    if (forkSourceInstanceId != null) {
+                        manager.duplicateInstance(forkSourceInstanceId, profileToSave.instanceId,
+                                saveKey, profileToSave.name, profileToSave.lastVersionId);
+                    } else {
+                        manager.initializeInstance(profileToSave.instanceId, saveKey,
+                                profileToSave.name, profileToSave.lastVersionId);
+                        manager.updateMetadata(profileToSave.instanceId, saveKey,
+                                profileToSave.name, profileToSave.lastVersionId);
+                    }
+                    LauncherProfiles.mainProfileJson.profiles.put(saveKey, profileToSave);
+                    LauncherProfiles.write();
+                    ExtraCore.setValue(ExtraConstants.REFRESH_VERSION_SPINNER, saveKey);
+                } catch (Exception error) {
+                    failure = error;
+                }
+                final Exception saveFailure = failure;
                 mMainHandler.post(() -> {
                     if (!isAdded()) return;
+                    if (saveFailure != null) {
+                        mSaveButton.setEnabled(true);
+                        Toast.makeText(requireContext(), "Could not save instance: " +
+                                saveFailure.getMessage(), Toast.LENGTH_LONG).show();
+                        return;
+                    }
                     Fragment parentFrag = getParentFragment();
                     if (parentFrag instanceof MainMenuFragment) {
                         MainMenuFragment mmf = (MainMenuFragment) parentFrag;
@@ -202,13 +261,46 @@ public class ProfileEditorFragment extends Fragment implements CropperUtils.Crop
             if(LauncherProfiles.mainProfileJson.profiles.size() > 1){
                 ProfileIconCache.dropIcon(mProfileKey);
                 mDeleteButton.setEnabled(false);
-                // JSON write off the main thread
+                final String deleteKey = mProfileKey;
+                final String deleteInstanceId = mTempProfile != null ? mTempProfile.instanceId : null;
+                // Remove the profile and its isolated folder off the UI thread. Legacy source folders
+                // are not under instances/ and are deliberately never deleted here.
                 mBgExecutor.execute(() -> {
-                    LauncherProfiles.mainProfileJson.profiles.remove(mProfileKey);
-                    LauncherProfiles.write();
-                    ExtraCore.setValue(ExtraConstants.REFRESH_VERSION_SPINNER, ProfileEditorFragment.DELETED_PROFILE);
+                    Exception failure = null;
+                    String replacementSelection = null;
+                    try {
+                        if (deleteInstanceId != null) {
+                            Tools.getInstanceManager().deleteInstance(deleteInstanceId);
+                        }
+                        LauncherProfiles.mainProfileJson.profiles.remove(deleteKey);
+                        String selectedKey = LauncherPreferences.DEFAULT_PREF.getString(
+                                LauncherPreferences.PREF_KEY_CURRENT_PROFILE, "");
+                        if (deleteKey.equals(selectedKey)) {
+                            java.util.List<java.util.Map.Entry<String, MinecraftProfile>> remaining =
+                                    LauncherProfiles.getProfilesInDisplayOrder();
+                            if (!remaining.isEmpty()) replacementSelection = remaining.get(0).getKey();
+                            if (replacementSelection != null) {
+                                LauncherPreferences.DEFAULT_PREF.edit()
+                                        .putString(LauncherPreferences.PREF_KEY_CURRENT_PROFILE,
+                                                replacementSelection).apply();
+                            }
+                        }
+                        LauncherProfiles.write();
+                        ExtraCore.setValue(ExtraConstants.REFRESH_VERSION_SPINNER,
+                                replacementSelection != null ? replacementSelection
+                                        : ProfileEditorFragment.DELETED_PROFILE);
+                    } catch (Exception error) {
+                        failure = error;
+                    }
+                    final Exception deleteFailure = failure;
                     mMainHandler.post(() -> {
                         if (!isAdded()) return;
+                        if (deleteFailure != null) {
+                            mDeleteButton.setEnabled(true);
+                            Toast.makeText(requireContext(), "Could not delete instance: " +
+                                    deleteFailure.getMessage(), Toast.LENGTH_LONG).show();
+                            return;
+                        }
                         Fragment parentFrag = getParentFragment();
                         if (parentFrag instanceof MainMenuFragment) {
                             MainMenuFragment mmf = (MainMenuFragment) parentFrag;
@@ -313,13 +405,16 @@ public class ProfileEditorFragment extends Fragment implements CropperUtils.Crop
 
     private View.OnClickListener getGameDirListener() {
         return v -> {
-            Bundle bundle = new Bundle(2);
-            bundle.putBoolean(FileSelectorFragment.BUNDLE_SELECT_FOLDER, true);
-            bundle.putString(FileSelectorFragment.BUNDLE_ROOT_PATH, Tools.DIR_GAME_HOME);
-            bundle.putBoolean(FileSelectorFragment.BUNDLE_SHOW_FILE, false);
-            mValueToConsume = FileSelectorFragment.BUNDLE_SELECT_FOLDER;
-
-            navigateToFragment(FileSelectorFragment.class, FileSelectorFragment.TAG, bundle);
+            if (mTempProfile == null) return;
+            try {
+                File instanceRoot = Tools.getGameDirPath(mTempProfile);
+                if (!instanceRoot.isDirectory() && !instanceRoot.mkdirs() && !instanceRoot.isDirectory()) {
+                    throw new IOException("Could not create instance folder");
+                }
+                Tools.openPath(v.getContext(), instanceRoot, false);
+            } catch (Exception error) {
+                Toast.makeText(v.getContext(), "Could not open instance folder", Toast.LENGTH_LONG).show();
+            }
         };
     }
 
@@ -335,7 +430,7 @@ public class ProfileEditorFragment extends Fragment implements CropperUtils.Crop
     }
 
     private View.OnClickListener getVersionSelectListener() {
-        return v -> VersionSelectorDialog.open(v.getContext(), false, (id, snapshot)-> {
+        return v -> VersionSelectorDialog.open(v.getContext(), false, mTempProfile, (id, snapshot)-> {
             mTempProfile.lastVersionId = id;
             mDefaultVersion.setText(id);
         });
@@ -452,19 +547,62 @@ public class ProfileEditorFragment extends Fragment implements CropperUtils.Crop
         });
     }
 
-    private MinecraftProfile getProfile(@NonNull String profile){
-        MinecraftProfile minecraftProfile;
-        if(getArguments() == null) {
-            LauncherProfiles.load();
-            MinecraftProfile originalProfile = LauncherProfiles.mainProfileJson.profiles.get(profile);
-            if(originalProfile != null) minecraftProfile = new MinecraftProfile(originalProfile);
-            else minecraftProfile = MinecraftProfile.createTemplate();
-            mProfileKey = profile;
-        }else{
-            minecraftProfile = MinecraftProfile.createTemplate();
-            mProfileKey = LauncherProfiles.getFreeProfileKey();
+    private boolean sameValue(@Nullable String left, @Nullable String right) {
+        return left == null ? right == null : left.equals(right);
+    }
+
+    private String suggestProfileName(@Nullable String versionId) {
+        if (versionId == null || versionId.trim().isEmpty()) return "Minecraft Instance";
+        String mcVersion = net.kdt.pojavlaunch.utils.ProfileDetection.extractMcFromVersionId(versionId);
+        if (mcVersion != null && !mcVersion.isEmpty()) return "Minecraft " + mcVersion;
+        if (MinecraftProfile.LATEST_RELEASE.equals(versionId)) return "Minecraft Latest Release";
+        if (MinecraftProfile.LATEST_SNAPSHOT.equals(versionId)) return "Minecraft Latest Snapshot";
+        return "Minecraft " + versionId;
+    }
+
+    private String makeUniqueProfileName(@NonNull String baseName, @Nullable String excludedKey) {
+        String candidate = baseName;
+        int suffix = 2;
+        Map<String, MinecraftProfile> profiles = LauncherProfiles.mainProfileJson != null
+                ? LauncherProfiles.mainProfileJson.profiles : null;
+        while (profiles != null && hasProfileName(profiles, candidate, excludedKey)) {
+            candidate = baseName + " (" + suffix++ + ")";
         }
-        return minecraftProfile;
+        return candidate;
+    }
+
+    private boolean hasProfileName(@NonNull Map<String, MinecraftProfile> profiles,
+                                   @NonNull String candidate, @Nullable String excludedKey) {
+        for (Map.Entry<String, MinecraftProfile> entry : profiles.entrySet()) {
+            if (sameValue(excludedKey, entry.getKey())) continue;
+            MinecraftProfile profile = entry.getValue();
+            if (profile != null && profile.name != null &&
+                    candidate.equalsIgnoreCase(profile.name.trim())) return true;
+        }
+        return false;
+    }
+
+    private MinecraftProfile getProfile(@NonNull String profile){
+        LauncherProfiles.load();
+        if (getArguments() == null) {
+            MinecraftProfile originalProfile = LauncherProfiles.mainProfileJson.profiles.get(profile);
+            if (originalProfile != null) {
+                mCreatingProfile = false;
+                mOriginalVersionId = originalProfile.lastVersionId;
+                mOriginalProfileName = originalProfile.name;
+                mProfileKey = profile;
+                return new MinecraftProfile(originalProfile);
+            }
+        }
+
+        mCreatingProfile = true;
+        mOriginalVersionId = null;
+        mOriginalProfileName = null;
+        mProfileKey = LauncherProfiles.getFreeProfileKey();
+        MinecraftProfile profile = MinecraftProfile.createTemplate();
+        profile.instanceId = InstancePathResolver.instanceIdForProfileKey(mProfileKey);
+        profile.gameDir = InstancePathResolver.gameDirectoryValue(profile.instanceId);
+        return profile;
     }
 
 
@@ -507,11 +645,11 @@ public class ProfileEditorFragment extends Fragment implements CropperUtils.Crop
         mTempProfile.javaArgs = mDefaultJvmArgument.getText().toString()
                 .replaceAll("[\r\n]+", " ")
                 .trim();
-        mTempProfile.gameDir = mDefaultPath.getText().toString();
+        mTempProfile.gameDir = mTempProfile.instanceId != null
+                ? InstancePathResolver.gameDirectoryValue(mTempProfile.instanceId) : null;
 
         if(mTempProfile.controlFile != null && mTempProfile.controlFile.isEmpty()) mTempProfile.controlFile = null;
         if(mTempProfile.javaArgs != null && mTempProfile.javaArgs.isEmpty()) mTempProfile.javaArgs = null;
-        if(mTempProfile.gameDir != null && mTempProfile.gameDir.isEmpty()) mTempProfile.gameDir = null;
 
         if (mDefaultRuntime.getSelectedItem() instanceof Runtime) {
             Runtime selectedRuntime = (Runtime) mDefaultRuntime.getSelectedItem();

@@ -68,7 +68,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="2dp"
-                android:textColor="@color/accent_primary"
+                android:textColor="?attr/luciferAccent"
                 android:textSize="11sp"
                 tools:text="by modmuss50 • 179M Downloads" />
 

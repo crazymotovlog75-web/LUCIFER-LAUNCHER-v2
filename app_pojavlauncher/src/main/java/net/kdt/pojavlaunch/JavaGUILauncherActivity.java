@@ -55,6 +55,7 @@ public class JavaGUILauncherActivity extends BaseActivity implements View.OnTouc
     private GestureDetector mGestureDetector;
 
     private boolean mIsVirtualMouseEnabled;
+    private File mGameDirectory;
     
     @SuppressLint("ClickableViewAccessibility")
     @Override
@@ -62,8 +63,21 @@ public class JavaGUILauncherActivity extends BaseActivity implements View.OnTouc
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_java_gui_launcher);
 
+        String requestedGameDirectory = getIntent().getStringExtra("minecraftDirectory");
+        if (requestedGameDirectory != null && !requestedGameDirectory.trim().isEmpty()) {
+            mGameDirectory = new File(requestedGameDirectory);
+        } else {
+            try {
+                net.kdt.pojavlaunch.value.launcherprofiles.LauncherProfiles.load();
+                mGameDirectory = Tools.getGameDirPath(
+                        net.kdt.pojavlaunch.value.launcherprofiles.LauncherProfiles.getCurrentProfile());
+            } catch (Exception ignored) {
+                mGameDirectory = new File(Tools.DIR_GAME_NEW);
+            }
+        }
+
         try {
-            File latestLogFile = new File(Tools.DIR_GAME_HOME, "latestlog.txt");
+            File latestLogFile = new File(mGameDirectory, "latestlog.txt");
             if (!latestLogFile.exists() && !latestLogFile.createNewFile())
                 throw new IOException("Failed to create a new log file");
             Logger.begin(latestLogFile.getAbsolutePath());
@@ -377,7 +391,8 @@ public class JavaGUILauncherActivity extends BaseActivity implements View.OnTouc
 
             Logger.appendToLog("Info: Java arguments: " + Arrays.toString(javaArgList.toArray(new String[0])));
 
-            JREUtils.launchJavaVM(this, runtime,null,javaArgList, LauncherPreferences.PREF_CUSTOM_JAVA_ARGS);
+            JREUtils.launchJavaVM(this, runtime, mGameDirectory, javaArgList,
+                    LauncherPreferences.PREF_CUSTOM_JAVA_ARGS);
         } catch (Throwable th) {
             Tools.showError(this, th, true);
         }

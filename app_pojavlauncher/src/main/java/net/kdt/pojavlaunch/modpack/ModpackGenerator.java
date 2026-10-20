@@ -4,6 +4,8 @@ import android.content.Context;
 import android.util.Log;
 
 import net.kdt.pojavlaunch.Tools;
+import net.kdt.pojavlaunch.instances.InstanceManager;
+import net.kdt.pojavlaunch.instances.InstancePathResolver;
 import net.kdt.pojavlaunch.value.launcherprofiles.LauncherProfiles;
 import net.kdt.pojavlaunch.value.launcherprofiles.MinecraftProfile;
 
@@ -164,45 +166,43 @@ public class ModpackGenerator {
      */
     public String generate() throws Exception {
         Log.i(TAG, "Generating modpack: " + mState.modpackName);
+        LauncherProfiles.load();
 
-        // 1. Determine the effective version ID (with loader prefix if needed)
+        // 1. Determine the effective version ID (with loader prefix if needed).
         String effectiveVersionId = resolveVersionId();
+        String profileKey = LauncherProfiles.getFreeProfileKey();
+        String instanceId = InstancePathResolver.instanceIdForProfileKey(profileKey);
 
-        // 2. Create game directory
-        String gameDirName = sanitiseName(mState.modpackName);
-        File gameDir = new File(Tools.DIR_GAME_NEW + MODPACKS_DIR + "/" + gameDirName);
-        if (!gameDir.exists()) {
-            gameDir.mkdirs();
-        }
-
-        // 3. Create folder structure
-        createFolderStructure(gameDir);
-
-        // 4. Create the MinecraftProfile
+        // 2. Give the modpack its own managed game directory and copy only its selected version.
         MinecraftProfile profile = new MinecraftProfile();
         profile.name = mState.modpackName;
         profile.lastVersionId = effectiveVersionId;
         profile.icon = "Grass";
         profile.type = "modpack";
-        profile.gameDir = "./modpacks/" + gameDirName;
-        profile.created = new java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX",
-                java.util.Locale.US).format(new java.util.Date());
+        profile.instanceId = instanceId;
+        profile.gameDir = InstancePathResolver.gameDirectoryValue(instanceId);
+        profile.created = MinecraftProfile.currentTimestamp();
         profile.lastUsed = profile.created;
-
-        // Set renderer default for modpacks
         profile.pojavRendererName = null; // use global default
 
-        // 5. Write mod / resource pack / shader placeholders
+        InstanceManager manager = Tools.getInstanceManager();
+        File gameDir = manager.initializeInstance(instanceId, profileKey, profile.name, effectiveVersionId);
+        MinecraftProfile sourceProfile = LauncherProfiles.getCurrentProfile();
+        if (sourceProfile.instanceId != null) {
+            manager.copyVersionFromInstance(sourceProfile.instanceId, instanceId, effectiveVersionId);
+        }
+        manager.ensureVersionImported(instanceId, effectiveVersionId);
+
+        // 3. Create modpack-specific folders and entries inside the instance root.
+        createFolderStructure(gameDir);
         writeModEntries(profile, gameDir);
 
-        // 6. Add description if provided
+        // 4. Add description if provided.
         if (mState.modpackDescription != null && !mState.modpackDescription.isEmpty()) {
             profile.javaArgs = "# Modpack: " + mState.modpackName
                     + "\n# Description: " + mState.modpackDescription;
         }
-
-        // 7. Insert into profiles
-        String profileKey = LauncherProfiles.getFreeProfileKey();
+        manager.updateMetadata(instanceId, profileKey, profile.name, profile.lastVersionId);
         LauncherProfiles.mainProfileJson.profiles.put(profileKey, profile);
         LauncherProfiles.write();
 
@@ -261,23 +261,22 @@ public class ModpackGenerator {
      */
     private String findInstalledLoaderVersion(String loader, String mcVersion) {
         try {
-            File versionsDir = new File(Tools.DIR_GAME_NEW + "/versions");
-            if (versionsDir.exists() && versionsDir.isDirectory()) {
-                File[] dirs = versionsDir.listFiles(File::isDirectory);
-                if (dirs != null) {
-                    String best = null;
-                    for (File dir : dirs) {
-                        String name = dir.getName().toLowerCase(java.util.Locale.ROOT);
-                        if (name.contains(loader) && name.contains(mcVersion)) {
-                            // Prefer longer match (more specific)
-                            if (best == null || name.length() > best.length()) {
-                                best = dir.getName();
-                            }
-                        }
+            File[] roots = {Tools.getCurrentVersionRoot(),
+                    Tools.getInstanceManager().paths().getLegacyVersionsRoot()};
+            String best = null;
+            for (File versionsDir : roots) {
+                File[] dirs = versionsDir != null ? versionsDir.listFiles(File::isDirectory) : null;
+                if (dirs == null) continue;
+                for (File dir : dirs) {
+                    String name = dir.getName().toLowerCase(java.util.Locale.ROOT);
+                    if (name.contains(loader) && name.contains(mcVersion) &&
+                            new File(dir, dir.getName() + ".json").isFile()) {
+                        // Prefer the longer, more specific loader ID.
+                        if (best == null || name.length() > best.length()) best = dir.getName();
                     }
-                    return best;
                 }
             }
+            return best;
         } catch (Exception ignored) {}
         return null;
     }

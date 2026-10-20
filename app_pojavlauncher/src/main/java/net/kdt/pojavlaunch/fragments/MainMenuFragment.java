@@ -5,6 +5,7 @@ import static net.kdt.pojavlaunch.Tools.hasOnlineProfile;
 import static net.kdt.pojavlaunch.Tools.openPath;
 import static net.kdt.pojavlaunch.Tools.shareLog;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -29,6 +30,7 @@ import net.kdt.pojavlaunch.extra.ExtraConstants;
 import net.kdt.pojavlaunch.extra.ExtraCore;
 import net.kdt.pojavlaunch.prefs.LauncherPreferences;
 import net.kdt.pojavlaunch.progresskeeper.ProgressKeeper;
+import net.kdt.pojavlaunch.theme.ThemeManager;
 import net.kdt.pojavlaunch.value.launcherprofiles.LauncherProfiles;
 import net.kdt.pojavlaunch.value.launcherprofiles.MinecraftProfile;
 
@@ -98,7 +100,7 @@ public class MainMenuFragment extends Fragment {
     /** Explicitly clears the right pane and resets home UI state */
     public void refreshHomeState() {
         if (getView() == null || !isAdded()) {
-            Log.w("CS_LAUNCHER", "Home state refresh skipped: View not fully inflated yet.");
+            Log.w("LUCIFER_LAUNCHER", "Home state refresh skipped: View not fully inflated yet.");
             return;
         }
         clearRightPane();
@@ -166,7 +168,14 @@ public class MainMenuFragment extends Fragment {
      */
     private void openPane(Class<? extends Fragment> fragmentClass, String tag,
                           @Nullable Bundle args) {
-        if (fragmentClass == ClientFeaturesFragment.class) {
+        // Retire the old artwork-only server page: all server entry points now open the
+        // functional Server Hub with the pinned server, Add button, and scrollable server list.
+        if (fragmentClass == FeaturedServerFragment.class) {
+            fragmentClass = ServerHubFragment.class;
+            tag = ServerHubFragment.TAG;
+            args = null;
+        }
+        if (fragmentClass == CreatorTeamFragment.class) {
             Tools.swapFragment(requireActivity(), fragmentClass, tag, args,
                     R.anim.slide_in_right, R.anim.slide_out_left,
                     R.anim.slide_in_left, R.anim.slide_out_right);
@@ -232,6 +241,7 @@ public class MainMenuFragment extends Fragment {
         Button mInstallJarButton   = view.findViewById(R.id.install_jar_button);
         Button mShareLogsButton    = view.findViewById(R.id.share_logs_button);
         Button mOpenDirectoryButton = view.findViewById(R.id.open_directory_button);
+        Button mOpenModsFolderButton = view.findViewById(R.id.open_mods_folder_button);
         Button mModStoreButton      = view.findViewById(R.id.mod_store_button);
         Button mCursorCustomButton  = view.findViewById(R.id.cursor_customization_button);
         Button mHomeButton          = view.findViewById(R.id.home_button);
@@ -276,7 +286,7 @@ public class MainMenuFragment extends Fragment {
                     v -> Tools.openURL(requireActivity(), Tools.URL_HOME));
         if (mDiscordButton != null)
             mDiscordButton.setOnClickListener(
-                    v -> Tools.openURL(requireActivity(), getString(R.string.discord_invite)));
+                    v -> Tools.openDiscordInvite(requireActivity(), getString(R.string.discord_invite)));
 
         // Custom controls (always opens as Activity — can't be in the pane)
         if (mCustomControlButton != null) {
@@ -289,15 +299,12 @@ public class MainMenuFragment extends Fragment {
             mCursorCustomButton.setOnClickListener(v ->
                 Tools.swapFragment(requireActivity(), CursorCustomizationFragment.class, CursorCustomizationFragment.TAG, null));
 
-        // Client Features Toggle Button
-        Button btnClientFeatures = view.findViewById(R.id.btn_client_features);
-        if (btnClientFeatures != null && getActivity() instanceof net.kdt.pojavlaunch.LauncherActivity) {
-            final net.kdt.pojavlaunch.ClientFeaturesManager cfm = ((net.kdt.pojavlaunch.LauncherActivity) requireActivity()).getClientFeaturesManager();
-            updateClientFeaturesMenuButton(btnClientFeatures, cfm.isEnabled());
-            btnClientFeatures.setOnClickListener(v -> {
-                openPane(ClientFeaturesFragment.class, ClientFeaturesFragment.TAG, null);
-            });
-            startPremiumButtonPulse(btnClientFeatures);
+        // Pro now opens the creator credits page; the removed client-pack installer is no longer
+        // part of launcher navigation.
+        Button btnCreatorTeam = view.findViewById(R.id.btn_creator_team);
+        if (btnCreatorTeam != null) {
+            btnCreatorTeam.setOnClickListener(v ->
+                    openPane(CreatorTeamFragment.class, CreatorTeamFragment.TAG, null));
         }
 
         // Manage Skin Button
@@ -345,6 +352,9 @@ public class MainMenuFragment extends Fragment {
                 }
             });
         }
+        if (mOpenModsFolderButton != null) {
+            mOpenModsFolderButton.setOnClickListener(v -> openSelectedModsFolder(v.getContext()));
+        }
 
         // Edit profile — always full-screen
         if (mEditProfileBtn != null) {
@@ -371,7 +381,7 @@ public class MainMenuFragment extends Fragment {
 
         // Apply Premium Mobile Animations
         applyPremiumTouchAnimation(mHomeButton, mModStoreButton, mCursorCustomButton, mCustomControlButton, mInstallJarButton,
-                                   mShareLogsButton, mOpenDirectoryButton,
+                                   mShareLogsButton, mOpenDirectoryButton, mOpenModsFolderButton,
                                    mPlayBtn, mEditProfileBtn, mVersionSpinner);
 
         // Play
@@ -417,17 +427,39 @@ public class MainMenuFragment extends Fragment {
             });
         }
 
-        View view = getView();
-        if (view != null) {
-            Button btnClientFeatures = view.findViewById(R.id.btn_client_features);
-            if (btnClientFeatures != null && getActivity() instanceof net.kdt.pojavlaunch.LauncherActivity) {
-                final net.kdt.pojavlaunch.ClientFeaturesManager cfm = ((net.kdt.pojavlaunch.LauncherActivity) requireActivity()).getClientFeaturesManager();
-                updateClientFeaturesMenuButton(btnClientFeatures, cfm.isEnabled());
-            }
-        }
     }
 
     // ─── Private helpers ────────────────────────────────────────────────────
+
+    /** Open the selected Minecraft profile's mods directory in Android's document/file viewer. */
+    public static void openSelectedModsFolder(@NonNull Context context) {
+        String profileKey = LauncherPreferences.DEFAULT_PREF.getString(
+                LauncherPreferences.PREF_KEY_CURRENT_PROFILE, "");
+        if (!Tools.isValidString(profileKey)) {
+            Toast.makeText(context, R.string.please_select_version, Toast.LENGTH_LONG).show();
+            return;
+        }
+        try {
+            if (LauncherProfiles.mainProfileJson == null || LauncherProfiles.mainProfileJson.profiles == null) {
+                LauncherProfiles.load();
+            }
+            MinecraftProfile profile = LauncherProfiles.mainProfileJson == null ||
+                    LauncherProfiles.mainProfileJson.profiles == null
+                    ? null : LauncherProfiles.mainProfileJson.profiles.get(profileKey);
+            if (profile == null) {
+                Toast.makeText(context, R.string.please_select_version, Toast.LENGTH_LONG).show();
+                return;
+            }
+            File modsDirectory = new File(Tools.getGameDirPath(profile), "mods");
+            if (!modsDirectory.isDirectory() && !modsDirectory.mkdirs() && !modsDirectory.isDirectory()) {
+                throw new java.io.IOException("Could not create mods directory");
+            }
+            Tools.openPath(context, modsDirectory, false);
+        } catch (Exception error) {
+            Log.w(TAG, "Could not open the selected profile's mods directory", error);
+            Toast.makeText(context, R.string.open_mods_folder_failed, Toast.LENGTH_LONG).show();
+        }
+    }
 
     private File getCurrentProfileDirectory() {
         String currentProfile = LauncherPreferences.DEFAULT_PREF
@@ -456,9 +488,9 @@ public class MainMenuFragment extends Fragment {
             boolean isActive = (id == activeId);
             btn.setBackgroundResource(isActive ? R.drawable.bg_nav_item_active : 0);
             if (btn instanceof Button) {
-                ((Button) btn).setTextColor(isActive ? 
-                    getResources().getColor(R.color.accent_primary) : 
-                    getResources().getColor(R.color.text_secondary_light));
+                ((Button) btn).setTextColor(isActive
+                    ? ThemeManager.getAccentColor(requireContext())
+                    : getResources().getColor(R.color.text_secondary_light));
             }
         }
     }
@@ -488,36 +520,4 @@ public class MainMenuFragment extends Fragment {
         }
     }
 
-    private void updateClientFeaturesMenuButton(Button btn, boolean enabled) {
-        if (enabled) {
-            btn.setText("✦ Client Features (Enabled)");
-            btn.setBackgroundResource(R.drawable.bg_client_features_btn_filled);
-            btn.setTextColor(0xFF0D0D0D);
-        } else {
-            btn.setText("✦ Enable Client Features");
-            btn.setBackgroundResource(R.drawable.bg_client_features_btn);
-            btn.setTextColor(0xFF39FF14);
-        }
-    }
-
-    private void startPremiumButtonPulse(View btn) {
-        if (btn == null) return;
-        android.view.animation.Animation pulse = android.view.animation.AnimationUtils.loadAnimation(requireContext(), R.anim.pulse_animation);
-        btn.startAnimation(pulse);
-        btn.setOnTouchListener((v, event) -> {
-            switch (event.getAction()) {
-                case android.view.MotionEvent.ACTION_DOWN:
-                    v.clearAnimation();
-                    v.animate().scaleX(0.94f).scaleY(0.94f).alpha(0.85f).setDuration(70).start();
-                    break;
-                case android.view.MotionEvent.ACTION_UP:
-                case android.view.MotionEvent.ACTION_CANCEL:
-                    v.animate().scaleX(1.0f).scaleY(1.0f).alpha(1.0f).setDuration(120).withEndAction(() -> {
-                        if (isAdded()) v.startAnimation(pulse);
-                    }).start();
-                    break;
-            }
-            return false;
-        });
-    }
 }

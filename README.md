@@ -1,7 +1,7 @@
 <div align="center">
 
 <!-- 🎬 Animated Header -->
-<img src="https://capsule-render.vercel.app/api?type=waving&color=gradient&customColorList=6,11,20&height=220&section=header&text=CS%20LAUNCHER%20V2&fontSize=60&fontColor=ffffff&animation=twinkling&fontAlignY=35&desc=Play%20Minecraft%3A%20Java%20Edition%20on%20Android&descSize=20&descAlignY=55" width="100%"/>
+<img src="https://capsule-render.vercel.app/api?type=waving&color=gradient&customColorList=6,11,20&height=220&section=header&text=LUCIFER%20LAUNCHER&fontSize=60&fontColor=ffffff&animation=twinkling&fontAlignY=35&desc=Play%20Minecraft%3A%20Java%20Edition%20on%20Android&descSize=20&descAlignY=55" width="100%"/>
 
 <!-- ⌨️ Animated Typing Tagline -->
 <img src="https://readme-typing-svg.herokuapp.com?font=Fira+Code&weight=700&size=24&duration=2500&pause=800&color=F76C00&center=true&vCenter=true&width=600&lines=⚡+Fast+•+Free+•+Open+Source+⚡;🧩+Forge+%26+Fabric+Mod+Support;🎮+Every+Version+from+rd-132211+to+1.21;🚀+Built+for+Android+8.0%2B" alt="Typing animation"/>
@@ -36,7 +36,7 @@
 
 </div>
 
-> 🎮 **CS LAUNCHER V2** is a powerful Minecraft: Java Edition launcher for Android, forked from [Amethyst](https://github.com/AngelAuraMC/Amethyst-Android) and built on the legendary foundations of [Boardwalk](https://github.com/zhuowei/Boardwalk) and [PojavLauncher](https://github.com/PojavLauncherTeam/PojavLauncher).
+> 🎮 **LUCIFER LAUNCHER** is a powerful Minecraft: Java Edition launcher for Android, forked from [Amethyst](https://github.com/AngelAuraMC/Amethyst-Android) and built on the legendary foundations of [Boardwalk](https://github.com/zhuowei/Boardwalk) and [PojavLauncher](https://github.com/PojavLauncherTeam/PojavLauncher).
 
 <br>
 
@@ -90,6 +90,24 @@
 3. 🔑 **Sign in** with your Microsoft account (or play in offline mode)
 4. 🎮 **Pick a version**, hit **Play**, and enjoy Minecraft on Android!
 
+> 📦 The compact APK does not bundle Java. It downloads the compatible runtime on demand, so internet access and extra storage are needed the first time each Java version is used.
+
+<br>
+
+## 🗂️ Instance storage
+
+Each launcher profile now owns an isolated game directory at:
+
+```text
+<launcher-storage>/instances/<instanceId>/
+```
+
+The instance root is its Minecraft `gameDir` and stores that profile's version JSON/JAR files, natives, mods, saves, `config`, resource packs, shader packs, logs, screenshots, crash reports, and options. Newly created/downloaded versions are written under the instance's `versions/` directory; they are not installed into the legacy global `.minecraft/versions/` directory. `launcher_profiles.json` remains in `.minecraft` for launcher compatibility.
+
+For storage efficiency, **Share assets and libraries between instances** is enabled by default in Settings. When enabled, instances share `.minecraft/assets` and `.minecraft/libraries`; version files, natives, and game data remain isolated. Turn the setting off to keep assets and libraries inside each instance instead.
+
+The Instances screen can create, import, duplicate, delete, and open instance folders. Legacy versions and game data are **copied** into an instance on import/migration; the source `.minecraft` data is retained and repeated migration does not overwrite files already present in the instance.
+
 <br>
 
 ## 📸 Screenshots
@@ -126,7 +144,7 @@ cd <YOUR_REPO_NAME>
 <br>
 
 #### 1️⃣ Java Runtime Environment (JRE)
-Download the `jre8-pojav` artifact from AngelAuraMC's [CI auto builds](https://github.com/AngelAuraMC/openjdk-build-multiarch/actions) — pre-built JREs for all architectures. To build it yourself, follow [android-openjdk-build-multiarch](https://github.com/AngelAuraMC/openjdk-build-multiarch).
+The standard launcher build omits bundled JRE files; it downloads a compatible Java runtime on demand when a Minecraft version is first launched. For a custom offline APK with Java 8 bundled, add the `jre8-pojav` artifact from AngelAuraMC's [CI auto builds](https://github.com/AngelAuraMC/openjdk-build-multiarch/actions) under `app_pojavlauncher/src/main/assets/components/jre`. To build the runtime yourself, follow [android-openjdk-build-multiarch](https://github.com/AngelAuraMC/openjdk-build-multiarch).
 
 #### 2️⃣ LWJGL
 Build instructions in the [LWJGL repository](https://github.com/AngelAuraMC/lwjgl3).
@@ -179,7 +197,7 @@ scripts\languagelist_updater.bat
 
 ```mermaid
 timeline
-    title CS LAUNCHER V2 — Development Roadmap
+    title LUCIFER LAUNCHER — Development Roadmap
     NOW : 🔬 New rendering technologies
     NEXT : ⚡ Stability & performance improvements
     LATER : 🧩 Better mod installation experience
@@ -195,7 +213,7 @@ timeline
 ## ❓ FAQ
 
 <details>
-<summary><b>Is CS LAUNCHER V2 free?</b></summary>
+<summary><b>Is LUCIFER LAUNCHER free?</b></summary>
 <br>
 Yes! 100% free and open source. However, you need a legitimate Minecraft: Java Edition account for online play.
 </details>
@@ -261,7 +279,7 @@ Check the **issue tracker** for known issues and their status. Found a new bug? 
 
 ## 📜 License
 
-**CS LAUNCHER V2** is licensed under the **GNU GPL v3.0**.
+**LUCIFER LAUNCHER** is licensed under the **GNU GPL v3.0**.
 See the LICENSE file for details.
 
 <br>

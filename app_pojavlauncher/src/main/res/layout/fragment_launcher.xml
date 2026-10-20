@@ -5,7 +5,7 @@
     android:id="@+id/fragment_menu_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="?attr/bgMainDrawable">
+    android:background="@android:color/transparent">
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/center_guideline"
@@ -99,13 +99,13 @@
                 android:drawableStart="@drawable/ic_mouse_pointer"
                 android:text="@string/cursor_customization_title" />
 
-            <!-- ENABLE CLIENT FEATURES -->
+            <!-- PRO / CREATOR CREDITS -->
             <com.kdt.mcgui.LauncherMenuButton
-                android:id="@+id/btn_client_features"
+                android:id="@+id/btn_creator_team"
                 style="@style/LauncherMenuButton.Universal"
                 android:layout_width="match_parent"
                 android:drawableStart="@drawable/ic_star"
-                android:text="✦ Enable Client Features" />
+                android:text="✦ Pro" />
 
             <!-- MANAGE SKIN -->
             <com.kdt.mcgui.LauncherMenuButton
@@ -141,6 +141,14 @@
                 android:layout_width="match_parent"
                 android:drawableStart="@drawable/ic_folder"
                 android:text="@string/mcl_button_open_directory" />
+
+            <!-- OPEN SELECTED INSTANCE MODS FOLDER -->
+            <com.kdt.mcgui.LauncherMenuButton
+                android:id="@+id/open_mods_folder_button"
+                style="@style/LauncherMenuButton.Universal"
+                android:layout_width="match_parent"
+                android:drawableStart="@drawable/ic_folder_managed"
+                android:text="@string/mcl_button_open_mods_folder" />
 
             <!-- EXECUTE .JAR -->
             <com.kdt.mcgui.LauncherMenuButton

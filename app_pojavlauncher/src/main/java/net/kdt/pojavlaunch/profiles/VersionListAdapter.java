@@ -11,6 +11,7 @@ import android.widget.TextView;
 import net.kdt.pojavlaunch.JMinecraftVersionList;
 import net.kdt.pojavlaunch.R;
 import net.kdt.pojavlaunch.Tools;
+import net.kdt.pojavlaunch.value.launcherprofiles.MinecraftProfile;
 import net.kdt.pojavlaunch.utils.FilteredSubList;
 
 import java.io.File;
@@ -27,9 +28,18 @@ public class VersionListAdapter extends BaseExpandableListAdapter implements Exp
     private final List<?>[] mData;
     private final boolean mHideCustomVersions;
     private final int mSnapshotListPosition;
+    private final MinecraftProfile mInstanceProfile;
+    private final String mSelectedVersionId;
     private boolean mInstalledVersionsLoaded;
 
-    public VersionListAdapter(JMinecraftVersionList.Version[] versionList, boolean hideCustomVersions, Context ctx){
+    public VersionListAdapter(JMinecraftVersionList.Version[] versionList, boolean hideCustomVersions, Context ctx) {
+        this(versionList, hideCustomVersions, ctx, Tools.getCurrentMinecraftProfile());
+    }
+
+    public VersionListAdapter(JMinecraftVersionList.Version[] versionList, boolean hideCustomVersions,
+                              Context ctx, MinecraftProfile instanceProfile) {
+        mInstanceProfile = instanceProfile;
+        mSelectedVersionId = instanceProfile != null ? instanceProfile.lastVersionId : null;
         mHideCustomVersions = hideCustomVersions;
         mLayoutInflater = (LayoutInflater) ctx.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
@@ -55,13 +65,23 @@ public class VersionListAdapter extends BaseExpandableListAdapter implements Exp
     private void ensureInstalledVersionsLoaded() {
         if (mInstalledVersionsLoaded) return;
         mInstalledVersionsLoaded = true;
-        mInstalledVersions = new File(Tools.DIR_GAME_NEW + "/versions").list();
-        if (mInstalledVersions != null) {
-            Arrays.sort(mInstalledVersions);
-            // Populate the data list so getChildrenCount returns the right value.
-            @SuppressWarnings("unchecked")
-            List<String> installedList = (List<String>) mData[0];
-            installedList.addAll(Arrays.asList(mInstalledVersions));
+        ArrayList<String> installedVersions = new ArrayList<>();
+        addInstalledVersions(Tools.getVersionRoot(mInstanceProfile), installedVersions);
+        addInstalledVersions(Tools.getInstanceManager().paths().getLegacyVersionsRoot(), installedVersions);
+        mInstalledVersions = installedVersions.toArray(new String[0]);
+        Arrays.sort(mInstalledVersions, String.CASE_INSENSITIVE_ORDER);
+        // Populate the data list so getChildrenCount returns the right value.
+        @SuppressWarnings("unchecked")
+        List<String> installedList = (List<String>) mData[0];
+        installedList.addAll(Arrays.asList(mInstalledVersions));
+    }
+
+    private void addInstalledVersions(File versionsRoot, List<String> target) {
+        File[] directories = versionsRoot != null ? versionsRoot.listFiles(File::isDirectory) : null;
+        if (directories == null) return;
+        for (File directory : directories) {
+            String id = directory.getName();
+            if (new File(directory, id + ".json").isFile() && !target.contains(id)) target.add(id);
         }
     }
 
@@ -121,7 +141,12 @@ public class VersionListAdapter extends BaseExpandableListAdapter implements Exp
     public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
         if(convertView == null)
             convertView = mLayoutInflater.inflate(android.R.layout.simple_expandable_list_item_1, parent, false);
-        ((TextView) convertView).setText(getChild(groupPosition, childPosition));
+        TextView versionView = (TextView) convertView;
+        String versionId = getChild(groupPosition, childPosition);
+        versionView.setText(versionId);
+        boolean selected = versionId != null && versionId.equals(mSelectedVersionId);
+        versionView.setTextColor(selected ? 0xFFB7FFC1 : android.graphics.Color.WHITE);
+        versionView.setBackgroundColor(selected ? 0x5536D878 : android.graphics.Color.TRANSPARENT);
         return convertView;
     }
 

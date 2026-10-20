@@ -30,6 +30,7 @@ import net.kdt.pojavlaunch.utils.FileUtils;
 import net.kdt.pojavlaunch.value.DependentLibrary;
 import net.kdt.pojavlaunch.value.MinecraftClientInfo;
 import net.kdt.pojavlaunch.value.MinecraftLibraryArtifact;
+import net.kdt.pojavlaunch.value.launcherprofiles.MinecraftProfile;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -66,6 +67,7 @@ public class MinecraftDownloader {
 
     private boolean isLocalProfile = false;
     private boolean isOnline;
+    @Nullable private MinecraftProfile mProfile;
 
     /**
      * Start the game version download process on the global executor service.
@@ -77,6 +79,13 @@ public class MinecraftDownloader {
     public void start(@Nullable Activity activity, @Nullable JMinecraftVersionList.Version version,
                       @NonNull String realVersion,
                       @NonNull AsyncMinecraftDownloader.DoneListener listener) {
+        start(activity, version, realVersion, Tools.getCurrentMinecraftProfile(), listener);
+    }
+
+    public void start(@Nullable Activity activity, @Nullable JMinecraftVersionList.Version version,
+                      @NonNull String realVersion, @Nullable MinecraftProfile profile,
+                      @NonNull AsyncMinecraftDownloader.DoneListener listener) {
+        mProfile = profile == null ? null : new MinecraftProfile(profile);
         if(activity != null){
             isLocalProfile = Tools.isLocalProfile(activity);
             isOnline = Tools.isOnline(activity);
@@ -95,15 +104,17 @@ public class MinecraftDownloader {
                     // See if provided version is a modded version and if that version depends on another jar, check for presence of both jar's .json.
                     try {
                         // This reads the .json associated with the provided version. If it fails, we can assume it's not installed.
-                        File providedJsonFile = new File(Tools.DIR_HOME_VERSION + "/" + realVersion + "/" + realVersion + ".json");
+                        File providedJsonFile = Tools.getVersionJsonFile(mProfile, realVersion);
                         JMinecraftVersionList.Version providedJson = Tools.GLOBAL_GSON.fromJson(Tools.read(providedJsonFile.getAbsolutePath()), JMinecraftVersionList.Version.class);
 
-                        // This checks if running modded version that depends on other jars, so we use that for the error message.
-                        File vanillaJsonFile = new File(Tools.DIR_HOME_VERSION + "/" + providedJson.inheritsFrom + "/" + providedJson.inheritsFrom + ".json");
+                        // This checks if running modded version that depends on another version.
+                        File vanillaJsonFile = Tools.isValidString(providedJson.inheritsFrom)
+                                ? Tools.getVersionJsonFile(mProfile, providedJson.inheritsFrom) : null;
                         versionMessage = providedJson.inheritsFrom != null ? providedJson.inheritsFrom : versionMessage;
 
-                        // Ensure they're both not some 0 byte corrupted json
-                        if (providedJsonFile.length() == 0 || vanillaJsonFile.exists() && vanillaJsonFile.length() == 0){
+                        // Ensure neither version metadata file is an empty/corrupt placeholder.
+                        if (providedJsonFile.length() == 0 || vanillaJsonFile != null &&
+                                vanillaJsonFile.exists() && vanillaJsonFile.length() == 0){
                             throw new RuntimeException("Minecraft "+versionMessage+ " is needed by " +realVersion); }
 
                         listener.onDownloadDone();
@@ -195,11 +206,11 @@ public class MinecraftDownloader {
     }
 
     private File createGameJsonPath(String versionId) {
-        return new File(Tools.DIR_HOME_VERSION, versionId + File.separator + versionId + ".json");
+        return Tools.getVersionJsonFile(mProfile, versionId);
     }
 
     private File createGameJarPath(String versionId) {
-        return new File(Tools.DIR_HOME_VERSION, versionId + File.separator + versionId + ".jar");
+        return Tools.getVersionJarFile(mProfile, versionId);
     }
 
     /**
@@ -223,7 +234,7 @@ public class MinecraftDownloader {
         ProgressLayout.setProgress(ProgressLayout.DOWNLOAD_MINECRAFT, 0,
                 R.string.newdl_extracting_native_libraries, 0, totalCount);
 
-        File targetDirectory = new File(Tools.DIR_CACHE, "natives/"+versionName);
+        File targetDirectory = Tools.getNativesRoot(mProfile, versionName);
         FileUtils.ensureDirectory(targetDirectory);
         NativesExtractor nativesExtractor = new NativesExtractor(targetDirectory);
         int extractedCount = 0;
@@ -257,7 +268,7 @@ public class MinecraftDownloader {
     private JAssets downloadAssetsIndex(JMinecraftVersionList.Version verInfo) throws IOException{
         JMinecraftVersionList.AssetIndex assetIndex = verInfo.assetIndex;
         if(assetIndex == null || verInfo.assets == null) return null;
-        File targetFile = new File(Tools.ASSETS_PATH, "indexes"+ File.separator + verInfo.assets + ".json");
+        File targetFile = new File(Tools.getAssetsRoot(mProfile), "indexes" + File.separator + verInfo.assets + ".json");
         FileUtils.ensureParentDirectory(targetFile);
         DownloadUtils.ensureSha1(targetFile, assetIndex.sha1, ()-> {
             ProgressLayout.setProgress(ProgressLayout.DOWNLOAD_MINECRAFT, 0,
@@ -295,10 +306,10 @@ public class MinecraftDownloader {
                 versionJsonFile = createGameJsonPath(versionName);
             }
         }
-        Log.d("CS_LAUNCHER", "Version JSON path: " + versionJsonFile.getAbsolutePath());
+        Log.d("LUCIFER_LAUNCHER", "Version JSON path: " + versionJsonFile.getAbsolutePath());
         if(!versionJsonFile.exists() || versionJsonFile.length() == 0) {
             String message = "Failed to load version: " + versionName + ". Please re-install the version.";
-            Log.e("CS_LAUNCHER", message);
+            Log.e("LUCIFER_LAUNCHER", message);
             new Handler(Looper.getMainLooper()).post(() -> {
                 if(activity != null && !activity.isFinishing()) {
                     Toast.makeText(activity, message, Toast.LENGTH_LONG).show();
@@ -375,7 +386,7 @@ public class MinecraftDownloader {
     private void scheduleNativeLibraryDownload(String baseRepository, DependentLibrary dependentLibrary) throws IOException {
         String path = FileUtils.removeExtension(Tools.artifactToPath(dependentLibrary)) + ".aar";
         String downloadUrl = baseRepository + path;
-        File targetPath = new File(Tools.DIR_HOME_LIBRARY, path);
+        File targetPath = new File(Tools.getLibrariesRoot(mProfile), path);
         mDeclaredNatives.add(targetPath);
         scheduleDownload(targetPath, DownloadMirror.DOWNLOAD_CLASS_LIBRARIES, downloadUrl, null, 0, true);
     }
@@ -414,7 +425,7 @@ public class MinecraftDownloader {
                 skipIfFailed = true;
             }
             if(!LauncherPreferences.PREF_CHECK_LIBRARY_SHA) sha1 = null;
-            scheduleDownload(new File(Tools.DIR_HOME_LIBRARY, libArtifactPath),
+            scheduleDownload(new File(Tools.getLibrariesRoot(mProfile), libArtifactPath),
                     DownloadMirror.DOWNLOAD_CLASS_LIBRARIES,
                     url, sha1, size, skipIfFailed
             );
@@ -431,7 +442,8 @@ public class MinecraftDownloader {
             if(assetInfo == null) continue;
             File targetFile;
             String hashedPath = assetInfo.hash.substring(0, 2) + File.separator + assetInfo.hash;
-            String basePath = assets.mapToResources ? Tools.OBSOLETE_RESOURCES_PATH : Tools.ASSETS_PATH;
+            String basePath = (assets.mapToResources ? Tools.getObsoleteResourcesRoot(mProfile)
+                    : Tools.getAssetsRoot(mProfile)).getAbsolutePath();
             if(assets.virtual || assets.mapToResources) {
                 targetFile = new File(basePath, asset);
             } else {
@@ -453,7 +465,9 @@ public class MinecraftDownloader {
         File internalLoggingConfig = new File(Tools.DIR_DATA + File.separator + "security",
                 loggingFileProperties.id.replace("client", "log4j-rce-patch"));
         if(internalLoggingConfig.exists()) return;
-        File destination = new File(Tools.DIR_GAME_NEW, loggingFileProperties.id);
+        MinecraftProfile gameProfile = mProfile != null ? mProfile : Tools.getCurrentMinecraftProfile();
+        File destination = new File(gameProfile != null ? Tools.getGameDirPath(gameProfile)
+                : new File(Tools.DIR_GAME_NEW), loggingFileProperties.id);
         scheduleDownload(destination,
                 DownloadMirror.DOWNLOAD_CLASS_LIBRARIES,
                 loggingFileProperties.url,

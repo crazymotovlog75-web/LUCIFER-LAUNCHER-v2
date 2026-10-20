@@ -21,6 +21,8 @@ public class ModLoader {
     public final int modLoaderType;
     public final String modLoaderVersion;
     public final String minecraftVersion;
+    /** Managed instance gameDir to target when this loader belongs to an imported modpack. */
+    public String targetGameDirectory;
 
     public ModLoader(int modLoaderType, String modLoaderVersion, String minecraftVersion) {
         this.modLoaderType = modLoaderType;
@@ -82,17 +84,20 @@ public class ModLoader {
         switch (modLoaderType) {
             case MOD_LOADER_FORGE:
                 ForgeUtils.addAutoInstallArgs(baseIntent, modInstallerJar, getVersionId());
-                return baseIntent;
+                break;
             case MOD_LOADER_NEOFORGE:
-                return baseIntent
-                        .putExtra("javaArgs", "-jar "+modInstallerJar.getAbsolutePath()+" --install-client")
-                        .putExtra("openLogOutput", true)
-                        ;
+                baseIntent.putExtra("javaArgs", "-jar "+modInstallerJar.getAbsolutePath()+" --install-client")
+                        .putExtra("openLogOutput", true);
+                break;
             case MOD_LOADER_QUILT:
             case MOD_LOADER_FABRIC:
             default:
                 return null;
         }
+        if (targetGameDirectory != null) {
+            baseIntent.putExtra("minecraftDirectory", targetGameDirectory);
+        }
+        return baseIntent;
     }
 
     /**

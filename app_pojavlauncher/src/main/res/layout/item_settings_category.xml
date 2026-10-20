@@ -22,7 +22,7 @@
             android:id="@+id/category_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="@color/accent_primary"
+            android:textColor="?attr/luciferAccent"
             android:textSize="12sp"
             android:textStyle="bold"
             android:textAllCaps="true"

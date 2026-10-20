@@ -1,7 +1,9 @@
 package net.kdt.pojavlaunch.modloaders;
 
+import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
 
+@Keep
 public class FabricVersion {
     public String version;
     public boolean stable;

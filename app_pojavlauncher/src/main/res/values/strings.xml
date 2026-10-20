@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
     <!-- App name part -->
-    <string name="app_name" translatable="false">CS LAUNCHER V2</string>
+    <string name="app_name" translatable="false">Lucifer Launcher</string>
 
     <!-- Action bar part -->
 
@@ -21,7 +21,7 @@
     <string name="alerttitle_installmod">Select a mod installer</string>
 
     <!-- Error messages -->
-    <string name="error_fatal">CS LAUNCHER V2 has unexpectedly crashed</string>
+    <string name="error_fatal">Lucifer Launcher has unexpectedly crashed</string>
     <string name="error_no_version">No version!</string>
     <string name="error_show_more">Show more</string>
     <string name="error_show_less">Show less</string>
@@ -218,9 +218,13 @@
     <string name="preference_misc_description">Version list and libraries check</string>
     <string name="preference_experimental_description">Use things there with consideration, no support</string>
     <string name="preference_sustained_performance_title">Enable sustained performance mode</string>
-    <string name="preference_sustained_performance_description">Limit thermal throttling by limiting peak performance.</string>
+    <string name="preference_sustained_performance_description">Optional Android sustained mode may lower heat during longer sessions but can reduce peak FPS. It is off by default; enable it only if your device throttles.</string>
+    <string name="preference_share_instance_cache_title">Share assets and libraries between instances</string>
+    <string name="preference_share_instance_cache_description">Enabled by default to save storage. Instances keep separate versions, natives, mods, saves, config, logs and options. Turn off to store assets and libraries inside each instance.</string>
     <string name="preference_force_vsync_title">Force enable VSync</string>
     <string name="preference_force_vsync_description">Limit thermal throttling by limiting peak performance.</string>
+    <string name="preference_fps_first_mode_title">FPS-first mode (lower graphics)</string>
+    <string name="preference_fps_first_mode_description">More aggressive low-RAM preset: up to 480 px on the short edge, 4-chunk view and simulation distance, minimal particles, fast graphics, and VSync off for GL and Zink. Sustained-performance mode is off by default because it can reduce peak FPS. Video options are rewritten on each launch while enabled. Image quality is lower; actual FPS depends on the phone\'s GPU, game version, mods, display, and temperature. 200+ FPS cannot be guaranteed.</string>
     <string name="preference_force_english_title">Force language to English</string>
     <string name="preference_force_english_description">Allows you to see original strings, as intended by developers. Requires a restart.</string>
     <string name="preference_edit_controls_title">Edit custom controls</string>
@@ -251,7 +255,7 @@
     <string name="color_default_hex" translatable="false">FFFF0000</string>
     <string name="notif_channel_name">General</string>
     <string name="notif_channel_id" translatable="false">channel_id</string>
-    <string name="lazy_service_default_title">CS Launcher Foreground Service</string>
+    <string name="lazy_service_default_title">Lucifer Launcher Foreground Service</string>
     <string name="mcl_setting_veroption_installed">Installed</string>
     <string name="use_global_default">(Use global default)</string>
     <string name="default_control">Default controlmap</string>
@@ -481,7 +485,10 @@
     <string name="delete">Delete</string>
     <string name="ltw_render_distance_warning_msg">Your GPU is not capable of rendering above 7 render distance without Sodium or other similar mods. The render distance will be automatically reduced when you click "OK".</string>
     <string name="mcl_button_open_directory">Open game directory</string>
-    <string name="discord_invite" translatable="false">https://discord.gg/8WzF2RVAq4</string>
+    <string name="mcl_button_open_mods_folder">Open mods folder</string>
+    <string name="please_select_version">PLEASE SELECT A VERSION</string>
+    <string name="open_mods_folder_failed">Could not open the selected instance mods folder.</string>
+    <string name="discord_invite" translatable="false">https://discord.gg/crfVegmMH8</string>
     <string name="local_login_bad_username_title">Unsuitable username</string>
     <string name="local_login_bad_username_text">The username must be between 3–16 characters long, and must only contain latin letters, numbers 0–9 and underscores.</string>
     <string name="quick_setting_title">Quick settings</string>
@@ -510,7 +517,7 @@
     <string name="mg_renderer_summary_computeShaderext">May help with shaderpack glitches. Disable if not needed, can cause crashes.</string>
     <string name="mg_renderer_title_multidrawCompute">Use Compute Multidraw Emulation</string>
     <string name="mg_renderer_summary_multidrawCompute">Uses compute shaders for multidraw emulation</string>
-    <string name="app_short_name" translatable="false">CS LAUNCHER v2</string>
+    <string name="app_short_name" translatable="false">Lucifer Launcher</string>
     <string name="demo_versions_supported">Only Vanilla 1.3.1 and above are supported on demo accounts</string>
     <string name="demo_unsupported">Demo Profile not supported</string>
     <string name="change_account">Please change accounts to use this function</string>
@@ -563,13 +570,76 @@
     <string name="mod_deps_install_without">Install without deps</string>
 
     <!-- Launcher Landscape Layout Strings -->
-    <string name="cs_launcher_title">CS LAUNCHER v2</string>
+    <string name="lucifer_launcher_title">Lucifer Launcher</string>
     <string name="cs_launcher_subtitle">YOUR MINECRAFT. YOUR WAY.</string>
     <string name="cs_welcome_back_label">· WELCOME BACK,</string>
     <string name="cs_welcome_username">STEVE</string>
     <string name="cs_ready_subtitle">Ready to jump back into your adventure?</string>
     <string name="mcl_edit">Edit</string>
     <string name="mcl_tab_home">Home</string>
+    <string name="profiles_refreshed">Instances refreshed</string>
+    <string name="no_profile_selected">No instance selected</string>
+    <string name="choose_minecraft_version">Choose a Minecraft version to get started</string>
+    <string name="player_skin_preview">Full player skin preview</string>
+    <string name="vanilla">Vanilla</string>
+    <string name="unknown">Unknown</string>
+    <string name="ram_summary_gb">RAM %1$.1f GB</string>
+    <string name="lucifer_version">%1$s</string>
+    <string name="instance_count">%1$d INSTANCES</string>
+    <string name="instance_load_failed">Could not load instances. Please try again.</string>
+    <string name="instance_actions_description">Instance actions</string>
+    <string name="instance_action_open_folder">Open instance folder</string>
+    <string name="instance_action_import_legacy">Import a legacy version</string>
+    <string name="instance_action_duplicate">Duplicate instance</string>
+    <string name="instance_action_delete">Delete instance</string>
+    <string name="instance_open_folder_failed">Could not open this instance folder.</string>
+    <string name="instance_no_legacy_versions">No importable versions were found in the legacy .minecraft/versions folder.</string>
+    <string name="instance_import_choose_version">Choose a legacy version to copy</string>
+    <string name="instance_import_name_title">Name this instance</string>
+    <string name="instance_import_action">Import copy</string>
+    <string name="instance_import_failed">Could not import this legacy version. The original data was left unchanged.</string>
+    <string name="instance_import_complete">Legacy version copied into a new isolated instance.</string>
+    <string name="instance_duplicate_failed">Could not duplicate this instance.</string>
+    <string name="instance_duplicate_complete">Instance duplicated.</string>
+    <string name="instance_cannot_delete_last">At least one instance must remain.</string>
+    <string name="instance_delete_title">Delete instance?</string>
+    <string name="instance_delete_message">Delete %1$s and its local game files? This cannot be undone. Legacy source files are not deleted.</string>
+    <string name="instance_delete_failed">Could not delete this instance.</string>
+    <string name="instance_delete_complete">Instance deleted.</string>
+    <string name="nav_wallpapers">Wallpapers</string>
+    <string name="wallpaper_studio_title">WALLPAPER STUDIO</string>
+    <string name="wallpaper_studio_subtitle">20 Minecraft worlds · each one retunes the launcher colors</string>
+    <string name="wallpaper_palette_live">LIVE PALETTE</string>
+    <string name="wallpaper_palette_hint">Accents, glass borders, buttons and controls follow the selected scene.</string>
+    <string name="wallpaper_reset_default">Default look</string>
+    <string name="wallpaper_applied_toast">Wallpaper and matching colors applied</string>
+    <string name="wallpaper_custom_preset">A color preset is active. Choose a scene to sync the palette.</string>
+    <string name="wallpaper_selected">SELECTED</string>
+    <string name="wallpaper_card_description">Apply %1$s wallpaper and matching color palette</string>
+    <string name="wallpaper_card_selected_description">%1$s wallpaper and palette are selected</string>
+    <string-array name="lucifer_wallpaper_names" translatable="false">
+        <item>Ender Dragon</item>
+        <item>Snowy Spruce Village</item>
+        <item>Amethyst Geode</item>
+        <item>Desert Temple</item>
+        <item>Cherry Blossom Village</item>
+        <item>Emerald Jungle Ruins</item>
+        <item>Coral Reef</item>
+        <item>Nether Fortress</item>
+        <item>Golden Plains Village</item>
+        <item>Frozen Peaks</item>
+        <item>Crimson Forest</item>
+        <item>Lush Cave</item>
+        <item>Bamboo Grove</item>
+        <item>Badlands Mesa</item>
+        <item>Ancient City</item>
+        <item>Woodland Mansion</item>
+        <item>Wildflower Meadow</item>
+        <item>Mushroom Fields</item>
+        <item>Ocean Monument</item>
+        <item>The End Islands</item>
+        <item>Plain Black</item>
+    </string-array>
 
     <!-- Mod Detail Page Strings -->
     <string name="detail_select_version">Select a version</string>

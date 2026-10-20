@@ -35,7 +35,7 @@ public class MCOptionUtils {
 
     public static void load(){
         load(sOptionFolderPath == null
-                ? Tools.DIR_GAME_NEW
+                ? Tools.getGameDirPath(net.kdt.pojavlaunch.value.launcherprofiles.LauncherProfiles.getCurrentProfile()).getAbsolutePath()
                 : sOptionFolderPath);
     }
 
@@ -74,6 +74,29 @@ public class MCOptionUtils {
 
     public static void set(String key, String value) {
         sParameterMap.put(key,value);
+    }
+
+    /**
+     * Apply conservative Minecraft video options for the FPS-first launcher preset.
+     * Unknown keys are ignored by older Minecraft releases; the shared options are recognized
+     * across supported versions. The preset is intentionally reapplied only while the user has
+     * FPS-first mode enabled.
+     */
+    public static void applyFpsFirstPreset() {
+        set("renderDistance", "4");
+        set("simulationDistance", "4");
+        set("enableVsync", "false");
+        set("maxFps", "260");
+        set("graphicsMode", "fast");
+        set("fancyGraphics", "false");
+        set("entityShadows", "false");
+        set("entityDistanceScaling", "0.5");
+        set("mipmapLevels", "0");
+        set("particles", "2");
+        set("biomeBlendRadius", "0");
+        set("ao", "false");
+        set("fovEffectScale", "0.0");
+        set("distortionEffectScale", "0.0");
     }
 
     /** Set an array of String, instead of a simple value. Not supported on all options */

@@ -29,8 +29,11 @@ public class SelfReferencingFuture {
                 if (mMyFuture == null) mFutureLock.wait();
             }
             mFutureInterface.run(mMyFuture);
-        }catch (InterruptedException e) {
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
             Log.i("SelfReferencingFuture", "Interrupted while acquiring own Future");
+        } catch (RuntimeException e) {
+            Log.e("SelfReferencingFuture", "Background task failed unexpectedly", e);
         }
     }
 

@@ -13,7 +13,13 @@ public class MinecraftProfile {
 	public String created;
 	public String lastUsed;
 	public String icon;
+	/** Marks the original launcher profile so it stays pinned before created instances. */
+	public boolean isDefault;
 	public String lastVersionId;
+	/** Stable ID of this profile's isolated on-disk instance directory. */
+	public String instanceId;
+	/** Original legacy folder used only to keep import/rescan idempotent; never a launch path. */
+	public String legacySourcePath;
 	public String gameDir;
 	public String javaDir;
 	public String javaArgs;
@@ -39,7 +45,19 @@ public class MinecraftProfile {
 		defaultProfile.lastVersionId = "1.7.10";
 		defaultProfile.icon = "default";
 		defaultProfile.type = "custom";
+		defaultProfile.created = currentTimestamp();
+		defaultProfile.isDefault = true;
 		return defaultProfile;
+	}
+
+	/** Uses the profile JSON timestamp format for stable, persisted instance ordering. */
+	public static String currentTimestamp() {
+		return timestampFrom(System.currentTimeMillis());
+	}
+
+	public static String timestampFrom(long timestampMillis) {
+		return new java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX",
+				java.util.Locale.US).format(new java.util.Date(timestampMillis));
 	}
 
 	public MinecraftProfile(){}
@@ -50,7 +68,10 @@ public class MinecraftProfile {
 		created = profile.created;
 		lastUsed = profile.lastUsed;
 		icon = profile.icon;
+		isDefault = profile.isDefault;
 		lastVersionId = profile.lastVersionId;
+		instanceId = profile.instanceId;
+		legacySourcePath = profile.legacySourcePath;
 		gameDir = profile.gameDir;
 		javaDir = profile.javaDir;
 		javaArgs = profile.javaArgs;

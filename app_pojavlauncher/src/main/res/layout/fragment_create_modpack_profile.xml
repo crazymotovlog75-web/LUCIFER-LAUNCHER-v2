@@ -3,14 +3,14 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/bg_launcher_dark">
+    android:background="@android:color/transparent">
 
     <!-- ── Header ── -->
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/profile_header"
         android:layout_width="match_parent"
         android:layout_height="@dimen/_52sdp"
-        android:background="@color/bg_header"
+        android:background="?attr/luciferGlassHigh"
         app:layout_constraintTop_toTopOf="parent">
 
         <TextView
@@ -58,7 +58,7 @@
                     android:src="@drawable/ic_search"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:tint="@color/neon_green" />
+                    app:tint="?attr/luciferAccent" />
 
                 <TextView
                     android:layout_width="0dp"
@@ -117,7 +117,7 @@
                     android:src="@drawable/ic_folder"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:tint="@color/neon_green" />
+                    app:tint="?attr/luciferAccent" />
 
                 <TextView
                     android:layout_width="0dp"

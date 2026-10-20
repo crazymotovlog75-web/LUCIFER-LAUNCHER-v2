@@ -22,6 +22,7 @@ import net.kdt.pojavlaunch.utils.JREUtils;
 import java.io.File;
 import java.io.IOException;
 import java.util.LinkedHashMap;
+import java.util.List;
 
 public class LauncherPreferences {
     public static final String PREF_KEY_CURRENT_PROFILE = "currentProfile";
@@ -47,6 +48,8 @@ public class LauncherPreferences {
     public static int PREF_RAM_ALLOCATION;
     public static String PREF_DEFAULT_RUNTIME;
     public static boolean PREF_SUSTAINED_PERFORMANCE = false;
+    /** Global .minecraft asset/library cache is shared by instances unless the user opts out. */
+    public static boolean PREF_SHARE_ASSETS_LIBRARIES = true;
     public static boolean PREF_VIRTUAL_MOUSE_START = false;
     public static boolean PREF_ARC_CAPES = false;
     public static boolean PREF_USE_ALTERNATE_SURFACE = true;
@@ -61,6 +64,7 @@ public class LauncherPreferences {
     public static boolean PREF_GYRO_INVERT_Y = false;
 
     public static boolean PREF_FORCE_VSYNC = false;
+    public static boolean PREF_FPS_FIRST_MODE = false;
 
     public static boolean PREF_BUTTON_ALL_CAPS = true;
     public static boolean PREF_DUMP_SHADERS = false;
@@ -107,7 +111,12 @@ public class LauncherPreferences {
         PREF_DISABLE_SWAP_HAND = DEFAULT_PREF.getBoolean("disableDoubleTap", false);
         PREF_RAM_ALLOCATION = DEFAULT_PREF.getInt("allocation", findBestRAMAllocation(ctx));
         PREF_CUSTOM_JAVA_ARGS = DEFAULT_PREF.getString("javaArgs", "");
-        PREF_SUSTAINED_PERFORMANCE = DEFAULT_PREF.getBoolean("sustainedPerformance", isDevicePowerful);
+        PREF_FPS_FIRST_MODE = DEFAULT_PREF.getBoolean("fpsFirstMode", Tools.getTotalDeviceMemory(ctx) <= 4096);
+        // Sustained mode may lower peak clocks on some phones; keep it opt-in so FPS-first
+        // does not trade the user's peak frame rate for a steadier but lower ceiling.
+        PREF_SUSTAINED_PERFORMANCE = DEFAULT_PREF.getBoolean("sustainedPerformance", false);
+        PREF_SHARE_ASSETS_LIBRARIES = DEFAULT_PREF.getBoolean("shareAssetsLibraries", true);
+        Tools.setSharedAssetsAndLibraries(PREF_SHARE_ASSETS_LIBRARIES);
         PREF_VIRTUAL_MOUSE_START = DEFAULT_PREF.getBoolean("mouse_start", false);
         PREF_ARC_CAPES = DEFAULT_PREF.getBoolean("arc_capes",false);
         PREF_USE_ALTERNATE_SURFACE = DEFAULT_PREF.getBoolean("alternate_surface", isDevicePowerful);
@@ -120,6 +129,20 @@ public class LauncherPreferences {
         PREF_GYRO_INVERT_X = DEFAULT_PREF.getBoolean("gyroInvertX", false);
         PREF_GYRO_INVERT_Y = DEFAULT_PREF.getBoolean("gyroInvertY", false);
         PREF_FORCE_VSYNC = DEFAULT_PREF.getBoolean("force_vsync", isDevicePowerful);
+        if (PREF_FPS_FIRST_MODE) {
+            DisplayMetrics displayMetrics = ctx.getResources().getDisplayMetrics();
+            int shortSide = Math.min(displayMetrics.widthPixels, displayMetrics.heightPixels);
+            if (shortSide > 0) {
+                // Keep the render buffer near 480 px on the short edge for GPU-bound devices.
+                // Never upscale or go below the resolution slider's supported 25% floor.
+                float fpsResolutionScale = Math.max(0.25f, Math.min(1f, 480f / shortSide));
+                PREF_SCALE_FACTOR = Math.min(PREF_SCALE_FACTOR, fpsResolutionScale);
+            }
+            // SurfaceView avoids the extra app-window composition pass used by TextureView.
+            // Zink/Kopper is still switched back to TextureView in MinecraftGLSurface.
+            PREF_USE_ALTERNATE_SURFACE = true;
+            PREF_FORCE_VSYNC = false;
+        }
         PREF_BUTTON_ALL_CAPS = DEFAULT_PREF.getBoolean("buttonAllCaps", true);
         PREF_DUMP_SHADERS = DEFAULT_PREF.getBoolean("dump_shaders", false);
         PREF_DEADZONE_SCALE = ((float) DEFAULT_PREF.getInt("gamepad_deadzone_scale", 100))/100f;
@@ -129,6 +152,11 @@ public class LauncherPreferences {
         PREF_VERIFY_MANIFEST = DEFAULT_PREF.getBoolean("verifyManifest", true);
         PREF_SKIP_NOTIFICATION_PERMISSION_CHECK = DEFAULT_PREF.getBoolean(PREF_KEY_SKIP_NOTIFICATION_CHECK, false);
         PREF_VSYNC_IN_ZINK = DEFAULT_PREF.getBoolean("vsync_in_zink", true);
+        if (PREF_FPS_FIRST_MODE) {
+            // The Zink-specific override is separate from FORCE_VSYNC; disable both for the
+            // low-latency preset so one backend cannot silently keep frames locked to refresh.
+            PREF_VSYNC_IN_ZINK = false;
+        }
         PREF_FORCE_ENABLE_TOUCHCONTROLLER = DEFAULT_PREF.getBoolean("forceEnableTouchController", false);
         PREF_TOUCHCONTROLLER_VIBRATE_LENGTH = DEFAULT_PREF.getInt("touchControllerVibrateLength", 100);
         PREF_MOUSE_GRAB_FORCE = DEFAULT_PREF.getBoolean("always_grab_mouse", false);
@@ -144,12 +172,15 @@ public class LauncherPreferences {
         if(DEFAULT_PREF.contains("defaultRuntime")) {
             PREF_DEFAULT_RUNTIME = DEFAULT_PREF.getString("defaultRuntime","");
         }else{
-            if(MultiRTUtils.getInstalledRuntimes().isEmpty()) {
+            List<net.kdt.pojavlaunch.multirt.Runtime> installedRuntimes = MultiRTUtils.getInstalledRuntimes();
+            if(installedRuntimes.isEmpty()) {
+                // Compact APKs start without a bundled runtime. Keep loading all other settings;
+                // a compatible JRE is downloaded when a Minecraft version is first launched.
                 PREF_DEFAULT_RUNTIME = "";
-                return;
+            } else {
+                PREF_DEFAULT_RUNTIME = installedRuntimes.get(0).name;
+                LauncherPreferences.DEFAULT_PREF.edit().putString("defaultRuntime",LauncherPreferences.PREF_DEFAULT_RUNTIME).apply();
             }
-            PREF_DEFAULT_RUNTIME = MultiRTUtils.getInstalledRuntimes().get(0).name;
-            LauncherPreferences.DEFAULT_PREF.edit().putString("defaultRuntime",LauncherPreferences.PREF_DEFAULT_RUNTIME).apply();
         }
  
         PREF_CUSTOM_CURSOR_PATH = DEFAULT_PREF.getString("custom_cursor_path", null);
@@ -178,7 +209,11 @@ public class LauncherPreferences {
         if (is32BitsDevice()) return 696;
 
         if (deviceRam < 3064) return 936;
-        if (deviceRam < 4096) return 1144;
+        if (deviceRam < 4096) {
+            // A 4 GB-class 64-bit device can safely give Minecraft more breathing room than
+            // the old 1144 MB default, while reserving roughly 2 GB for Android and native memory.
+            return Math.min(1536, Math.max(1024, deviceRam - 2048));
+        }
         if (deviceRam < 6144) return 1536;
         return 2048; //Default RAM allocation for 64 bits
     }

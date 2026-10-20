@@ -59,6 +59,8 @@ import com.google.gson.GsonBuilder;
 import net.kdt.pojavlaunch.lifecycle.ContextExecutor;
 import net.kdt.pojavlaunch.lifecycle.ContextExecutorTask;
 import net.kdt.pojavlaunch.lifecycle.LifecycleAwareAlertDialog;
+import net.kdt.pojavlaunch.instances.InstanceManager;
+import net.kdt.pojavlaunch.instances.InstancePathResolver;
 import net.kdt.pojavlaunch.memory.MemoryHoleFinder;
 import net.kdt.pojavlaunch.memory.SelfMapsParser;
 import net.kdt.pojavlaunch.multirt.MultiRTUtils;
@@ -112,9 +114,10 @@ import java.util.Map;
 
 @SuppressWarnings("IOStreamConstructor")
 public final class Tools {
+    private static volatile InstanceManager sInstanceManager;
     public  static final float BYTE_TO_MB = 1024 * 1024;
     public static final Handler MAIN_HANDLER = new Handler(Looper.getMainLooper());
-    public static String APP_NAME = "CS Launcher";
+    public static String APP_NAME = "LUCIFER LAUNCHER";
 
     public static final Gson GLOBAL_GSON = new GsonBuilder().setPrettyPrinting().create();
 
@@ -218,6 +221,140 @@ public final class Tools {
         CTRLMAP_PATH = DIR_GAME_HOME + "/controlmap";
         CTRLDEF_FILE = DIR_GAME_HOME + "/controlmap/default.json";
         DIR_CURSORS = DIR_GAME_HOME + "/cursors";
+        sInstanceManager = new InstanceManager(new InstancePathResolver(
+                new File(DIR_GAME_HOME), LauncherPreferences.PREF_SHARE_ASSETS_LIBRARIES));
+    }
+
+    public static InstanceManager getInstanceManager() {
+        InstanceManager manager = sInstanceManager;
+        if (manager == null && DIR_GAME_HOME != null) {
+            synchronized (Tools.class) {
+                manager = sInstanceManager;
+                if (manager == null) {
+                    manager = new InstanceManager(new InstancePathResolver(
+                            new File(DIR_GAME_HOME), LauncherPreferences.PREF_SHARE_ASSETS_LIBRARIES));
+                    sInstanceManager = manager;
+                }
+            }
+        }
+        if (manager == null) throw new IllegalStateException("Minecraft storage has not been initialized");
+        return manager;
+    }
+
+    public static void setSharedAssetsAndLibraries(boolean shared) {
+        LauncherPreferences.PREF_SHARE_ASSETS_LIBRARIES = shared;
+        getInstanceManager().paths().setSharedAssetsAndLibraries(shared);
+    }
+
+    @Nullable
+    public static String getCurrentProfileKey() {
+        if (LauncherPreferences.DEFAULT_PREF == null) return null;
+        String key = LauncherPreferences.DEFAULT_PREF.getString(
+                LauncherPreferences.PREF_KEY_CURRENT_PROFILE, "");
+        return isValidString(key) ? key : null;
+    }
+
+    @Nullable
+    public static MinecraftProfile getCurrentMinecraftProfile() {
+        String key = getCurrentProfileKey();
+        if (key == null || LauncherProfiles.mainProfileJson == null ||
+                LauncherProfiles.mainProfileJson.profiles == null) return null;
+        return LauncherProfiles.mainProfileJson.profiles.get(key);
+    }
+
+    public static File getVersionRoot(@Nullable MinecraftProfile profile) {
+        if (profile != null && isValidString(profile.instanceId)) {
+            return getInstanceManager().paths().getVersionsRoot(profile.instanceId);
+        }
+        return new File(DIR_HOME_VERSION);
+    }
+
+    public static File getCurrentVersionRoot() {
+        return getVersionRoot(getCurrentMinecraftProfile());
+    }
+
+    public static File getVersionDirectory(@Nullable MinecraftProfile profile, String versionId) {
+        if (profile != null && isValidString(profile.instanceId)) {
+            return getInstanceManager().paths().getVersionDirectory(profile.instanceId, versionId);
+        }
+        return new File(getVersionRoot(profile), versionId);
+    }
+
+    public static File getVersionJsonFile(@Nullable MinecraftProfile profile, String versionId) {
+        if (profile != null && isValidString(profile.instanceId)) {
+            InstanceManager manager = getInstanceManager();
+            try {
+                manager.ensureVersionImported(profile.instanceId, versionId);
+            } catch (IOException error) {
+                Log.w(APP_NAME, "Could not import legacy version metadata " + versionId, error);
+            }
+            return manager.paths().getVersionJson(profile.instanceId, versionId);
+        }
+        return new File(new File(DIR_HOME_VERSION, versionId), versionId + ".json");
+    }
+
+    public static File getVersionJarFile(@Nullable MinecraftProfile profile, String versionId) {
+        if (profile != null && isValidString(profile.instanceId)) {
+            InstanceManager manager = getInstanceManager();
+            try {
+                manager.ensureVersionImported(profile.instanceId, versionId);
+            } catch (IOException error) {
+                Log.w(APP_NAME, "Could not import legacy version jar " + versionId, error);
+            }
+            return manager.paths().getVersionJar(profile.instanceId, versionId);
+        }
+        return new File(new File(DIR_HOME_VERSION, versionId), versionId + ".jar");
+    }
+
+    public static File getLibrariesRoot(@Nullable MinecraftProfile profile) {
+        if (profile != null && isValidString(profile.instanceId)) {
+            return getInstanceManager().paths().getLibrariesRoot(profile.instanceId);
+        }
+        return new File(DIR_HOME_LIBRARY);
+    }
+
+    public static File getAssetsRoot(@Nullable MinecraftProfile profile) {
+        if (profile != null && isValidString(profile.instanceId)) {
+            return getInstanceManager().paths().getAssetsRoot(profile.instanceId);
+        }
+        return new File(ASSETS_PATH);
+    }
+
+    public static File getObsoleteResourcesRoot(@Nullable MinecraftProfile profile) {
+        return profile != null && isValidString(profile.instanceId)
+                ? new File(getGameDirPath(profile), "resources")
+                : new File(OBSOLETE_RESOURCES_PATH);
+    }
+
+    public static File getNativesRoot(@Nullable MinecraftProfile profile, String versionId) {
+        if (profile != null && isValidString(profile.instanceId)) {
+            return getInstanceManager().paths().getNativesRoot(profile.instanceId, versionId);
+        }
+        return new File(DIR_CACHE, "natives/" + versionId);
+    }
+
+    public static File getCrashReportsRoot(@Nullable MinecraftProfile profile) {
+        if (profile != null && isValidString(profile.instanceId)) {
+            return getInstanceManager().paths().getCrashReportsRoot(profile.instanceId);
+        }
+        return new File(DIR_HOME_CRASH);
+    }
+
+    public static Map<String, String> getInstanceLaunchVariables(@Nullable MinecraftProfile profile,
+                                                                  String versionId) {
+        if (profile != null && isValidString(profile.instanceId)) {
+            return getInstanceManager().paths().getLaunchArgumentVariables(profile.instanceId, versionId);
+        }
+        Map<String, String> variables = new ArrayMap<>();
+        variables.put("game_directory", profile != null
+                ? getGameDirPath(profile).getAbsolutePath() : new File(DIR_GAME_NEW).getAbsolutePath());
+        variables.put("assets_root", getAssetsRoot(profile).getAbsolutePath());
+        variables.put("library_directory", getLibrariesRoot(profile).getAbsolutePath());
+        variables.put("natives_directory", getNativesRoot(profile, versionId).getAbsolutePath());
+        variables.put("client_jar", getVersionJarFile(profile, versionId).getAbsolutePath());
+        variables.put("version_json", getVersionJsonFile(profile, versionId).getAbsolutePath());
+        variables.put("version_name", versionId);
+        return variables;
     }
 
     @SuppressLint("PrivateApi")
@@ -394,19 +531,22 @@ public final class Tools {
         }
 
 
+        JMinecraftVersionList.Version versionInfo = Tools.getVersionInfo(versionId, false, minecraftProfile);
+        // The compact APK does not bundle a JRE. Ensure a compatible one is installed before
+        // pickRuntime runs, including for already-installed Minecraft versions.
+        if (!NewJREUtil.installNewJreIfNeeded(activity, versionInfo)) return;
         Runtime runtime = MultiRTUtils.forceReread(Tools.pickRuntime(minecraftProfile, versionJavaRequirement));
-        JMinecraftVersionList.Version versionInfo = Tools.getVersionInfo(versionId);
 
 
         // Pre-process specific files
         disableSplash(gamedir);
-        String[] launchArgs = getMinecraftClientArgs(minecraftAccount, versionInfo, gamedir);
+        String[] launchArgs = getMinecraftClientArgs(minecraftAccount, versionInfo, gamedir, minecraftProfile);
 
         // Select the appropriate openGL version
         OldVersionsUtils.selectOpenGlVersion(versionInfo);
 
 
-        String launchClasspath = generateLaunchClasspath(versionInfo, versionId);
+        String launchClasspath = generateLaunchClasspath(versionInfo, versionId, minecraftProfile);
 
         List<String> javaArgList = new ArrayList<>();
 
@@ -415,12 +555,12 @@ public final class Tools {
         if (versionInfo.logging != null) {
             String configFile = Tools.DIR_DATA + "/security/" + versionInfo.logging.client.file.id.replace("client", "log4j-rce-patch");
             if (!new File(configFile).exists()) {
-                configFile = Tools.DIR_GAME_NEW + "/" + versionInfo.logging.client.file.id;
+                configFile = new File(gamedir, versionInfo.logging.client.file.id).getAbsolutePath();
             }
             javaArgList.add("-Dlog4j.configurationFile=" + configFile);
         }
 
-        File versionSpecificNativesDir = new File(Tools.DIR_CACHE, "natives/"+versionId);
+        File versionSpecificNativesDir = Tools.getNativesRoot(minecraftProfile, versionId);
         StringBuilder javaLibraryPath = new StringBuilder();
 
         // Add which lwjgl natives to use into classpath
@@ -435,7 +575,7 @@ public final class Tools {
         }
         javaArgList.add("-Djava.library.path="+javaLibraryPath);
 
-        javaArgList.addAll(Arrays.asList(getMinecraftJVMArgs(versionId, gamedir)));
+        javaArgList.addAll(Arrays.asList(getMinecraftJVMArgs(versionId, gamedir, minecraftProfile)));
         javaArgList.add("-cp"); javaArgList.add(launchClasspath);
 
         // Some modloaders (babric) don't fully respect java.libary.path and only use the native lib dir
@@ -599,13 +739,10 @@ public final class Tools {
     }
 
     public static File getGameDirPath(@NonNull MinecraftProfile minecraftProfile){
-        if(minecraftProfile.gameDir != null){
-            if(minecraftProfile.gameDir.startsWith(Tools.LAUNCHERPROFILES_RTPREFIX))
-                return new File(minecraftProfile.gameDir.replace(Tools.LAUNCHERPROFILES_RTPREFIX,Tools.DIR_GAME_HOME+"/"));
-            else
-                return new File(Tools.DIR_GAME_HOME,minecraftProfile.gameDir);
+        if (isValidString(minecraftProfile.instanceId)) {
+            return getInstanceManager().paths().getGameDirectory(minecraftProfile.instanceId);
         }
-        return new File(Tools.DIR_GAME_NEW);
+        return getInstanceManager().paths().resolveLegacyGameDirectory(minecraftProfile.gameDir);
     }
 
     public static void buildNotificationChannel(Context context){
@@ -697,15 +834,21 @@ public final class Tools {
     }
 
     public static String[] getMinecraftJVMArgs(String versionName, File gameDir) {
-        JMinecraftVersionList.Version versionInfo = Tools.getVersionInfo(versionName, true);
+        return getMinecraftJVMArgs(versionName, gameDir, getCurrentMinecraftProfile());
+    }
+
+    public static String[] getMinecraftJVMArgs(String versionName, File gameDir,
+                                                @Nullable MinecraftProfile instanceProfile) {
+        JMinecraftVersionList.Version versionInfo = Tools.getVersionInfo(versionName, true, instanceProfile);
         if (versionInfo.arguments == null || versionInfo.arguments.jvm == null)
             return new String[0];
 
         Map<String, String> varArgMap = new ArrayMap<>();
+        Map<String, String> instanceVariables = getInstanceLaunchVariables(instanceProfile, versionName);
         varArgMap.put("classpath_separator", ":");
-        varArgMap.put("library_directory", DIR_HOME_LIBRARY);
+        varArgMap.put("library_directory", instanceVariables.get("library_directory"));
         varArgMap.put("version_name", versionInfo.id);
-        varArgMap.put("natives_directory", Tools.DIR_CACHE.getAbsolutePath());
+        varArgMap.put("natives_directory", instanceVariables.get("natives_directory"));
 
         List<String> minecraftArgs = new ArrayList<>();
         for (Object arg : versionInfo.arguments.jvm) {
@@ -743,7 +886,14 @@ public final class Tools {
         return JSONUtils.insertJSONValueList(minecraftArgs.toArray(new String[0]), varArgMap);
     }
 
-    public static String[] getMinecraftClientArgs(MinecraftAccount profile, JMinecraftVersionList.Version versionInfo, File gameDir) {
+    public static String[] getMinecraftClientArgs(MinecraftAccount account,
+                                                  JMinecraftVersionList.Version versionInfo, File gameDir) {
+        return getMinecraftClientArgs(account, versionInfo, gameDir, getCurrentMinecraftProfile());
+    }
+
+    public static String[] getMinecraftClientArgs(MinecraftAccount profile,
+                                                  JMinecraftVersionList.Version versionInfo, File gameDir,
+                                                  @Nullable MinecraftProfile instanceProfile) {
         String username = profile.username;
         String versionName = versionInfo.id;
         if (versionInfo.inheritsFrom != null) {
@@ -770,10 +920,12 @@ public final class Tools {
         varArgMap.put("auth_player_name", username);
         varArgMap.put("auth_uuid", profile.profileId.replace("-", ""));
         varArgMap.put("auth_xuid", profile.xuid);
-        varArgMap.put("assets_root", Tools.ASSETS_PATH);
+        Map<String, String> instanceVariables = getInstanceLaunchVariables(instanceProfile, versionInfo.id);
+        String assetsRoot = instanceVariables.get("assets_root");
+        varArgMap.put("assets_root", assetsRoot);
         varArgMap.put("assets_index_name", versionInfo.assets);
-        varArgMap.put("game_assets", Tools.ASSETS_PATH);
-        varArgMap.put("game_directory", gameDir.getAbsolutePath());
+        varArgMap.put("game_assets", assetsRoot);
+        varArgMap.put("game_directory", instanceVariables.get("game_directory"));
         varArgMap.put("user_properties", "{}");
         varArgMap.put("user_type", userType);
         varArgMap.put("version_name", versionName);
@@ -789,13 +941,21 @@ public final class Tools {
             }
         }
 
-        return JSONUtils.insertJSONValueList(
+        String[] resolvedArgs = JSONUtils.insertJSONValueList(
                 splitAndFilterEmpty(
                         versionInfo.minecraftArguments == null ?
                                 fromStringArray(minecraftArgs.toArray(new String[0])):
                                 versionInfo.minecraftArguments
                 ), varArgMap
         );
+
+        // Consume the one-shot server destination once. Build the argument list directly so
+        // address characters never pass through a shell-string parser.
+        String quickPlayAddress = QuickPlayManager.consumePendingAddress();
+        if (quickPlayAddress == null) return resolvedArgs;
+        List<String> argsWithServer = new ArrayList<>(Arrays.asList(resolvedArgs));
+        QuickPlayManager.appendLaunchArguments(argsWithServer, versionInfo, quickPlayAddress);
+        return argsWithServer.toArray(new String[0]);
     }
 
     public static String fromStringArray(String[] strArr) {
@@ -828,9 +988,14 @@ public final class Tools {
         return libInfos[0].replaceAll("\\.", "/") + "/" + libInfos[1] + "/" + libInfos[2] + "/" + libInfos[1] + "-" + libInfos[2] + (libInfos.length == 4 ? "-" + libInfos[3] : "") + ".jar";
     }
 
-    private static String getLibClasspath(JMinecraftVersionList.Version info){
+    private static String getLibClasspath(JMinecraftVersionList.Version info) {
+        return getLibClasspath(info, getCurrentMinecraftProfile());
+    }
+
+    private static String getLibClasspath(JMinecraftVersionList.Version info,
+                                          @Nullable MinecraftProfile instanceProfile) {
         StringBuilder libClasspath = new StringBuilder();
-        String[] classpath = generateLibClasspath(info);
+        String[] classpath = generateLibClasspath(info, instanceProfile);
         for (String jarFile : classpath) {
             libClasspath.append(jarFile).append(":");
         }
@@ -840,11 +1005,21 @@ public final class Tools {
     }
 
     public static String getClientClasspath(String version) {
-        return DIR_HOME_VERSION + "/" + version + "/" + version + ".jar";
+        return getClientClasspath(version, getCurrentMinecraftProfile());
     }
+
+    public static String getClientClasspath(String version, @Nullable MinecraftProfile instanceProfile) {
+        return getInstanceLaunchVariables(instanceProfile, version).get("client_jar");
+    }
+
     public static String generateLaunchClasspath(JMinecraftVersionList.Version info, String actualname) {
+        return generateLaunchClasspath(info, actualname, getCurrentMinecraftProfile());
+    }
+
+    public static String generateLaunchClasspath(JMinecraftVersionList.Version info, String actualname,
+                                                 @Nullable MinecraftProfile instanceProfile) {
         StringBuilder launchClasspath = new StringBuilder(); //versnDir + "/" + version + "/" + version + ".jar:";
-        String libClasspath = getLibClasspath(info); // Sets lwjglVersion, janky, but we can't get it any simpler
+        String libClasspath = getLibClasspath(info, instanceProfile); // Sets lwjglVersion, janky, but we can't get it any simpler
         String internalLwjglVersion = iLwjglVersion >= 341 ? "3.4.1" : "3.3.3";
         File lwjgl3Folder = new File(Tools.DIR_GAME_HOME, "lwjgl3/"+internalLwjglVersion);
         String lwjglCore = lwjgl3Folder.getAbsolutePath() + "/lwjgl.jar";
@@ -869,7 +1044,7 @@ public final class Tools {
         } else Log.e("generateLaunchClasspath", "lwjgl modules are missing from components!");
 
         launchClasspath.append(libClasspath).append(":");
-        launchClasspath.append(getClientClasspath(actualname));
+        launchClasspath.append(getClientClasspath(actualname, instanceProfile));
         // Anything LWJGL2 gets LWJGLX
         if (iLwjglVersion <= 299) launchClasspath.append(":").append(lwjglxFile);
         return launchClasspath.toString();
@@ -1095,6 +1270,17 @@ public final class Tools {
         act.startActivity(browserIntent);
     }
 
+    /** Prefer the Discord app for invite links, and fall back to the web invite when it is absent. */
+    public static void openDiscordInvite(Activity act, String inviteUrl) {
+        Intent discordIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(inviteUrl));
+        discordIntent.setPackage("com.discord");
+        try {
+            act.startActivity(discordIntent);
+        } catch (android.content.ActivityNotFoundException notInstalled) {
+            openURL(act, inviteUrl);
+        }
+    }
+
     private static boolean checkRules(JMinecraftVersionList.Arguments.ArgValue.ArgRules[] rules) {
         if(rules == null) return true; // always allow
         for (JMinecraftVersionList.Arguments.ArgValue.ArgRules rule : rules) {
@@ -1152,7 +1338,13 @@ public final class Tools {
     }
 
     public static String[] generateLibClasspath(JMinecraftVersionList.Version info) {
+        return generateLibClasspath(info, getCurrentMinecraftProfile());
+    }
+
+    public static String[] generateLibClasspath(JMinecraftVersionList.Version info,
+                                                 @Nullable MinecraftProfile instanceProfile) {
         List<String> libDir = new ArrayList<>();
+        String libraryRoot = getLibrariesRoot(instanceProfile).getAbsolutePath();
         for (DependentLibrary libItem: info.libraries) {
             // Look for LWJGL version
             int libItemVersionStringOffset = 0;
@@ -1176,7 +1368,7 @@ public final class Tools {
                 }
             }
 
-            String libPath = Tools.DIR_HOME_LIBRARY + "/" + artifactToPath(libItem);
+            String libPath = new File(libraryRoot, artifactToPath(libItem)).getAbsolutePath();
             if (!FileUtils.exists(libPath)) {
                 Log.d(APP_NAME, "Ignored non-exists file: " + libPath);
                 continue;
@@ -1185,9 +1377,9 @@ public final class Tools {
             libDir.add(libPath);
             // Mitigation: Babric doesn't use asm-all for some reason so it does a classpath conflict
             if (libItem.name.startsWith("org.ow2.asm:asm") && !libItem.name.startsWith("org.ow2.asm:asm-all:")){
-                libDir.remove(Tools.DIR_HOME_LIBRARY + "/" + artifactToPath(new DependentLibrary(){{
+                libDir.remove(new File(libraryRoot, artifactToPath(new DependentLibrary(){{
                     name = "org.ow2.asm:asm-all:5.0.4";
-                }} ));
+                }} )).getAbsolutePath());
             }
         }
         // Scary message, but we aren't getting LWJGL 1.9.9 or 3.10.100 any time soon
@@ -1203,15 +1395,29 @@ public final class Tools {
 
     @SuppressWarnings({"unchecked", "rawtypes"})
     public static JMinecraftVersionList.Version getVersionInfo(String versionName, boolean skipInheriting) {
+        return getVersionInfo(versionName, skipInheriting, getCurrentMinecraftProfile());
+    }
+
+    public static JMinecraftVersionList.Version getVersionInfo(String versionName, boolean skipInheriting,
+                                                                 @Nullable MinecraftProfile instanceProfile) {
         try {
-            JMinecraftVersionList.Version customVer = Tools.GLOBAL_GSON.fromJson(read(DIR_HOME_VERSION + "/" + versionName + "/" + versionName + ".json"), JMinecraftVersionList.Version.class);
+            File versionJson = getVersionJsonFile(instanceProfile, versionName);
+            if (!versionJson.isFile() && instanceProfile != null && isValidString(instanceProfile.instanceId)) {
+                File legacyJson = new File(new File(DIR_HOME_VERSION, versionName), versionName + ".json");
+                if (legacyJson.isFile()) {
+                    getInstanceManager().ensureVersionImported(instanceProfile.instanceId, versionName);
+                    versionJson = getVersionJsonFile(instanceProfile, versionName);
+                }
+            }
+            JMinecraftVersionList.Version customVer = Tools.GLOBAL_GSON.fromJson(read(versionJson.getAbsolutePath()), JMinecraftVersionList.Version.class);
             if (skipInheriting || customVer.inheritsFrom == null || customVer.inheritsFrom.equals(customVer.id)) {
                 preProcessLibraries(customVer.libraries);
             } else {
                 JMinecraftVersionList.Version inheritsVer;
                 //If it won't download, just search for it
                 try{
-                    inheritsVer = Tools.GLOBAL_GSON.fromJson(read(DIR_HOME_VERSION + "/" + customVer.inheritsFrom + "/" + customVer.inheritsFrom + ".json"), JMinecraftVersionList.Version.class);
+                    File inheritedJson = getVersionJsonFile(instanceProfile, customVer.inheritsFrom);
+                    inheritsVer = Tools.GLOBAL_GSON.fromJson(read(inheritedJson.getAbsolutePath()), JMinecraftVersionList.Version.class);
                 }catch(IOException e) {
                     throw new RuntimeException("Can't find the source version for "+ versionName +" (req version="+customVer.inheritsFrom+")");
                 }
@@ -1316,9 +1522,9 @@ public final class Tools {
     }
 
     public static String read(InputStream is) throws IOException {
-        String readResult = IOUtils.toString(is, StandardCharsets.UTF_8);
-        is.close();
-        return readResult;
+        try (InputStream input = is) {
+            return IOUtils.toString(input, StandardCharsets.UTF_8);
+        }
     }
 
     public static String read(String path) throws IOException {
@@ -1592,7 +1798,10 @@ public final class Tools {
 
     /** Triggers the share intent chooser, with the latestlog file attached to it */
     public static void shareLog(Context context){
-        openPath(context, new File(Tools.DIR_GAME_HOME, "latestlog.txt"), true);
+        MinecraftProfile profile = getCurrentMinecraftProfile();
+        File logFile = profile != null ? new File(getGameDirPath(profile), "latestlog.txt")
+                : new File(Tools.DIR_GAME_HOME, "latestlog.txt");
+        openPath(context, logFile, true);
     }
 
     /**
@@ -1811,7 +2020,7 @@ public final class Tools {
         }
         String currentMCVersion = selected.lastVersionId;
         String vanillaVersion = currentMCVersion;
-        File providedJsonFile = new File(Tools.DIR_HOME_VERSION + "/" + currentMCVersion + "/" + currentMCVersion + ".json");
+        File providedJsonFile = Tools.getVersionJsonFile(selected, currentMCVersion);
         JMinecraftVersionList.Version providedJsonVersion = null;
         try {
             providedJsonVersion = Tools.GLOBAL_GSON.fromJson(Tools.read(providedJsonFile.getAbsolutePath()), JMinecraftVersionList.Version.class);

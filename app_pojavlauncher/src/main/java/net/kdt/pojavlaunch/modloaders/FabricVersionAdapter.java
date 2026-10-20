@@ -46,6 +46,7 @@ public class FabricVersionAdapter extends ArrayAdapter<FabricVersion> {
             text1.setText(item.version);
         }
 
+        boolean selected = position == mSelectedPosition;
         if (mShowBadges) {
             TextView badge = view.findViewById(R.id.fabric_stable_badge);
             if (badge != null) {
@@ -53,12 +54,18 @@ public class FabricVersionAdapter extends ArrayAdapter<FabricVersion> {
             }
             TextView subtitle = view.findViewById(R.id.fabric_version_subtitle);
             if (subtitle != null) {
-                subtitle.setText(item.stable ? "Recommended" : "Preview");
-                subtitle.setTextColor(item.stable ? 0xFF8BFF8B : 0xFF9CA3AF);
+                subtitle.setText(selected ? item.version + " selected"
+                        : item.stable ? "Recommended" : "Preview");
+                subtitle.setTextColor(selected ? 0xFF72F28B
+                        : item.stable ? 0xFF8BFF8B : 0xFF9CA3AF);
             }
         }
 
-        view.setSelected(position == mSelectedPosition);
+        // The non-badged game-version row draws its selector on an inner surface; loader rows
+        // draw it on the root. Update both so the selected outline is reliable in either list.
+        View selectionSurface = view.findViewById(R.id.fabric_version_surface);
+        if (selectionSurface != null) selectionSurface.setSelected(selected);
+        view.setSelected(selected);
 
         return view;
     }

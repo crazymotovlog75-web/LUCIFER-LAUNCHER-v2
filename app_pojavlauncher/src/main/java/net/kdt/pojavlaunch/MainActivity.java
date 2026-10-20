@@ -144,6 +144,11 @@ public class MainActivity extends BaseActivity implements ControlButtonMenuListe
 
         String gameDirPath = Tools.getGameDirPath(minecraftProfile).getAbsolutePath();
         MCOptionUtils.load(gameDirPath);
+        if (LauncherPreferences.PREF_FPS_FIRST_MODE) {
+            MCOptionUtils.applyFpsFirstPreset();
+            MCOptionUtils.save();
+            Log.i("FPSFirst", "Applied FPS-first Minecraft video preset to " + gameDirPath);
+        }
         if (Tools.hasTouchController(new File(gameDirPath)) || LauncherPreferences.PREF_FORCE_ENABLE_TOUCHCONTROLLER) {
             TouchControllerUtils.initialize(this);
         }
@@ -221,7 +226,7 @@ public class MainActivity extends BaseActivity implements ControlButtonMenuListe
         drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
 
         try {
-            File latestLogFile = new File(Tools.DIR_GAME_HOME, "latestlog.txt");
+            File latestLogFile = new File(Tools.getGameDirPath(minecraftProfile), "latestlog.txt");
             if(!latestLogFile.exists() && !latestLogFile.createNewFile())
                 throw new IOException("Failed to create a new log file");
             Logger.begin(latestLogFile.getAbsolutePath());
@@ -244,7 +249,7 @@ public class MainActivity extends BaseActivity implements ControlButtonMenuListe
             String version = getIntent().getStringExtra(INTENT_MINECRAFT_VERSION);
             version = version == null ? minecraftProfile.lastVersionId : version;
 
-            JMinecraftVersionList.Version mVersionInfo = Tools.getVersionInfo(version);
+            JMinecraftVersionList.Version mVersionInfo = Tools.getVersionInfo(version, false, minecraftProfile);
             isInputStackCall = mVersionInfo.arguments != null;
             CallbackBridge.nativeSetUseInputStackQueue(isInputStackCall);
 
@@ -446,7 +451,7 @@ public class MainActivity extends BaseActivity implements ControlButtonMenuListe
         String assetVersion;
         try {
             if (version.inheritsFrom != null) { // We are almost definitely modded if this runs
-                File vanillaJsonFile = new File(Tools.DIR_HOME_VERSION + "/" + version.inheritsFrom + "/" + version.inheritsFrom + ".json");
+                File vanillaJsonFile = Tools.getVersionJsonFile(minecraftProfile, version.inheritsFrom);
                 JMinecraftVersionList.Version vanillaJson;
                 try { // Get the vanilla json from modded instance
                     vanillaJson = Tools.GLOBAL_GSON.fromJson(Tools.read(vanillaJsonFile.getAbsolutePath()), JMinecraftVersionList.Version.class);

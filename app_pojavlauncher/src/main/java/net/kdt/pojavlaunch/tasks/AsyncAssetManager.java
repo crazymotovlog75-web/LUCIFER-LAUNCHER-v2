@@ -15,6 +15,8 @@ import com.kdt.mcgui.ProgressLayout;
 import net.kdt.pojavlaunch.Architecture;
 import net.kdt.pojavlaunch.Tools;
 import net.kdt.pojavlaunch.multirt.MultiRTUtils;
+import net.kdt.pojavlaunch.value.launcherprofiles.LauncherProfiles;
+import net.kdt.pojavlaunch.value.launcherprofiles.MinecraftProfile;
 
 import org.apache.commons.io.FileUtils;
 
@@ -39,7 +41,7 @@ public class AsyncAssetManager {
         try {
             rt_version = Tools.read(am.open("components/jre/version"));
         } catch (IOException e) {
-            Log.e("JREAuto", "JRE was not included on this APK.", e);
+            Log.i("JREAuto", "No bundled Java 8 runtime; a compatible runtime will be installed on demand.");
         }
         String exactJREName = MultiRTUtils.getExactJreName(8);
         if(current_rt_version == null && exactJREName != null && !exactJREName.equals("Internal")/*this clause is for when the internal runtime is goofed*/) return;
@@ -67,11 +69,15 @@ public class AsyncAssetManager {
         ProgressLayout.setProgress(ProgressLayout.EXTRACT_SINGLE_FILES, 0);
         sExecutorService.execute(() -> {
             try {
-                Tools.copyAssetFile(ctx, "options.txt", Tools.DIR_GAME_NEW, false);
-                Tools.copyAssetFile(ctx, "default.json", Tools.CTRLMAP_PATH, false);
-
+                // The launcher profile catalog remains at .minecraft for compatibility. Load it
+                // before seeding options so the game-specific file lands in the selected instance.
                 Tools.copyAssetFile(ctx, "launcher_profiles.json", Tools.DIR_GAME_NEW, false);
-                Tools.copyAssetFile(ctx,"resolv.conf",Tools.DIR_DATA, false);
+                LauncherProfiles.load();
+                MinecraftProfile selectedProfile = LauncherProfiles.getCurrentProfile();
+                File selectedGameDirectory = Tools.getGameDirPath(selectedProfile);
+                Tools.copyAssetFile(ctx, "options.txt", selectedGameDirectory.getAbsolutePath(), false);
+                Tools.copyAssetFile(ctx, "default.json", Tools.CTRLMAP_PATH, false);
+                Tools.copyAssetFile(ctx, "resolv.conf", Tools.DIR_DATA, false);
             } catch (IOException e) {
                 Log.e("AsyncAssetManager", "Failed to unpack critical components !");
             }

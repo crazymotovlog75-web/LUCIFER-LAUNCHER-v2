@@ -8,6 +8,9 @@ import com.kdt.mcgui.ProgressLayout;
 
 import net.kdt.pojavlaunch.R;
 import net.kdt.pojavlaunch.Tools;
+import net.kdt.pojavlaunch.instances.InstanceManager;
+import net.kdt.pojavlaunch.instances.InstancePathResolver;
+import net.kdt.pojavlaunch.prefs.LauncherPreferences;
 import net.kdt.pojavlaunch.progresskeeper.ProgressKeeper;
 import net.kdt.pojavlaunch.utils.DownloadUtils;
 import net.kdt.pojavlaunch.utils.FileUtils;
@@ -61,39 +64,91 @@ public class BTADownloadTask implements Runnable {
         return null;
     }
 
-    private void createJson(String btaVersionId) throws IOException {
+    private void createJson(String btaVersionId, MinecraftProfile profile) throws IOException {
         String btaJson = String.format(BASE_JSON, mBtaVersion.versionName, mBtaVersion.downloadUrl, btaVersionId);
-        File jsonDir = new File(Tools.DIR_HOME_VERSION, btaVersionId);
-        File jsonFile = new File(jsonDir, btaVersionId+".json");
+        File jsonDir = Tools.getVersionDirectory(profile, btaVersionId);
+        File jsonFile = new File(jsonDir, btaVersionId + ".json");
         FileUtils.ensureDirectory(jsonDir);
         Tools.write(jsonFile.getAbsolutePath(), btaJson);
     }
 
-    // BTA doesn't have SHA1 checksums in its repositories, so the user may try to reinstall it
-    // if it didn't work due to a broken download. So, for reinstalls like that to work,
-    // we need to delete the old client jar to force the download of a new one.
-    private void removeOldClient() throws IOException{
-        File btaClientPath = new File(Tools.DIR_HOME_LIBRARY, String.format("bta-client/bta-client-%1$s.jar", mBtaVersion.versionName));
-        if(btaClientPath.exists() && !btaClientPath.delete())
-            throw new IOException("Failed to delete old client jar");
+    // BTA does not publish SHA1 hashes, so clear only its client artifact to force a fresh download.
+    private void removeOldClient(MinecraftProfile profile) throws IOException {
+        File btaClientPath = new File(Tools.getLibrariesRoot(profile),
+                String.format("bta-client/bta-client-%1$s.jar", mBtaVersion.versionName));
+        if (btaClientPath.exists() && !btaClientPath.delete()) {
+            throw new IOException("Failed to delete old BTA client jar");
+        }
     }
 
-    private void createProfile(String btaVersionId) throws IOException {
+    private MinecraftProfile getOrCreateProfile(String btaVersionId) throws IOException {
         LauncherProfiles.load();
-        MinecraftProfile btaProfile = new MinecraftProfile();
+        for (java.util.Map.Entry<String, MinecraftProfile> entry :
+                LauncherProfiles.mainProfileJson.profiles.entrySet()) {
+            MinecraftProfile profile = entry.getValue();
+            if (profile != null && "Better than Adventure!".equalsIgnoreCase(profile.name)) {
+                profile.lastVersionId = btaVersionId;
+                profile.type = "modpack";
+                if (profile.instanceId == null || profile.instanceId.trim().isEmpty()) {
+                    profile.instanceId = InstancePathResolver.instanceIdForProfileKey(entry.getKey());
+                }
+                profile.gameDir = InstancePathResolver.gameDirectoryValue(profile.instanceId);
+                LauncherPreferences.DEFAULT_PREF.edit()
+                        .putString(LauncherPreferences.PREF_KEY_CURRENT_PROFILE, entry.getKey())
+                        .apply();
+                return profile;
+            }
+        }
+
+        String profileKey = LauncherProfiles.getFreeProfileKey();
+        String instanceId = InstancePathResolver.instanceIdForProfileKey(profileKey);
+        MinecraftProfile selectedProfile = LauncherProfiles.getCurrentProfile();
+        MinecraftProfile btaProfile = new MinecraftProfile(selectedProfile);
         btaProfile.lastVersionId = btaVersionId;
         btaProfile.name = "Better than Adventure!";
-        // Allows for smooth upgrades
-        btaProfile.gameDir = "./custom_instances/better_than_adventure";
+        btaProfile.type = "modpack";
         btaProfile.icon = tryDownloadIcon();
-        LauncherProfiles.insertMinecraftProfile(btaProfile);
+        btaProfile.created = MinecraftProfile.currentTimestamp();
+        btaProfile.lastUsed = null;
+        btaProfile.isDefault = false;
+        btaProfile.instanceId = instanceId;
+        btaProfile.gameDir = InstancePathResolver.gameDirectoryValue(instanceId);
+
+        InstanceManager manager = Tools.getInstanceManager();
+        File legacyBtaDirectory = manager.paths().resolveLegacyGameDirectory(
+                "./custom_instances/better_than_adventure");
+        if (legacyBtaDirectory.isDirectory()) {
+            manager.importLegacyInstance(instanceId, profileKey, btaProfile.name,
+                    btaVersionId, legacyBtaDirectory);
+        } else {
+            manager.duplicateInstance(selectedProfile.instanceId, instanceId, profileKey,
+                    btaProfile.name, btaVersionId);
+        }
+        LauncherProfiles.mainProfileJson.profiles.put(profileKey, btaProfile);
         LauncherProfiles.write();
+        LauncherPreferences.DEFAULT_PREF.edit()
+                .putString(LauncherPreferences.PREF_KEY_CURRENT_PROFILE, profileKey)
+                .apply();
+        return btaProfile;
     }
 
     public void runCatching() throws IOException {
-        removeOldClient();
-        String btaVersionId = "bta-"+mBtaVersion.versionName;
-        createJson(btaVersionId);
-        createProfile(btaVersionId);
+        String btaVersionId = "bta-" + mBtaVersion.versionName;
+        MinecraftProfile profile = getOrCreateProfile(btaVersionId);
+        createJson(btaVersionId, profile);
+        removeOldClient(profile);
+        profile.lastVersionId = btaVersionId;
+        profile.icon = tryDownloadIcon();
+        String profileKey = "bta";
+        for (java.util.Map.Entry<String, MinecraftProfile> entry :
+                LauncherProfiles.mainProfileJson.profiles.entrySet()) {
+            if (entry.getValue() == profile) {
+                profileKey = entry.getKey();
+                break;
+            }
+        }
+        Tools.getInstanceManager().updateMetadata(profile.instanceId, profileKey,
+                profile.name, profile.lastVersionId);
+        LauncherProfiles.write();
     }
 }

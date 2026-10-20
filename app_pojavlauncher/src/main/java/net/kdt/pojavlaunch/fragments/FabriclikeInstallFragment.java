@@ -18,6 +18,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import android.view.animation.LayoutAnimationController;
 import android.view.animation.AnimationUtils;
@@ -58,6 +59,8 @@ public abstract class FabriclikeInstallFragment extends Fragment implements Modl
     private CheckBox mOnlyStableCheckbox;
     private int mSelectedLoaderPosition = -1;
     private int mSelectedGamePosition = -1;
+    private int mGameRequestGeneration;
+    private int mLoaderRequestGeneration;
 
     // UI references
     private android.widget.ViewFlipper mStepFlipper;
@@ -77,7 +80,8 @@ public abstract class FabriclikeInstallFragment extends Fragment implements Modl
     }
 
     private boolean isFragmentUiAvailable() {
-        return isAdded() && getContext() != null && getActivity() != null && !isRemoving() && !isDetached();
+        return isAdded() && getView() != null && mStartButton != null && getContext() != null &&
+                getActivity() != null && !isRemoving() && !isDetached();
     }
 
     private void applyListAnimations(android.widget.ListView listView) {
@@ -158,7 +162,7 @@ public abstract class FabriclikeInstallFragment extends Fragment implements Modl
 
             mSelectedGamePosition = position;
             mSelectedGameVersion = selected.version;
-            Log.d("CSLauncher", "Game Version selected: " + mSelectedGameVersion);
+            Log.d("LuciferLauncher", "Game Version selected: " + mSelectedGameVersion);
 
             ArrayAdapter<FabricVersion> spinnerAdapter = (ArrayAdapter<FabricVersion>) mGameVersionSpinner.getAdapter();
             if (spinnerAdapter == null) {
@@ -190,7 +194,7 @@ public abstract class FabriclikeInstallFragment extends Fragment implements Modl
 
             // CRITICAL: Programmatic setSelection() does NOT fire OnItemSelectedListener.
             // We must explicitly trigger loader version fetch here.
-            Log.d("CSLauncher", "Triggering loader version fetch for: " + mSelectedGameVersion);
+            Log.d("LuciferLauncher", "Triggering loader version fetch for: " + mSelectedGameVersion);
             cancelFutureChecked(mLoaderVersionFuture);
             updateLoaderVersions();
         });
@@ -238,24 +242,66 @@ public abstract class FabriclikeInstallFragment extends Fragment implements Modl
 
         // Proxy restore
         ModloaderListenerProxy proxy = getListenerProxy();
-        if(proxy != null) {
+        if (proxy != null) {
             mStartButton.setEnabled(false);
+            showInstallOverlay();
             proxy.attachListener(this);
         } else {
             mStartButton.setEnabled(true);
+            // Rebind dynamic selections to newly created spinner views after rotation/re-entry.
+            mSelectedGameVersion = null;
+            mSelectedLoaderVersion = null;
+            mLoaderVersionArray = null;
         }
         updateGameVersions();
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        if (!isFragmentUiAvailable() || getListenerProxy() != null) return;
+        if (mGameVersionFuture != null && mGameVersionFuture.isCancelled() && mGameVersionArray == null) {
+            updateGameVersions();
+        } else if (mLoaderVersionFuture != null && mLoaderVersionFuture.isCancelled() &&
+                mSelectedGameVersion != null && mLoaderVersionArray == null) {
+            updateLoaderVersions();
+        }
     }
 
     @Override
     public void onStop() {
         cancelFutureChecked(mGameVersionFuture);
         cancelFutureChecked(mLoaderVersionFuture);
+        if (mProgressBar != null) mProgressBar.setVisibility(View.GONE);
         ModloaderListenerProxy proxy = getListenerProxy();
-        if(proxy != null) {
-            proxy.detachListener();
-        }
+        if (proxy != null) proxy.detachListener();
         super.onStop();
+    }
+
+    @Override
+    public void onDestroyView() {
+        mGameRequestGeneration++;
+        mLoaderRequestGeneration++;
+        cancelFutureChecked(mGameVersionFuture);
+        cancelFutureChecked(mLoaderVersionFuture);
+        ModloaderListenerProxy proxy = getListenerProxy();
+        if (proxy != null) proxy.detachListener();
+        mGameVersionSpinner = null;
+        mLoaderVersionSpinner = null;
+        mProgressBar = null;
+        mStartButton = null;
+        mRetryView = null;
+        mOnlyStableCheckbox = null;
+        mStepFlipper = null;
+        mGameVerList = null;
+        mLoaderVerList = null;
+        mInstallOverlay = null;
+        mSuccessOverlay = null;
+        mInstallStatusTitle = null;
+        mInstallStatusSubtitle = null;
+        mDeterminateProgress = null;
+        mSuccessDoneButton = null;
+        super.onDestroyView();
     }
 
     private void onClickStart(View v) {
@@ -301,8 +347,8 @@ public abstract class FabriclikeInstallFragment extends Fragment implements Modl
         proxy.attachListener(this);
         setListenerProxy(proxy);
         mStartButton.setEnabled(false);
-        Log.d("CSLauncher", "Installation Started");
-        new Thread(fabricDownloadTask).start();
+        Log.d("LuciferLauncher", "Installation Started");
+        PojavApplication.sExecutorService.execute(fabricDownloadTask);
     }
 
     private void showInstallOverlay() {
@@ -368,8 +414,7 @@ public abstract class FabriclikeInstallFragment extends Fragment implements Modl
         Log.d("FabricInstall", "STEP 6: Installation finished");
         Tools.runOnUiThread(()->{
             if (!isFragmentUiAvailable()) return;
-            Log.d("CSLauncher", "Installation Finished");
-            net.kdt.pojavlaunch.value.launcherprofiles.LauncherProfiles.load();
+            Log.d("LuciferLauncher", "Installation Finished");
             ModloaderListenerProxy proxy = getListenerProxy();
             if (proxy != null) proxy.detachListener();
             setListenerProxy(null);
@@ -387,9 +432,8 @@ public abstract class FabriclikeInstallFragment extends Fragment implements Modl
             if (proxy != null) proxy.detachListener();
             setListenerProxy(null);
             restoreUiState();
-            Tools.dialog(context,
-                    context.getString(R.string.global_error),
-                    context.getString(R.string.fabric_dl_cant_read_meta, mFabriclikeUtils.getName()));
+            showInstallFailure(context, new IOException(
+                    context.getString(R.string.fabric_dl_cant_read_meta, mFabriclikeUtils.getName())));
         });
     }
 
@@ -403,8 +447,23 @@ public abstract class FabriclikeInstallFragment extends Fragment implements Modl
             if (proxy != null) proxy.detachListener();
             setListenerProxy(null);
             restoreUiState();
-            Tools.showError(context, e);
+            showInstallFailure(context, e);
         });
+    }
+
+    private void showInstallFailure(Context context, Exception error) {
+        String details = error == null || error.getMessage() == null
+                ? "Check your connection and confirm the selected versions are still supported."
+                : error.getMessage().trim();
+        if (details.length() > 300) details = details.substring(0, 300) + "…";
+        new AlertDialog.Builder(context)
+                .setTitle(mFabriclikeUtils.getName() + " installation failed")
+                .setMessage("The profile was not installed. You can retry after checking your connection and selected versions.\n\n" + details)
+                .setNegativeButton(android.R.string.cancel, null)
+                .setPositiveButton(R.string.global_retry, (dialog, which) -> {
+                    if (isFragmentUiAvailable() && mStartButton != null) onClickStart(mStartButton);
+                })
+                .show();
     }
 
     private void cancelFutureChecked(Future<?> future) {
@@ -412,12 +471,12 @@ public abstract class FabriclikeInstallFragment extends Fragment implements Modl
     }
 
     private void startLoading() {
-        mProgressBar.setVisibility(View.VISIBLE);
-        mStartButton.setEnabled(true);
+        if (mProgressBar != null) mProgressBar.setVisibility(View.VISIBLE);
+        if (mStartButton != null) mStartButton.setEnabled(false);
     }
 
     private void stopLoading() {
-        mProgressBar.setVisibility(View.GONE);
+        if (mProgressBar != null) mProgressBar.setVisibility(View.GONE);
     }
 
     @Nullable
@@ -433,16 +492,6 @@ public abstract class FabriclikeInstallFragment extends Fragment implements Modl
         return new FabricVersionAdapter(context, layoutRes, filteredVersions, showBadges);
     }
 
-    private void onException(Future<?> myFuture, Exception e) {
-        Tools.runOnUiThread(()->{
-            Context context = getContext();
-            if(myFuture.isCancelled() || !isFragmentUiAvailable() || context == null) return;
-            stopLoading();
-            if(e != null) Tools.showError(context, e);
-            mRetryView.setVisibility(View.VISIBLE);
-        });
-    }
-
     @Override
     public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
         if (!isFragmentUiAvailable()) return;
@@ -455,77 +504,104 @@ public abstract class FabriclikeInstallFragment extends Fragment implements Modl
         @Override
         public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
             if (!isFragmentUiAvailable() || adapterView.getAdapter() == null) return;
-            mSelectedLoaderVersion = ((FabricVersion) adapterView.getAdapter().getItem(i)).version;
-            Log.d("CSLauncher", "Selected Loader Version = " + mSelectedLoaderVersion);
-            mStartButton.setEnabled(true);
+            FabricVersion selected = (FabricVersion) adapterView.getAdapter().getItem(i);
+            mSelectedLoaderVersion = selected != null ? selected.version : null;
+            Log.d("LuciferLauncher", "Selected Loader Version = " + mSelectedLoaderVersion);
+            mStartButton.setEnabled(mSelectedGameVersion != null && mSelectedLoaderVersion != null);
         }
 
         @Override
         public void onNothingSelected(AdapterView<?> adapterView) {
             if (!isFragmentUiAvailable()) return;
             mSelectedLoaderVersion = null;
-            mStartButton.setEnabled(true);
+            mStartButton.setEnabled(false);
         }
     }
 
     class LoadLoaderVersionsTask implements SelfReferencingFuture.FutureInterface {
+        private final String gameVersion;
+        private final int requestGeneration;
+
+        LoadLoaderVersionsTask(String gameVersion, int requestGeneration) {
+            this.gameVersion = gameVersion;
+            this.requestGeneration = requestGeneration;
+        }
+
         @Override
         public void run(Future<?> myFuture) {
-            Log.i("CSLauncher", "LoadLoaderVersionsTask START for game version: " + mSelectedGameVersion);
             try {
-                mLoaderVersionArray = mFabriclikeUtils.downloadLoaderVersions(mSelectedGameVersion);
-                if (mLoaderVersionArray != null) {
-                    Log.i("CSLauncher", "LoadLoaderVersionsTask SUCCESS: loaded " + mLoaderVersionArray.length + " loader versions");
-                    onFinished(myFuture);
-                } else {
-                    Log.e("CSLauncher", "LoadLoaderVersionsTask FAILED: downloadLoaderVersions returned null");
-                    onException(myFuture, null);
-                }
-            } catch (IOException e) {
-                Log.e("CSLauncher", "LoadLoaderVersionsTask FAILED with IOException", e);
-                onException(myFuture, e);
+                final FabricVersion[] versions = mFabriclikeUtils.downloadLoaderVersions(gameVersion);
+                Tools.runOnUiThread(() -> {
+                    if (myFuture.isCancelled() || requestGeneration != mLoaderRequestGeneration ||
+                            !gameVersion.equals(mSelectedGameVersion) || !isFragmentUiAvailable()) return;
+                    mLoaderVersionArray = versions;
+                    stopLoading();
+                    updateLoaderSpinner();
+                    if (mRetryView != null) {
+                        mRetryView.setVisibility(versions.length == 0 ? View.VISIBLE : View.GONE);
+                    }
+                    if (versions.length == 0 && isFragmentUiAvailable()) {
+                        Toast.makeText(requireContext(),
+                                "No compatible " + mFabriclikeUtils.getName() + " versions were returned for Minecraft " + gameVersion,
+                                Toast.LENGTH_LONG).show();
+                    }
+                });
+            } catch (Exception error) {
+                Log.e("FabricInstall", "Failed to load " + mFabriclikeUtils.getName() + " loader versions", error);
+                Tools.runOnUiThread(() -> {
+                    if (myFuture.isCancelled() || requestGeneration != mLoaderRequestGeneration ||
+                            !gameVersion.equals(mSelectedGameVersion) || !isFragmentUiAvailable()) return;
+                    stopLoading();
+                    if (mRetryView != null) mRetryView.setVisibility(View.VISIBLE);
+                    Tools.showError(requireContext(), error);
+                });
             }
-        }
-        private void onFinished(Future<?> myFuture) {
-            Tools.runOnUiThread(()->{
-                if(myFuture.isCancelled() || !isFragmentUiAvailable()) {
-                    Log.w("CSLauncher", "LoadLoaderVersionsTask onFinished: skipped (cancelled or UI unavailable)");
-                    return;
-                }
-                Log.d("CSLauncher", "LoadLoaderVersionsTask onFinished: updating loader spinner");
-                stopLoading();
-                updateLoaderSpinner();
-            });
         }
     }
 
     private void updateLoaderVersions() {
         if (!isFragmentUiAvailable()) return;
+        String gameVersion = mSelectedGameVersion;
+        int requestGeneration = ++mLoaderRequestGeneration;
+        cancelFutureChecked(mLoaderVersionFuture);
+        mLoaderVersionArray = null;
+        mSelectedLoaderVersion = null;
+        mSelectedLoaderPosition = -1;
+        if (mRetryView != null) mRetryView.setVisibility(View.GONE);
+        if (mLoaderVersionSpinner != null) mLoaderVersionSpinner.setAdapter(null);
+        if (mLoaderVerList != null) mLoaderVerList.setAdapter(null);
+        if (gameVersion == null || gameVersion.isEmpty()) {
+            stopLoading();
+            mStartButton.setEnabled(false);
+            return;
+        }
         startLoading();
-        mLoaderVersionFuture = new SelfReferencingFuture(new LoadLoaderVersionsTask()).startOnExecutor(PojavApplication.sExecutorService);
+        mLoaderVersionFuture = new SelfReferencingFuture(
+                new LoadLoaderVersionsTask(gameVersion, requestGeneration))
+                .startOnExecutor(PojavApplication.sExecutorService);
     }
 
     private void updateLoaderSpinner() {
         if(!isFragmentUiAvailable() || mLoaderVersionArray == null) {
-            Log.w("CSLauncher", "updateLoaderSpinner: skipped (UI unavailable or no loader array)");
+            Log.w("LuciferLauncher", "updateLoaderSpinner: skipped (UI unavailable or no loader array)");
             return;
         }
         mLoaderVersionSpinner.setAlpha(0f);
         ArrayAdapter<FabricVersion> adapter = createAdapter(mLoaderVersionArray, false, true);
         if (adapter == null) {
-            Log.w("CSLauncher", "updateLoaderSpinner: adapter is null");
+            Log.w("LuciferLauncher", "updateLoaderSpinner: adapter is null");
             return;
         }
-        Log.d("CSLauncher", "Game Version = " + mSelectedGameVersion);
-        Log.d("CSLauncher", "updateLoaderSpinner: created adapter with " + adapter.getCount() + " items");
+        Log.d("LuciferLauncher", "Game Version = " + mSelectedGameVersion);
+        Log.d("LuciferLauncher", "updateLoaderSpinner: created adapter with " + adapter.getCount() + " items");
         mLoaderVersionSpinner.setAdapter(adapter);
         mLoaderVersionSpinner.animate().alpha(1f).setDuration(250).start();
         if (mLoaderVerList != null) {
             mLoaderVerList.setAdapter(adapter);
             applyListAnimations(mLoaderVerList);
-            Log.d("CSLauncher", "updateLoaderSpinner: attached adapter to loader ListView");
+            Log.d("LuciferLauncher", "updateLoaderSpinner: attached adapter to loader ListView");
         } else {
-            Log.w("CSLauncher", "updateLoaderSpinner: mLoaderVerList is null!");
+            Log.w("LuciferLauncher", "updateLoaderSpinner: mLoaderVerList is null!");
         }
 
         // Auto-select latest stable loader if available, else first item
@@ -542,86 +618,107 @@ public abstract class FabriclikeInstallFragment extends Fragment implements Modl
             mLoaderVersionSpinner.setSelection(selectedIndex);
             mSelectedLoaderVersion = adapter.getItem(selectedIndex).version;
             mSelectedLoaderPosition = selectedIndex;
-            Log.d("CSLauncher", "updateLoaderSpinner: auto-selected loader " + mSelectedLoaderVersion);
+            Log.d("LuciferLauncher", "updateLoaderSpinner: auto-selected loader " + mSelectedLoaderVersion);
         } else {
             mSelectedLoaderVersion = null;
             mSelectedLoaderPosition = -1;
-            Log.w("CSLauncher", "updateLoaderSpinner: adapter is empty");
+            Log.w("LuciferLauncher", "updateLoaderSpinner: adapter is empty");
         }
 
         if (mLoaderVerList != null && adapter instanceof FabricVersionAdapter) {
             ((FabricVersionAdapter) adapter).setSelectedPosition(mSelectedLoaderPosition);
         }
 
-        mStartButton.setEnabled(true);
+        mStartButton.setEnabled(adapter.getCount() > 0 && mSelectedGameVersion != null &&
+                mSelectedLoaderVersion != null);
     }
 
     class GameVersionSelectedListener implements AdapterView.OnItemSelectedListener {
         @Override
         public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
             if (!isFragmentUiAvailable() || adapterView.getAdapter() == null) return;
-            mSelectedGameVersion = ((FabricVersion) adapterView.getAdapter().getItem(i)).version;
-            Log.d("CSLauncher", "Selected MC Version = " + mSelectedGameVersion);
-            cancelFutureChecked(mLoaderVersionFuture);
-            updateLoaderVersions();
+            FabricVersion selected = (FabricVersion) adapterView.getAdapter().getItem(i);
+            if (selected == null || selected.version == null) return;
+            if (!selected.version.equals(mSelectedGameVersion)) {
+                mSelectedGameVersion = selected.version;
+                mSelectedLoaderVersion = null;
+                Log.d("LuciferLauncher", "Selected MC Version = " + mSelectedGameVersion);
+                updateLoaderVersions();
+            }
         }
 
         @Override
         public void onNothingSelected(AdapterView<?> adapterView) {
             if (!isFragmentUiAvailable()) return;
             mSelectedGameVersion = null;
-            if(mLoaderVersionFuture != null) mLoaderVersionFuture.cancel(true);
-            adapterView.setAdapter(null);
+            mSelectedLoaderVersion = null;
+            mLoaderRequestGeneration++;
+            cancelFutureChecked(mLoaderVersionFuture);
+            mLoaderVersionArray = null;
+            if (mLoaderVersionSpinner != null) mLoaderVersionSpinner.setAdapter(null);
+            if (mLoaderVerList != null) mLoaderVerList.setAdapter(null);
+            mStartButton.setEnabled(false);
         }
-
     }
 
     class LoadGameVersionsTask implements SelfReferencingFuture.FutureInterface {
+        private final int requestGeneration;
+
+        LoadGameVersionsTask(int requestGeneration) {
+            this.requestGeneration = requestGeneration;
+        }
+
         @Override
         public void run(Future<?> myFuture) {
-            Log.i("CSLauncher", "LoadGameVersionsTask START");
             try {
-                mGameVersionArray = mFabriclikeUtils.downloadGameVersions();
-                if(mGameVersionArray != null) {
-                    Log.i("CSLauncher", "LoadGameVersionsTask SUCCESS: loaded " + mGameVersionArray.length + " game versions");
-                    onFinished(myFuture);
-                } else {
-                    Log.e("CSLauncher", "LoadGameVersionsTask FAILED: downloadGameVersions returned null");
-                    onException(myFuture, null);
-                }
-            }catch (IOException e) {
-                Log.e("CSLauncher", "LoadGameVersionsTask FAILED with IOException", e);
-                onException(myFuture, e);
+                final FabricVersion[] versions = mFabriclikeUtils.downloadGameVersions();
+                Tools.runOnUiThread(() -> {
+                    if (myFuture.isCancelled() || requestGeneration != mGameRequestGeneration ||
+                            !isFragmentUiAvailable()) return;
+                    mGameVersionArray = versions;
+                    stopLoading();
+                    updateGameSpinner();
+                    if (mRetryView != null) mRetryView.setVisibility(versions.length == 0 ? View.VISIBLE : View.GONE);
+                    if (versions.length == 0) {
+                        Toast.makeText(requireContext(), "No Minecraft versions are available from the " +
+                                mFabriclikeUtils.getName() + " API", Toast.LENGTH_LONG).show();
+                    }
+                });
+            } catch (Exception error) {
+                Log.e("FabricInstall", "Failed to load Minecraft versions for " + mFabriclikeUtils.getName(), error);
+                Tools.runOnUiThread(() -> {
+                    if (myFuture.isCancelled() || requestGeneration != mGameRequestGeneration ||
+                            !isFragmentUiAvailable()) return;
+                    stopLoading();
+                    if (mRetryView != null) mRetryView.setVisibility(View.VISIBLE);
+                    Tools.showError(requireContext(), error);
+                });
             }
-        }
-        private void onFinished(Future<?> myFuture) {
-            Tools.runOnUiThread(()->{
-                if(myFuture.isCancelled() || !isFragmentUiAvailable()) {
-                    Log.w("CSLauncher", "LoadGameVersionsTask onFinished: skipped (cancelled or UI unavailable)");
-                    return;
-                }
-                Log.d("CSLauncher", "LoadGameVersionsTask onFinished: updating game spinner");
-                stopLoading();
-                updateGameSpinner();
-            });
         }
     }
 
     private void updateGameVersions() {
         if (!isFragmentUiAvailable()) return;
+        int requestGeneration = ++mGameRequestGeneration;
+        cancelFutureChecked(mGameVersionFuture);
+        if (mRetryView != null) mRetryView.setVisibility(View.GONE);
         startLoading();
-        mGameVersionFuture = new SelfReferencingFuture(new LoadGameVersionsTask()).startOnExecutor(PojavApplication.sExecutorService);
+        mGameVersionFuture = new SelfReferencingFuture(new LoadGameVersionsTask(requestGeneration))
+                .startOnExecutor(PojavApplication.sExecutorService);
     }
 
     private void updateGameSpinner() {
-        if(!isFragmentUiAvailable() || mGameVersionArray == null) return;
+        if (!isFragmentUiAvailable() || mGameVersionArray == null) return;
         mGameVersionSpinner.setAlpha(0f);
-        ArrayAdapter<FabricVersion> adapter = createAdapter(mGameVersionArray, mOnlyStableCheckbox.isChecked(), false);
+        ArrayAdapter<FabricVersion> adapter = createAdapter(
+                mGameVersionArray, mOnlyStableCheckbox.isChecked(), false);
         if (adapter == null) return;
         mGameVersionSpinner.setAdapter(adapter);
         if (adapter.getCount() == 0) {
             mSelectedGameVersion = null;
-            mStartButton.setEnabled(true);
+            mSelectedLoaderVersion = null;
+            mStartButton.setEnabled(false);
+            if (mRetryView != null) mRetryView.setVisibility(View.VISIBLE);
         }
         mGameVersionSpinner.animate().alpha(1f).setDuration(250).start();
         if (mGameVerList != null) {

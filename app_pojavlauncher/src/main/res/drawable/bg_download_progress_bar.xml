@@ -11,7 +11,7 @@
             <shape>
                 <corners android:radius="4dp" />
                 <gradient
-                    android:startColor="#39FF14"
+                    android:startColor="?attr/luciferAccent"
                     android:endColor="#00FF87"
                     android:angle="0" />
             </shape>

@@ -45,7 +45,11 @@ public class ModpackInstaller {
             modpackName = modpackName.substring(0,255);
         }
 
-        // Build a new minecraft instance, folder first
+        LauncherProfiles.load();
+        String profileKey = uniqueProfileKey(modpackName);
+        String instanceId = newInstanceId();
+        net.kdt.pojavlaunch.instances.InstanceManager instanceManager = Tools.getInstanceManager();
+        File instanceRoot = instanceManager.initializeInstance(instanceId, profileKey, modDetail.title, null);
 
         // Get the modpack file
         File modpackFile = new File(Tools.DIR_CACHE, modpackName + ".cf"); // Cache File
@@ -59,32 +63,22 @@ public class ModpackInstaller {
                 return null;
             });
 
-            // Install the modpack
-            modLoaderInfo = installFunction.installModpack(modpackFile, new File(Tools.DIR_GAME_HOME, "custom_instances/"+modpackName));
-
+            // Pack contents and overrides are extracted directly into this managed gameDir.
+            modLoaderInfo = installFunction.installModpack(modpackFile, instanceRoot);
+        } catch (IOException | RuntimeException error) {
+            instanceManager.deleteInstance(instanceId);
+            throw error;
         } finally {
             modpackFile.delete();
             ProgressLayout.clearProgress(ProgressLayout.INSTALL_MODPACK);
         }
         if(modLoaderInfo == null) {
+            instanceManager.deleteInstance(instanceId);
             return null;
         }
-
-        // Create the instance
-        MinecraftProfile profile = new MinecraftProfile();
-        profile.gameDir = "./custom_instances/" + modpackName;
-        profile.name = modDetail.title;
-        profile.lastVersionId = modLoaderInfo.getVersionId();
-        profile.icon = ModIconCache.getBase64Image(modDetail.getIconCacheTag());
-
-
-        LauncherProfiles.mainProfileJson.profiles.put(modpackName, profile);
-        LauncherProfiles.write();
-        
-        net.kdt.pojavlaunch.prefs.LauncherPreferences.DEFAULT_PREF.edit()
-                .putString(net.kdt.pojavlaunch.prefs.LauncherPreferences.PREF_KEY_CURRENT_PROFILE, modpackName).apply();
-        LauncherProfiles.load();
-
+        modLoaderInfo.targetGameDirectory = instanceRoot.getAbsolutePath();
+        registerProfile(profileKey, instanceId, modDetail.title, modLoaderInfo,
+                ModIconCache.getBase64Image(modDetail.getIconCacheTag()));
         return modLoaderInfo;
     }
 
@@ -153,33 +147,76 @@ public class ModpackInstaller {
             }
             output.flush();
 
-            // Install the actual pack into custom_instances
-            ModLoader modLoaderInfo = installFunction.installModpack(modpackFile, new File(Tools.DIR_GAME_HOME, "custom_instances/"+modpackName));
-            // We have to do this because installModpack doesn't clean up after itself
-            ProgressLayout.clearProgress(ProgressLayout.INSTALL_MODPACK);
-            modpackFile.delete();
+            LauncherProfiles.load();
+            String profileKey = uniqueProfileKey(modpackName);
+            String displayName = packInfoJson.get("name").getAsString();
+            String instanceId = newInstanceId();
+            net.kdt.pojavlaunch.instances.InstanceManager instanceManager = Tools.getInstanceManager();
+            File instanceRoot = instanceManager.initializeInstance(instanceId, profileKey, displayName, null);
+            ModLoader modLoaderInfo;
+            try {
+                // Install the actual pack directly into its managed instance gameDir.
+                modLoaderInfo = installFunction.installModpack(modpackFile, instanceRoot);
+            } catch (IOException | RuntimeException error) {
+                instanceManager.deleteInstance(instanceId);
+                throw error;
+            } finally {
+                ProgressLayout.clearProgress(ProgressLayout.INSTALL_MODPACK);
+                modpackFile.delete();
+            }
             if(modLoaderInfo == null) {
+                instanceManager.deleteInstance(instanceId);
                 return null;
             }
 
             // Create the instance (We don't have a picture guys)
-            MinecraftProfile profile = new MinecraftProfile();
-            profile.gameDir = "./custom_instances/" + modpackName;
-            profile.name = packInfoJson.get("name").getAsString();
-            profile.lastVersionId = modLoaderInfo.getVersionId();
-            LauncherProfiles.mainProfileJson.profiles.put(modpackName, profile);
-            LauncherProfiles.write();
-
-            net.kdt.pojavlaunch.prefs.LauncherPreferences.DEFAULT_PREF.edit()
-                    .putString(net.kdt.pojavlaunch.prefs.LauncherPreferences.PREF_KEY_CURRENT_PROFILE, modpackName).apply();
-            LauncherProfiles.load();
-
+            modLoaderInfo.targetGameDirectory = instanceRoot.getAbsolutePath();
+            registerProfile(profileKey, instanceId, displayName, modLoaderInfo, null);
             return modLoaderInfo;
         }
         throw new IOException("Can't find manifest file in modpack provided");
 }
 
-interface InstallFunction {
+    private static String uniqueProfileKey(String preferredKey) {
+        String base = preferredKey == null || preferredKey.trim().isEmpty()
+                ? "Imported Modpack" : preferredKey.trim();
+        String candidate = base;
+        int suffix = 2;
+        while (LauncherProfiles.mainProfileJson.profiles.containsKey(candidate)) {
+            candidate = base + " (" + suffix++ + ")";
+        }
+        return candidate;
+    }
+
+    private static String newInstanceId() {
+        String instanceId;
+        do {
+            instanceId = java.util.UUID.randomUUID().toString();
+        } while (Tools.getInstanceManager().paths().getInstanceRoot(instanceId).exists());
+        return instanceId;
+    }
+
+    private static void registerProfile(String profileKey, String instanceId, String name,
+                                        ModLoader modLoader, String icon) throws IOException {
+        net.kdt.pojavlaunch.instances.InstanceManager manager = Tools.getInstanceManager();
+        MinecraftProfile profile = new MinecraftProfile();
+        profile.instanceId = instanceId;
+        profile.gameDir = manager.paths().gameDirectoryValue(instanceId);
+        profile.name = name;
+        profile.lastVersionId = modLoader.getVersionId();
+        profile.icon = icon;
+        profile.created = MinecraftProfile.currentTimestamp();
+        manager.updateMetadata(instanceId, profileKey, name, profile.lastVersionId);
+        LauncherProfiles.mainProfileJson.profiles.put(profileKey, profile);
+        LauncherProfiles.write();
+
+        net.kdt.pojavlaunch.prefs.LauncherPreferences.DEFAULT_PREF.edit()
+                .putString(net.kdt.pojavlaunch.prefs.LauncherPreferences.PREF_KEY_CURRENT_PROFILE, profileKey)
+                .apply();
+        LauncherProfiles.load();
+    }
+
+    interface InstallFunction {
         ModLoader installModpack(File modpackFile, File instanceDestination) throws IOException;
     }
 }

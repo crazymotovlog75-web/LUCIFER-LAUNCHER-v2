@@ -29,6 +29,7 @@ import androidx.viewpager2.widget.ViewPager2;
 import net.kdt.pojavlaunch.PojavApplication;
 import net.kdt.pojavlaunch.R;
 import net.kdt.pojavlaunch.Tools;
+import net.kdt.pojavlaunch.theme.ThemeManager;
 import net.kdt.pojavlaunch.modloaders.modpacks.api.ModrinthApi;
 import net.kdt.pojavlaunch.modloaders.modpacks.models.ModDetail;
 import net.kdt.pojavlaunch.modloaders.modpacks.models.ModItem;
@@ -179,7 +180,7 @@ public class ModsSearchFragment extends Fragment {
             tab.setTextSize(14);
             tab.setPadding(24, 8, 24, 8);
             tab.setGravity(android.view.Gravity.CENTER);
-            tab.setTextColor(i == 0 ? Color.parseColor("#39FF14") : Color.parseColor("#9CA3AF"));
+            tab.setTextColor(i == 0 ? ThemeManager.getAccentColor(requireContext()) : Color.parseColor("#9CA3AF"));
             tab.setTypeface(null, i == 0 ? Typeface.BOLD : Typeface.NORMAL);
             tab.setTag(i);
             tab.setOnClickListener(v -> mViewPager.setCurrentItem((int) v.getTag(), true));
@@ -205,7 +206,7 @@ public class ModsSearchFragment extends Fragment {
         for (int i = 0; i < mTabBar.getChildCount(); i++) {
             TextView tab = (TextView) mTabBar.getChildAt(i);
             if (i == position) {
-                tab.setTextColor(Color.parseColor("#39FF14"));
+                tab.setTextColor(ThemeManager.getAccentColor(requireContext()));
                 tab.setTypeface(null, Typeface.BOLD);
             } else {
                 tab.setTextColor(Color.parseColor("#9CA3AF"));
