@@ -194,7 +194,8 @@ public class JREUtils {
 
         if(PREF_DUMP_SHADERS)
             envMap.put("LIBGL_VGPU_DUMP", "1");
-        if(PREF_VSYNC_IN_ZINK)
+        boolean highFpsMode = LauncherPreferences.PREF_HIGH_FPS_MODE;
+        if(PREF_VSYNC_IN_ZINK && !highFpsMode)
             envMap.put("POJAV_VSYNC_IN_ZINK", "1");
         if(Tools.deviceHasHangingLinker())
             envMap.put("POJAV_EMUI_ITERATOR_MITIGATE", "1");
@@ -203,7 +204,7 @@ public class JREUtils {
         // The OPEN GL version is changed according
         envMap.put("LIBGL_ES", (String) ExtraCore.getValue(ExtraConstants.OPEN_GL_VERSION));
 
-        envMap.put("FORCE_VSYNC", String.valueOf(LauncherPreferences.PREF_FORCE_VSYNC));
+        envMap.put("FORCE_VSYNC", String.valueOf(!highFpsMode && LauncherPreferences.PREF_FORCE_VSYNC));
 
         envMap.put("MESA_GLSL_CACHE_DIR", Tools.DIR_CACHE.getAbsolutePath());
         envMap.put("force_glsl_extensions_warn", "true");

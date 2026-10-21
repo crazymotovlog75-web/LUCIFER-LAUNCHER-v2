@@ -25,6 +25,7 @@ import java.util.Objects;
 public class MCOptionUtils {
     private static final HashMap<String,String> sParameterMap = new HashMap<>();
     private static final ArrayList<WeakReference<MCOptionListener>> sOptionListeners = new ArrayList<>();
+    private static final String PERFORMANCE_BACKUP_FILE = ".lucifer-performance-options.json";
     private static FileObserver sFileObserver;
     private static String sOptionFolderPath = null;
     public interface MCOptionListener {
@@ -99,7 +100,12 @@ public class MCOptionUtils {
         return Arrays.asList(value.split(","));
     }
 
-    public static void save() {
+    public static boolean save() {
+        if (sOptionFolderPath == null) {
+            Log.w(Tools.APP_NAME, "Could not save options.txt before an instance was loaded");
+            return false;
+        }
+
         StringBuilder result = new StringBuilder();
         for(String key : sParameterMap.keySet())
             result.append(key)
@@ -107,13 +113,79 @@ public class MCOptionUtils {
                     .append(sParameterMap.get(key))
                     .append('\n');
 
+        FileObserver observer = sFileObserver;
         try {
-            sFileObserver.stopWatching();
+            if (observer != null) observer.stopWatching();
             Tools.write(sOptionFolderPath + "/options.txt", result.toString());
-            sFileObserver.startWatching();
-        } catch (IOException e) {
+            return true;
+        } catch (IOException | RuntimeException e) {
             Log.w(Tools.APP_NAME, "Could not save options.txt", e);
+            return false;
+        } finally {
+            if (observer != null) {
+                try {
+                    observer.startWatching();
+                } catch (RuntimeException e) {
+                    Log.w(Tools.APP_NAME, "Could not restart options.txt observer", e);
+                }
+            }
         }
+    }
+
+    /** Apply the reversible high-FPS options to the currently loaded instance. */
+    public static void applyPerformancePreset() {
+        if (sOptionFolderPath == null) {
+            Log.w(Tools.APP_NAME, "Cannot apply performance options before loading an instance");
+            return;
+        }
+
+        File backupFile = new File(sOptionFolderPath, PERFORMANCE_BACKUP_FILE);
+        if (!backupFile.exists()) {
+            PerformanceOptionsPreset.Snapshot snapshot = PerformanceOptionsPreset.capture(sParameterMap);
+            try {
+                Tools.write(backupFile.getAbsolutePath(), Tools.GLOBAL_GSON.toJson(snapshot));
+            } catch (IOException | RuntimeException e) {
+                Log.w(Tools.APP_NAME, "Could not back up instance options; performance profile was not applied", e);
+                return;
+            }
+        } else if (readPerformanceSnapshot(backupFile) == null) {
+            // Do not overwrite an unreadable backup: doing so would make restoring the user's
+            // original options impossible.
+            return;
+        }
+
+        PerformanceOptionsPreset.apply(sParameterMap);
+        save();
+    }
+
+    /** Restore the loaded instance's previous options after the high-FPS mode is disabled. */
+    public static void restorePerformancePreset() {
+        if (sOptionFolderPath == null) return;
+
+        File backupFile = new File(sOptionFolderPath, PERFORMANCE_BACKUP_FILE);
+        if (!backupFile.isFile()) return;
+
+        PerformanceOptionsPreset.Snapshot snapshot = readPerformanceSnapshot(backupFile);
+        if (snapshot == null) return;
+
+        PerformanceOptionsPreset.restore(sParameterMap, snapshot);
+        if (save() && !backupFile.delete()) {
+            Log.w(Tools.APP_NAME, "Could not remove restored performance-options backup");
+        }
+    }
+
+    private static PerformanceOptionsPreset.Snapshot readPerformanceSnapshot(File backupFile) {
+        try {
+            PerformanceOptionsPreset.Snapshot snapshot = Tools.GLOBAL_GSON.fromJson(
+                    Tools.read(backupFile), PerformanceOptionsPreset.Snapshot.class);
+            if (PerformanceOptionsPreset.isValidSnapshot(snapshot)) return snapshot;
+        } catch (IOException | RuntimeException e) {
+            Log.w(Tools.APP_NAME, "Could not read performance-options backup", e);
+            return null;
+        }
+
+        Log.w(Tools.APP_NAME, "Performance-options backup is invalid; leaving instance options unchanged");
+        return null;
     }
 
     /** @return The stored Minecraft GUI scale, also auto-computed if on auto-mode or improper setting */

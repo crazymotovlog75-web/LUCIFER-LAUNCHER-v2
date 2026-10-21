@@ -252,6 +252,9 @@ public class LauncherPreferenceFragment extends Fragment {
                     graphicsItems.add(new SettingItem("mg_renderer_dsaExt", SettingItem.TYPE_SWITCH, getString(R.string.mg_renderer_title_dsaExt), getString(R.string.mg_renderer_summary_dsaExt), false));
                     graphicsItems.add(new SettingItem("mg_renderer_multidrawCompute", SettingItem.TYPE_SWITCH, getString(R.string.mg_renderer_title_multidrawCompute), getString(R.string.mg_renderer_summary_multidrawCompute), false));
                     graphicsItems.add(new SettingItem("mg_renderer_setting_glsl_cache_size", SettingItem.TYPE_INPUT, getString(R.string.mg_renderer_glsl_cache), "Input cache size limit", "128"));
+                    graphicsItems.add(new SettingItem("highFpsMode", SettingItem.TYPE_SWITCH,
+                            getString(R.string.preference_high_fps_mode_title),
+                            getString(R.string.preference_high_fps_mode_description), false));
                     graphicsItems.add(new SettingItem("ignoreNotch", SettingItem.TYPE_SWITCH, getString(R.string.mcl_setting_title_ignore_notch), getString(R.string.mcl_setting_subtitle_ignore_notch), false));
                     graphicsItems.add(new SettingItem("resolutionRatio", SettingItem.TYPE_SLIDER, getString(R.string.mcl_setting_title_resolution_scaler), getString(R.string.mcl_setting_subtitle_resolution_scaler), 100).setSliderConfig(25, 100, 5, " %"));
                     graphicsItems.add(new SettingItem("sustainedPerformance", SettingItem.TYPE_SWITCH, getString(R.string.preference_sustained_performance_title), getString(R.string.preference_sustained_performance_description), false));
