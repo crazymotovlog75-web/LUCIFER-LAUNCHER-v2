@@ -25,6 +25,7 @@ import net.kdt.pojavlaunch.extra.ExtraConstants;
 import net.kdt.pojavlaunch.extra.ExtraCore;
 import net.kdt.pojavlaunch.prefs.LauncherPreferences;
 import net.kdt.pojavlaunch.utils.MinecraftSkinPreviewRenderer;
+import net.kdt.pojavlaunch.utils.ProfileVersionDisplay;
 import net.kdt.pojavlaunch.value.MinecraftAccount;
 import net.kdt.pojavlaunch.value.launcherprofiles.LauncherProfiles;
 import net.kdt.pojavlaunch.value.launcherprofiles.MinecraftProfile;
@@ -224,8 +225,7 @@ public class RightPaneHomeFragment extends Fragment {
                 @Override
                 public void onProfileEdit(String profileKey, MinecraftProfile profile) {
                     selectHomeProfile(profileKey, profile);
-                    Tools.swapFragment(requireActivity(), ProfileEditorFragment.class,
-                            ProfileEditorFragment.TAG, null);
+                    openPane(ProfileEditorFragment.class, ProfileEditorFragment.TAG, null);
                 }
 
                 @Override
@@ -267,8 +267,7 @@ public class RightPaneHomeFragment extends Fragment {
             mLoader.setText(getString(R.string.vanilla));
         } else {
             mProfileName.setText(profile.name != null ? profile.name : profileKey);
-            mVersion.setText(profile.lastVersionId != null && !profile.lastVersionId.isEmpty()
-                    ? profile.lastVersionId : getString(R.string.unknown));
+            mVersion.setText(ProfileVersionDisplay.format(profile.lastVersionId, profile.name));
             mLoader.setText(getLoaderName(profile));
         }
         mRam.setText(getString(R.string.ram_summary_gb,

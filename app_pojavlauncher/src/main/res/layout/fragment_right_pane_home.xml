@@ -21,7 +21,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.66" />
+        app:layout_constraintGuide_percent="0.52" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/home_hero_panel"
@@ -30,7 +30,7 @@
         android:layout_marginHorizontal="@dimen/_12sdp"
         android:layout_marginTop="@dimen/_10sdp"
         android:background="@drawable/bg_lucifer_glass_card"
-        android:padding="@dimen/_14sdp"
+        android:padding="@dimen/_8sdp"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -41,19 +41,19 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            app:layout_constraintGuide_percent="0.31" />
+            app:layout_constraintGuide_percent="0.36" />
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/home_guide_avatar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            app:layout_constraintGuide_percent="0.53" />
+            app:layout_constraintGuide_percent="0.56" />
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/home_guide_portal"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            app:layout_constraintGuide_percent="0.76" />
+            app:layout_constraintGuide_percent="0.78" />
 
         <LinearLayout
             android:id="@+id/home_intro"
@@ -81,10 +81,10 @@
                 android:id="@+id/tv_home_profile_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/_5sdp"
+                android:layout_marginTop="@dimen/_3sdp"
                 android:text="Select an instance"
                 android:textColor="@color/text_primary_white"
-                android:textSize="@dimen/_22ssp"
+                android:textSize="@dimen/_16ssp"
                 android:textStyle="bold"
                 android:maxLines="2"
                 android:ellipsize="end" />
@@ -93,22 +93,25 @@
                 android:id="@+id/tv_home_version"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/_3sdp"
+                android:layout_marginTop="@dimen/_2sdp"
+                android:background="@drawable/bg_chip_dark"
+                android:paddingHorizontal="@dimen/_6sdp"
+                android:paddingVertical="@dimen/_3sdp"
                 android:text="Choose a Minecraft version to get started"
                 android:textColor="@color/text_secondary_light"
-                android:textSize="@dimen/_11ssp"
-                android:maxLines="2"
-                android:ellipsize="end" />
+                android:textSize="@dimen/_8ssp"
+                android:maxLines="4"
+                android:breakStrategy="high_quality" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/_10sdp"
+                android:layout_marginTop="@dimen/_4sdp"
                 android:orientation="horizontal">
                 <TextView
                     android:id="@+id/tv_home_loader"
                     android:layout_width="wrap_content"
-                    android:layout_height="@dimen/_24sdp"
+                    android:layout_height="@dimen/_20sdp"
                     android:gravity="center"
                     android:paddingHorizontal="@dimen/_8sdp"
                     android:background="@drawable/bg_chip_dark"
@@ -118,7 +121,7 @@
                 <TextView
                     android:id="@+id/tv_home_ram"
                     android:layout_width="wrap_content"
-                    android:layout_height="@dimen/_24sdp"
+                    android:layout_height="@dimen/_20sdp"
                     android:layout_marginStart="@dimen/_5sdp"
                     android:gravity="center"
                     android:paddingHorizontal="@dimen/_8sdp"
@@ -128,47 +131,69 @@
                     android:textSize="@dimen/_9ssp" />
             </LinearLayout>
 
-            <LinearLayout
-                android:layout_width="wrap_content"
+            <HorizontalScrollView
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/_10sdp"
-                android:orientation="horizontal">
-                <TextView
-                    android:id="@+id/btn_home_instances"
-                    android:layout_width="wrap_content"
-                    android:layout_height="@dimen/_32sdp"
-                    android:gravity="center"
-                    android:paddingHorizontal="@dimen/_9sdp"
-                    android:background="@drawable/bg_home_profile_card"
-                    android:text="Choose instance"
-                    android:textColor="@color/text_primary_white"
-                    android:textSize="@dimen/_9ssp"
-                    android:clickable="true"
-                    android:focusable="true" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/_8sdp"
-                android:orientation="horizontal">
-                <TextView
-                    android:id="@+id/btn_home_wiki"
+                android:layout_marginTop="@dimen/_3sdp"
+                android:clipToPadding="false"
+                android:overScrollMode="never"
+                android:scrollbars="none">
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Wiki"
-                    android:textColor="?attr/luciferAccent"
-                    android:textSize="@dimen/_9ssp"
-                    android:paddingVertical="@dimen/_3sdp"
-                    android:clickable="true"
-                    android:focusable="true" />
-            </LinearLayout>
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+                    <TextView
+                        android:id="@+id/btn_open_mods_folder"
+                        android:layout_width="wrap_content"
+                        android:layout_height="@dimen/_24sdp"
+                        android:drawableStart="@drawable/ic_folder"
+                        android:drawablePadding="@dimen/_3sdp"
+                        android:gravity="center"
+                        android:paddingHorizontal="@dimen/_6sdp"
+                        android:background="@drawable/bg_lucifer_nav_item"
+                        android:text="Mods Folder"
+                        android:textColor="?attr/luciferAccent"
+                        android:textSize="@dimen/_8ssp"
+                        android:textStyle="bold"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:contentDescription="Open the selected instance mods folder in the file manager" />
+                    <TextView
+                        android:id="@+id/btn_home_skins"
+                        android:layout_width="wrap_content"
+                        android:layout_height="@dimen/_24sdp"
+                        android:layout_marginStart="@dimen/_4sdp"
+                        android:gravity="center"
+                        android:paddingHorizontal="@dimen/_6sdp"
+                        android:background="@drawable/bg_lucifer_nav_item"
+                        android:text="Skins"
+                        android:textColor="@color/text_primary_white"
+                        android:textSize="@dimen/_8ssp"
+                        android:clickable="true"
+                        android:focusable="true" />
+                    <TextView
+                        android:id="@+id/btn_home_instances"
+                        android:layout_width="wrap_content"
+                        android:layout_height="@dimen/_24sdp"
+                        android:layout_marginStart="@dimen/_4sdp"
+                        android:gravity="center"
+                        android:paddingHorizontal="@dimen/_7sdp"
+                        android:background="@drawable/bg_home_profile_card"
+                        android:text="Choose instance"
+                        android:textColor="@color/text_primary_white"
+                        android:textSize="@dimen/_8ssp"
+                        android:clickable="true"
+                        android:focusable="true" />
+                </LinearLayout>
+            </HorizontalScrollView>
+
         </LinearLayout>
 
         <FrameLayout
             android:id="@+id/home_avatar_shell"
             android:layout_width="0dp"
-            android:layout_height="@dimen/_128sdp"
+            android:layout_height="@dimen/_112sdp"
             android:layout_marginHorizontal="@dimen/_5sdp"
             android:background="@drawable/bg_lucifer_glass_card"
             app:layout_constraintStart_toEndOf="@id/home_guide_info"
@@ -186,8 +211,8 @@
 
         <FrameLayout
             android:id="@+id/btn_launch_portal"
-            android:layout_width="@dimen/_122sdp"
-            android:layout_height="@dimen/_122sdp"
+            android:layout_width="@dimen/_112sdp"
+            android:layout_height="@dimen/_112sdp"
             android:background="@drawable/bg_lucifer_portal"
             android:clickable="true"
             android:focusable="true"
@@ -242,18 +267,18 @@
             <LinearLayout
                 android:id="@+id/btn_home_discord"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/_34sdp"
+                android:layout_height="@dimen/_26sdp"
                 android:orientation="horizontal"
                 android:gravity="center_vertical"
-                android:paddingHorizontal="@dimen/_10sdp"
+                android:paddingHorizontal="@dimen/_6sdp"
                 android:background="@drawable/bg_discord_join"
                 android:clickable="true"
                 android:focusable="true"
                 android:contentDescription="Join the Lucifer Launcher Discord server">
                 <ImageView
-                    android:layout_width="@dimen/_22sdp"
-                    android:layout_height="@dimen/_17sdp"
-                    android:layout_marginEnd="@dimen/_8sdp"
+                    android:layout_width="@dimen/_18sdp"
+                    android:layout_height="@dimen/_14sdp"
+                    android:layout_marginEnd="@dimen/_5sdp"
                     android:src="@drawable/ic_discord_white"
                     android:contentDescription="@null" />
                 <TextView
@@ -262,7 +287,7 @@
                     android:layout_weight="1"
                     android:text="Join our Discord"
                     android:textColor="#FFFFFFFF"
-                    android:textSize="@dimen/_9ssp"
+                    android:textSize="@dimen/_8ssp"
                     android:textStyle="bold"
                     android:maxLines="1"
                     android:ellipsize="end" />
@@ -272,10 +297,10 @@
                 android:id="@+id/home_server_card"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/_5sdp"
+                android:layout_marginTop="@dimen/_3sdp"
                 android:orientation="vertical"
                 android:gravity="center_vertical"
-                android:padding="@dimen/_8sdp"
+                android:padding="@dimen/_5sdp"
                 android:background="@drawable/bg_lucifer_glass_card"
                 android:clickable="true"
                 android:focusable="true">
@@ -286,21 +311,21 @@
                     android:gravity="center"
                     android:text="LuciferMC · Lifesteal SMP"
                     android:textColor="@color/text_primary_white"
-                    android:textSize="@dimen/_10ssp"
+                    android:textSize="@dimen/_8ssp"
                     android:textStyle="bold"
                     android:maxLines="3"
                     android:ellipsize="end" />
                 <TextView
                     android:id="@+id/btn_home_servers"
                     android:layout_width="wrap_content"
-                    android:layout_height="@dimen/_30sdp"
-                    android:layout_marginTop="@dimen/_6sdp"
+                    android:layout_height="@dimen/_24sdp"
+                    android:layout_marginTop="@dimen/_3sdp"
                     android:gravity="center"
-                    android:paddingHorizontal="@dimen/_9sdp"
+                    android:paddingHorizontal="@dimen/_7sdp"
                     android:background="@drawable/bg_lucifer_action"
                     android:text="Server Hub"
                     android:textColor="?attr/luciferOnAccent"
-                    android:textSize="@dimen/_9ssp"
+                    android:textSize="@dimen/_8ssp"
                     android:clickable="true"
                     android:focusable="true" />
             </LinearLayout>
@@ -308,12 +333,12 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/_5sdp"
+                android:layout_marginTop="@dimen/_3sdp"
                 android:orientation="horizontal">
                 <TextView
                     android:id="@+id/btn_refresh_profiles"
                     android:layout_width="0dp"
-                    android:layout_height="@dimen/_30sdp"
+                    android:layout_height="@dimen/_24sdp"
                     android:layout_weight="1"
                     android:gravity="center"
                     android:paddingHorizontal="@dimen/_5sdp"
@@ -326,8 +351,8 @@
                 <TextView
                     android:id="@+id/fab_create_profile"
                     android:layout_width="0dp"
-                    android:layout_height="@dimen/_30sdp"
-                    android:layout_marginStart="@dimen/_5sdp"
+                    android:layout_height="@dimen/_24sdp"
+                    android:layout_marginStart="@dimen/_3sdp"
                     android:layout_weight="1"
                     android:gravity="center"
                     android:paddingHorizontal="@dimen/_3sdp"
@@ -364,31 +389,13 @@
             android:textStyle="bold"
             android:letterSpacing="0.12" />
         <TextView
-            android:id="@+id/btn_open_mods_folder"
+            android:id="@+id/btn_home_wiki"
             android:layout_width="wrap_content"
-            android:layout_height="@dimen/_30sdp"
-            android:drawableStart="@drawable/ic_folder"
-            android:drawablePadding="@dimen/_4sdp"
+            android:layout_height="@dimen/_24sdp"
             android:gravity="center"
-            android:paddingHorizontal="@dimen/_9sdp"
-            android:text="Mods Folder"
+            android:paddingHorizontal="@dimen/_8sdp"
+            android:text="Wiki"
             android:textColor="?attr/luciferAccent"
-            android:textSize="@dimen/_8ssp"
-            android:textStyle="bold"
-            android:background="@drawable/bg_lucifer_nav_item"
-            android:clickable="true"
-            android:focusable="true"
-            android:contentDescription="Open the selected instance mods folder in the file manager" />
-        <TextView
-            android:id="@+id/btn_home_skins"
-            android:layout_width="wrap_content"
-            android:layout_height="@dimen/_30sdp"
-            android:layout_marginStart="@dimen/_5sdp"
-            android:gravity="center"
-            android:paddingHorizontal="@dimen/_9sdp"
-            android:background="@drawable/bg_lucifer_nav_item"
-            android:text="Skins"
-            android:textColor="@color/text_primary_white"
             android:textSize="@dimen/_8ssp"
             android:clickable="true"
             android:focusable="true" />
@@ -400,8 +407,6 @@
         android:layout_height="0dp"
         android:clipToPadding="false"
         android:paddingHorizontal="@dimen/_10sdp"
-        android:paddingTop="@dimen/_4sdp"
-        android:paddingBottom="@dimen/_10sdp"
         android:overScrollMode="never"
         app:layout_constraintTop_toBottomOf="@id/home_instances_toolbar"
         app:layout_constraintBottom_toBottomOf="parent"

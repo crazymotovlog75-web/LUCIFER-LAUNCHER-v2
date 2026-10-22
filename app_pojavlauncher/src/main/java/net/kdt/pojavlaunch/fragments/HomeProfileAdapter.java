@@ -18,6 +18,7 @@ import net.kdt.pojavlaunch.PojavApplication;
 import net.kdt.pojavlaunch.R;
 import net.kdt.pojavlaunch.Tools;
 import net.kdt.pojavlaunch.profiles.ProfileIconCache;
+import net.kdt.pojavlaunch.utils.ProfileVersionDisplay;
 import net.kdt.pojavlaunch.value.launcherprofiles.MinecraftProfile;
 
 import java.util.Arrays;
@@ -129,15 +130,12 @@ public class HomeProfileAdapter extends RecyclerView.Adapter<HomeProfileAdapter.
 
         holder.tvName.setText(profile.name != null ? profile.name : "");
 
-        StringBuilder meta = new StringBuilder();
-        if (profile.lastVersionId != null && !profile.lastVersionId.isEmpty()) {
-            meta.append(profile.lastVersionId);
-        }
+        StringBuilder meta = new StringBuilder(
+                ProfileVersionDisplay.format(profile.lastVersionId, profile.name));
         if (profile.lastUsed != null && !profile.lastUsed.isEmpty()) {
-            if (meta.length() > 0) meta.append(" \u2022 ");
             String date = profile.lastUsed.length() >= 10
                     ? profile.lastUsed.substring(0, 10) : profile.lastUsed;
-            meta.append(date);
+            meta.append("\nLast used - ").append(date);
         }
         holder.tvMeta.setText(meta.toString());
 

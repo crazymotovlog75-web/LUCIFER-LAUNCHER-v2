@@ -57,6 +57,10 @@ jobs:
           echo "KEY_PASSWORD=${{ secrets.SIGNING_KEY_PASSWORD }}"   >> $GITHUB_ENV
           echo "STORE_PASSWORD=${{ secrets.SIGNING_STORE_PASSWORD }}" >> $GITHUB_ENV
 
+      # ── JVM unit tests ───────────────────────────────────────────────────────
+      - name: Run JVM unit tests
+        run: ./gradlew :app_pojavlauncher:testDebugUnitTest --no-daemon
+
       # ── Language list ────────────────────────────────────────────────────────
       - name: Update language list
         run: |

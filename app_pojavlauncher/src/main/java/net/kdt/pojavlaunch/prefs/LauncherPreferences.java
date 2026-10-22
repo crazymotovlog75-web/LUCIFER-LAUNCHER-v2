@@ -119,7 +119,12 @@ public class LauncherPreferences {
         PREF_ARC_CAPES = DEFAULT_PREF.getBoolean("arc_capes",false);
         PREF_USE_ALTERNATE_SURFACE = DEFAULT_PREF.getBoolean("alternate_surface", isDevicePowerful);
         PREF_JAVA_SANDBOX = DEFAULT_PREF.getBoolean("java_sandbox", true);
-        PREF_SCALE_FACTOR = DEFAULT_PREF.getInt("resolutionRatio", findBestResolution(ctx, isDevicePowerful))/100f;
+        float savedResolutionScale = DEFAULT_PREF.getInt(
+                "resolutionRatio", findBestResolution(ctx, isDevicePowerful)) / 100f;
+        // The opt-in high-FPS profile temporarily caps render resolution for GPU-heavy devices.
+        // The saved slider value is never changed and takes effect again when the profile is off.
+        PREF_SCALE_FACTOR = PREF_HIGH_FPS_MODE
+                ? Math.min(savedResolutionScale, 0.5f) : savedResolutionScale;
         PREF_ENABLE_GYRO = DEFAULT_PREF.getBoolean("enableGyro", false);
         PREF_GYRO_SENSITIVITY = ((float)DEFAULT_PREF.getInt("gyroSensitivity", 100))/100f;
         PREF_GYRO_SAMPLE_RATE = DEFAULT_PREF.getInt("gyroSampleRate", 16);
