@@ -59,7 +59,19 @@ jobs:
 
       # ── JVM unit tests ───────────────────────────────────────────────────────
       - name: Run JVM unit tests
-        run: ./gradlew :app_pojavlauncher:testDebugUnitTest --no-daemon
+        run: |
+          set +e
+          ./gradlew :app_pojavlauncher:testDebugUnitTest --no-daemon --stacktrace 2>&1 | tee "$RUNNER_TEMP/unit-test-gradle.log"
+          GRADLE_STATUS=${PIPESTATUS[0]}
+          set -e
+          if [ "$GRADLE_STATUS" -ne 0 ]; then
+            FAILURE_DETAILS=$(tail -n 80 "$RUNNER_TEMP/unit-test-gradle.log" | tr '\n' ' ' | cut -c1-10000)
+            FAILURE_DETAILS=${FAILURE_DETAILS//'%'/'%25'}
+            FAILURE_DETAILS=${FAILURE_DETAILS//$'\r'/'%0D'}
+            FAILURE_DETAILS=${FAILURE_DETAILS//$'\n'/'%0A'}
+            echo "::error title=Gradle unit tests failed::$FAILURE_DETAILS"
+            exit "$GRADLE_STATUS"
+          fi
 
       # ── Language list ────────────────────────────────────────────────────────
       - name: Update language list
