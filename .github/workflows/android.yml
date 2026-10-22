@@ -65,7 +65,9 @@ jobs:
           GRADLE_STATUS=${PIPESTATUS[0]}
           set -e
           if [ "$GRADLE_STATUS" -ne 0 ]; then
-            FAILURE_DETAILS=$(tail -n 80 "$RUNNER_TEMP/unit-test-gradle.log" | tr '\n' ' ' | cut -c1-10000)
+            FAILURE_DETAILS=$(grep -E 'FAILURE:|What went wrong:|Execution failed for task|error:|Could not resolve|Could not find|Caused by:|AssertionError|FAILED|There were failing tests|No tests found' "$RUNNER_TEMP/unit-test-gradle.log" | tail -n 50 || true)
+            if [ -z "$FAILURE_DETAILS" ]; then FAILURE_DETAILS=$(tail -n 50 "$RUNNER_TEMP/unit-test-gradle.log"); fi
+            FAILURE_DETAILS=$(printf '%s' "$FAILURE_DETAILS" | tr '\n' ' ' | cut -c1-10000)
             FAILURE_DETAILS=${FAILURE_DETAILS//'%'/'%25'}
             FAILURE_DETAILS=${FAILURE_DETAILS//$'\r'/'%0D'}
             FAILURE_DETAILS=${FAILURE_DETAILS//$'\n'/'%0A'}
