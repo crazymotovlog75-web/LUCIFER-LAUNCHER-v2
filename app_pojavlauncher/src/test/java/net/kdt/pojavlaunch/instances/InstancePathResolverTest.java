@@ -119,7 +119,7 @@ public class InstancePathResolverTest {
         String[] vanillaTemplate = {"--gameDir", "${game_directory}", "--assetsDir", "${assets_root}",
                 "-Djava.library.path=${natives_directory}", "-cp", "${client_jar}"};
         String[] vanillaArgs = JSONUtils.insertJSONValueList(vanillaTemplate, vanilla);
-        assertEquals(new File(paths.getInstanceRoot("vanilla-one")).getAbsolutePath(), vanillaArgs[1]);
+        assertEquals(paths.getInstanceRoot("vanilla-one").getAbsolutePath(), vanillaArgs[1]);
         assertEquals(new File(storage, ".minecraft/assets").getAbsolutePath(), vanillaArgs[3]);
         assertTrue(vanillaArgs[4].contains("/instances/vanilla-one/natives/1.21.1"));
         assertTrue(vanillaArgs[6].contains("/instances/vanilla-one/versions/1.21.1/1.21.1.jar"));
@@ -130,7 +130,7 @@ public class InstancePathResolverTest {
         String[] fabricTemplate = {"--gameDir", "${game_directory}", "--version", "${version_name}",
                 "-cp", "${client_jar}:${library_directory}/fabric-loader/example.jar"};
         String[] fabricArgs = JSONUtils.insertJSONValueList(fabricTemplate, fabric);
-        assertEquals(new File(paths.getInstanceRoot("fabric-one")).getAbsolutePath(), fabricArgs[1]);
+        assertEquals(paths.getInstanceRoot("fabric-one").getAbsolutePath(), fabricArgs[1]);
         assertEquals(fabricVersion, fabricArgs[3]);
         assertTrue(fabricArgs[5].contains("/instances/fabric-one/versions/" + fabricVersion + "/" + fabricVersion + ".jar"));
         assertTrue(fabricArgs[5].contains("/.minecraft/libraries/fabric-loader/example.jar"));
