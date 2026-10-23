@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/instance_content_item_root"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/_62sdp"
+    android:layout_marginVertical="@dimen/_3sdp"
+    android:background="@drawable/bg_lucifer_glass_card"
+    android:gravity="center_vertical"
+    android:orientation="horizontal"
+    android:paddingHorizontal="@dimen/_9sdp">
+
+    <ImageView
+        android:id="@+id/instance_content_item_icon"
+        android:layout_width="@dimen/_38sdp"
+        android:layout_height="@dimen/_38sdp"
+        android:background="@drawable/bg_profile_icon_rounded"
+        android:contentDescription=""
+        android:padding="@dimen/_7sdp"
+        android:src="@drawable/ic_folder_managed"
+        app:tint="?attr/luciferAccent" />
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/_9sdp"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/instance_content_item_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:textColor="@color/text_primary_white"
+            android:textSize="@dimen/_9ssp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/instance_content_item_state"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_2sdp"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:textColor="@color/text_secondary_light"
+            android:textSize="@dimen/_7ssp" />
+    </LinearLayout>
+
+    <androidx.appcompat.widget.SwitchCompat
+        android:id="@+id/instance_content_item_toggle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/_7sdp"
+        android:contentDescription="@string/instance_content_toggle_description"
+        android:minWidth="@dimen/_46sdp"
+        app:thumbTint="?attr/luciferAccent"
+        app:trackTint="?attr/luciferBorder" />
+</LinearLayout>

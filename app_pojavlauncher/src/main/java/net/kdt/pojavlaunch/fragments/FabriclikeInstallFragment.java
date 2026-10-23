@@ -529,6 +529,17 @@ public abstract class FabriclikeInstallFragment extends Fragment implements Modl
 
         @Override
         public void run(Future<?> myFuture) {
+            final FabricVersion[] cachedVersions = mFabriclikeUtils.getCachedLoaderVersions(gameVersion);
+            final boolean hasCachedVersions = cachedVersions.length > 0;
+            if (hasCachedVersions) {
+                Tools.runOnUiThread(() -> {
+                    if (myFuture.isCancelled() || requestGeneration != mLoaderRequestGeneration ||
+                            !gameVersion.equals(mSelectedGameVersion) || !isFragmentUiAvailable()) return;
+                    mLoaderVersionArray = cachedVersions;
+                    updateLoaderSpinner();
+                });
+            }
+
             try {
                 final FabricVersion[] versions = mFabriclikeUtils.downloadLoaderVersions(gameVersion);
                 Tools.runOnUiThread(() -> {
@@ -553,7 +564,11 @@ public abstract class FabriclikeInstallFragment extends Fragment implements Modl
                             !gameVersion.equals(mSelectedGameVersion) || !isFragmentUiAvailable()) return;
                     stopLoading();
                     if (mRetryView != null) mRetryView.setVisibility(View.VISIBLE);
-                    Tools.showError(requireContext(), error);
+                    if (hasCachedVersions) {
+                        Toast.makeText(requireContext(), R.string.modloader_using_cached_versions, Toast.LENGTH_SHORT).show();
+                    } else {
+                        Tools.showError(requireContext(), error);
+                    }
                 });
             }
         }
@@ -670,6 +685,17 @@ public abstract class FabriclikeInstallFragment extends Fragment implements Modl
 
         @Override
         public void run(Future<?> myFuture) {
+            final FabricVersion[] cachedVersions = mFabriclikeUtils.getCachedGameVersions();
+            final boolean hasCachedVersions = cachedVersions.length > 0;
+            if (hasCachedVersions) {
+                Tools.runOnUiThread(() -> {
+                    if (myFuture.isCancelled() || requestGeneration != mGameRequestGeneration ||
+                            !isFragmentUiAvailable()) return;
+                    mGameVersionArray = cachedVersions;
+                    updateGameSpinner();
+                });
+            }
+
             try {
                 final FabricVersion[] versions = mFabriclikeUtils.downloadGameVersions();
                 Tools.runOnUiThread(() -> {
@@ -691,7 +717,11 @@ public abstract class FabriclikeInstallFragment extends Fragment implements Modl
                             !isFragmentUiAvailable()) return;
                     stopLoading();
                     if (mRetryView != null) mRetryView.setVisibility(View.VISIBLE);
-                    Tools.showError(requireContext(), error);
+                    if (hasCachedVersions) {
+                        Toast.makeText(requireContext(), R.string.modloader_using_cached_versions, Toast.LENGTH_SHORT).show();
+                    } else {
+                        Tools.showError(requireContext(), error);
+                    }
                 });
             }
         }

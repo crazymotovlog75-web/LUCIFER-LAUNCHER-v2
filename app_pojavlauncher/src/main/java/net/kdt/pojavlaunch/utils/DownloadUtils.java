@@ -163,18 +163,43 @@ public class DownloadUtils {
         }
     }
 
+    /** Returns a cached response even when stale, for UI-first display while a refresh runs. */
+    @Nullable
+    public static String readCachedString(String cacheName) {
+        if (cacheName == null || !cacheName.matches("[A-Za-z0-9._%-]{1,256}")) return null;
+        return readCachedStringFile(getStringCacheFile(cacheName));
+    }
+
+    private static String readCachedStringFile(File cacheDestination) {
+        if (!cacheDestination.isFile() || !cacheDestination.canRead() ||
+                cacheDestination.length() > MAX_STRING_RESPONSE_BYTES) return null;
+        try (InputStream input = new java.io.FileInputStream(cacheDestination)) {
+            return IOUtils.toString(input, StandardCharsets.UTF_8);
+        } catch (IOException e) {
+            Log.i("DownloadUtils", "Failed to read the cached file", e);
+            return null;
+        }
+    }
+
+    private static File getStringCacheFile(String cacheName) {
+        // Preserve the legacy cache naming used by other metadata fetchers, some of which include
+        // the source URL. readCachedString applies a stricter validator for stale-while-revalidate use.
+        return new File(Tools.DIR_CACHE, "string_cache/" + cacheName);
+    }
+
     public static <T> T downloadStringCached(String url, String cacheName, ParseCallback<T> parseCallback)
             throws IOException, ParseException {
-        File cacheDestination = new File(Tools.DIR_CACHE, "string_cache/" + cacheName);
+        File cacheDestination = getStringCacheFile(cacheName);
         if (cacheDestination.isFile() && cacheDestination.canRead() &&
+                cacheDestination.length() <= MAX_STRING_RESPONSE_BYTES &&
                 System.currentTimeMillis() < cacheDestination.lastModified() + 86400000L) {
-            try (InputStream input = new java.io.FileInputStream(cacheDestination)) {
-                String cachedString = IOUtils.toString(input, StandardCharsets.UTF_8);
-                return parseCallback.process(cachedString);
-            } catch (IOException e) {
-                Log.i("DownloadUtils", "Failed to read the cached file", e);
-            } catch (ParseException e) {
-                Log.i("DownloadUtils", "Failed to parse the cached file", e);
+            String cachedString = readCachedStringFile(cacheDestination);
+            if (cachedString != null) {
+                try {
+                    return parseCallback.process(cachedString);
+                } catch (ParseException e) {
+                    Log.i("DownloadUtils", "Failed to parse the cached file", e);
+                }
             }
         }
 

@@ -163,12 +163,14 @@ public class InstancePickerFragment extends Fragment {
 
     private void showInstanceActions(View anchor, Instance instance) {
         PopupMenu menu = new PopupMenu(requireContext(), anchor);
-        menu.getMenu().add(0, 1, 0, R.string.instance_action_open_folder);
-        menu.getMenu().add(0, 2, 1, R.string.instance_action_import_legacy);
-        menu.getMenu().add(0, 3, 2, R.string.instance_action_duplicate);
-        menu.getMenu().add(0, 4, 3, R.string.instance_action_delete);
+        menu.getMenu().add(0, 5, 0, R.string.instance_action_manage_content);
+        menu.getMenu().add(0, 1, 1, R.string.instance_action_open_folder);
+        menu.getMenu().add(0, 2, 2, R.string.instance_action_import_legacy);
+        menu.getMenu().add(0, 3, 3, R.string.instance_action_duplicate);
+        menu.getMenu().add(0, 4, 4, R.string.instance_action_delete);
         menu.setOnMenuItemClickListener(item -> {
-            if (item.getItemId() == 1) openInstanceFolder(instance);
+            if (item.getItemId() == 5) openInstanceContentManager(instance);
+            else if (item.getItemId() == 1) openInstanceFolder(instance);
             else if (item.getItemId() == 2) showLegacyVersionPicker();
             else if (item.getItemId() == 3) duplicateInstance(instance);
             else if (item.getItemId() == 4) confirmDeleteInstance(instance);
@@ -176,6 +178,12 @@ public class InstancePickerFragment extends Fragment {
             return true;
         });
         menu.show();
+    }
+
+    private void openInstanceContentManager(Instance instance) {
+        Bundle arguments = new Bundle();
+        arguments.putString(InstanceContentManagerFragment.ARG_PROFILE_KEY, instance.key);
+        openPane(InstanceContentManagerFragment.class, InstanceContentManagerFragment.TAG, arguments);
     }
 
     private void openInstanceFolder(Instance instance) {
@@ -366,14 +374,18 @@ public class InstancePickerFragment extends Fragment {
     }
 
     private void openPane(Class<? extends Fragment> fragmentClass, String tag) {
+        openPane(fragmentClass, tag, null);
+    }
+
+    private void openPane(Class<? extends Fragment> fragmentClass, String tag, @Nullable Bundle arguments) {
         Fragment parent = getParentFragment();
         while (parent != null && !(parent instanceof MainMenuFragment)) {
             parent = parent.getParentFragment();
         }
         if (parent instanceof MainMenuFragment) {
-            ((MainMenuFragment) parent).openChildPane(fragmentClass, tag, null);
+            ((MainMenuFragment) parent).openChildPane(fragmentClass, tag, arguments);
         } else {
-            Tools.swapFragment(requireActivity(), fragmentClass, tag, null);
+            Tools.swapFragment(requireActivity(), fragmentClass, tag, arguments);
         }
     }
 

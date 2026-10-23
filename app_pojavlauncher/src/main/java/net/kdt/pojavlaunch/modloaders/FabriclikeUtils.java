@@ -80,6 +80,32 @@ public class FabriclikeUtils {
         return filterValidVersions(versions);
     }
 
+    /** Reads possibly stale metadata so the installer can populate its lists before refreshing. */
+    public FabricVersion[] getCachedGameVersions() {
+        return readCachedVersions(mCachePrefix + "_game_versions", false);
+    }
+
+    /** Reads possibly stale loader metadata for one exact Minecraft version. */
+    public FabricVersion[] getCachedLoaderVersions(String gameVersion) {
+        if (!isValidVersionToken(gameVersion)) return new FabricVersion[0];
+        String cacheName = mCachePrefix + "_loader_versions." + encodePathSegment(gameVersion);
+        return readCachedVersions(cacheName, true);
+    }
+
+    private FabricVersion[] readCachedVersions(String cacheName, boolean loaderMetadata) {
+        String cached = DownloadUtils.readCachedString(cacheName);
+        if (cached == null) return new FabricVersion[0];
+        try {
+            FabricVersion[] parsed = loaderMetadata
+                    ? deserializeLoaderVersions(cached)
+                    : deserializeRawVersions(cached);
+            return filterValidVersions(parsed);
+        } catch (DownloadUtils.ParseException error) {
+            Log.i(TAG, "Ignoring invalid cached " + mName + " metadata", error);
+            return new FabricVersion[0];
+        }
+    }
+
     /** Fetches and validates the installer profile after rechecking the live game/loader metadata. */
     public String downloadProfileJson(String gameVersion, String loaderVersion) throws IOException {
         requireVersionToken(gameVersion, "Minecraft version");

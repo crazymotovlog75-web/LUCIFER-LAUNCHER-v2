@@ -25,6 +25,7 @@ import net.kdt.pojavlaunch.Tools;
 import net.kdt.pojavlaunch.mirrors.DownloadMirror;
 import net.kdt.pojavlaunch.mirrors.MirrorTamperedException;
 import net.kdt.pojavlaunch.prefs.LauncherPreferences;
+import net.kdt.pojavlaunch.utils.DownloadTuning;
 import net.kdt.pojavlaunch.utils.DownloadUtils;
 import net.kdt.pojavlaunch.utils.FileUtils;
 import net.kdt.pojavlaunch.value.DependentLibrary;
@@ -157,14 +158,20 @@ public class MinecraftDownloader {
 
         downloadAndProcessMetadata(activity, verInfo, versionName);
 
-        ArrayBlockingQueue<Runnable> taskQueue =
-                new ArrayBlockingQueue<>(mScheduledDownloadTasks.size(), false);
-        ThreadPoolExecutor downloaderPool =
-                new ThreadPoolExecutor(4, 4, 500, TimeUnit.MILLISECONDS, taskQueue);
+        int scheduledTaskCount = mScheduledDownloadTasks.size();
+        int requestedParallelism = LauncherPreferences.DEFAULT_PREF == null
+                ? DownloadTuning.DEFAULT_PARALLEL_DOWNLOADS
+                : LauncherPreferences.DEFAULT_PREF.getInt(DownloadTuning.PREFERENCE_KEY,
+                        DownloadTuning.DEFAULT_PARALLEL_DOWNLOADS);
+        int parallelDownloads = DownloadTuning.normalizeParallelDownloads(requestedParallelism);
+        // ArrayBlockingQueue rejects a zero capacity. That occurred when every file was already
+        // cached and could abort an otherwise-ready 1.21+ launch before native extraction.
+        ArrayBlockingQueue<Runnable> taskQueue = new ArrayBlockingQueue<>(
+                DownloadTuning.queueCapacity(scheduledTaskCount), false);
+        ThreadPoolExecutor downloaderPool = new ThreadPoolExecutor(
+                parallelDownloads, parallelDownloads, 500, TimeUnit.MILLISECONDS, taskQueue);
 
-        // I have tried pre-filling the queue directly instead of doing this, but it didn't work.
-        // What a shame.
-        for(DownloaderTask scheduledTask : mScheduledDownloadTasks) downloaderPool.execute(scheduledTask);
+        for (DownloaderTask scheduledTask : mScheduledDownloadTasks) downloaderPool.execute(scheduledTask);
         downloaderPool.shutdown();
 
         try {
