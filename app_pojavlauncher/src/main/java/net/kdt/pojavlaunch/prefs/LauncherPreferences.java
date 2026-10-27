@@ -67,6 +67,11 @@ public class LauncherPreferences {
     public static float PREF_DEADZONE_SCALE = 1f;
     public static boolean PREF_BIG_CORE_AFFINITY = false;
     public static boolean PREF_ZINK_PREFER_SYSTEM_DRIVER = false;
+
+    // Discord Rich Presence
+    public static boolean PREF_DISCORD_RPC = false;
+    public static String PREF_DISCORD_RPC_ENDPOINT = "auto";
+    public static String PREF_DISCORD_RPC_TOKEN = "";
     
     public static boolean PREF_VERIFY_MANIFEST = true;
     public static String PREF_DOWNLOAD_SOURCE = "default";
@@ -125,6 +130,9 @@ public class LauncherPreferences {
         PREF_DEADZONE_SCALE = ((float) DEFAULT_PREF.getInt("gamepad_deadzone_scale", 100))/100f;
         PREF_BIG_CORE_AFFINITY = DEFAULT_PREF.getBoolean("bigCoreAffinity", false);
         PREF_ZINK_PREFER_SYSTEM_DRIVER = DEFAULT_PREF.getBoolean("zinkPreferSystemDriver", false);
+        PREF_DISCORD_RPC = DEFAULT_PREF.getBoolean("discordRpc", false);
+        PREF_DISCORD_RPC_ENDPOINT = DEFAULT_PREF.getString("discordRpcEndpoint", "auto");
+        PREF_DISCORD_RPC_TOKEN = DEFAULT_PREF.getString("discordRpcToken", "");
         PREF_DOWNLOAD_SOURCE = DEFAULT_PREF.getString("downloadSource", "default");
         PREF_VERIFY_MANIFEST = DEFAULT_PREF.getBoolean("verifyManifest", true);
         PREF_SKIP_NOTIFICATION_PERMISSION_CHECK = DEFAULT_PREF.getBoolean(PREF_KEY_SKIP_NOTIFICATION_CHECK, false);

@@ -70,6 +70,7 @@ import net.kdt.pojavlaunch.utils.DateUtils;
 import net.kdt.pojavlaunch.utils.DownloadUtils;
 import net.kdt.pojavlaunch.utils.FileUtils;
 import net.kdt.pojavlaunch.utils.GLInfoUtils;
+import net.kdt.pojavlaunch.discord.DiscordRpcManager;
 import net.kdt.pojavlaunch.utils.JREUtils;
 import net.kdt.pojavlaunch.utils.JSONUtils;
 import net.kdt.pojavlaunch.utils.MCOptionUtils;
@@ -490,7 +491,11 @@ public final class Tools {
         String args = LauncherPreferences.PREF_CUSTOM_JAVA_ARGS;
         if(Tools.isValidString(minecraftProfile.javaArgs)) args = minecraftProfile.javaArgs;
         FFmpegPlugin.discover(activity);
+        // Discord Rich Presence: "Playing Minecraft <versionId>" + elapsed timer
+        DiscordRpcManager.gameLaunch(versionId);
         JREUtils.launchJavaVM(activity, runtime, gamedir, javaArgList, args);
+        // We only get here once the JVM is gone (crash dialog / exit)
+        DiscordRpcManager.gameExit();
         // If we returned, this means that the JVM exit dialog has been shown and we don't need to be active anymore.
         // We never return otherwise. The process will be killed anyway, and thus we will become inactive
     }

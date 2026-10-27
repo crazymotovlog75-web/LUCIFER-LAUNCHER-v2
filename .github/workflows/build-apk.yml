@@ -1,0 +1,88 @@
+name: Build LUCIFER launcher (Discord presence)
+
+# Builds an installable debug APK with Discord Rich Presence compiled in.
+# Runs on push to this branch and on manual dispatch. The APK is uploaded as a
+# workflow artifact AND attached to a release so it can be downloaded without
+# logging in to GitHub.
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - discord-presence
+
+jobs:
+  build:
+    runs-on: ubuntu-22.04
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Install NDK + build tools
+        run: |
+          yes | sdkmanager --licenses > /dev/null || true
+          sdkmanager "ndk;27.3.13750724" "build-tools;34.0.0" "platforms;android-34" || true
+
+      - name: Download JRE 8 runtime
+        uses: dawidd6/action-download-artifact@v6
+        continue-on-error: true
+        with:
+          workflow: build.yml
+          path: app_pojavlauncher/src/main/assets/components/jre
+          workflow_conclusion: success
+          repo: AngelAuraMC/angelauramc-openjdk-build
+          branch: buildjre8
+          name: jre8-pojav
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          validate-wrappers: false
+          gradle-version: "8.11"
+
+      - name: Build debug APK
+        run: |
+          chmod +x ./gradlew
+          ./gradlew :app_pojavlauncher:assembleDebug --no-daemon --stacktrace
+
+      - name: Show APK
+        run: ls -lh app_pojavlauncher/build/outputs/apk/debug/
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: lucifer-launcher-discord
+          path: app_pojavlauncher/build/outputs/apk/debug/*.apk
+          if-no-files-found: error
+
+      - name: Publish release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: discord-presence-${{ github.run_number }}
+          name: LUCIFER launcher + Discord presence (build ${{ github.run_number }})
+          body: |
+            Debug APK with Discord Rich Presence compiled in.
+
+            Setup after installing:
+            1. On your PC: run `tools/discord-bridge/start-bridge.bat` (Discord desktop must be logged in).
+            2. Launcher → Settings → Miscellaneous:
+               - Discord Rich Presence → ON
+               - Discord bridge address → `auto`
+               - Discord bridge token → token printed by the bridge
+            3. Play any version — your Discord profile shows
+               LUCIFER LAUNCHER / Playing Minecraft <version> / <Loader> <mcVersion> / elapsed timer.
+          files: app_pojavlauncher/build/outputs/apk/debug/*.apk
+          draft: false
+          prerelease: true

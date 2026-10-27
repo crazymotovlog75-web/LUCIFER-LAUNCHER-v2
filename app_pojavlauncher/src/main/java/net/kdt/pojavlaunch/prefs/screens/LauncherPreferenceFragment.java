@@ -165,6 +165,8 @@ public class LauncherPreferenceFragment extends Fragment {
         // Save pending changes on exit
         if (mIsDirty) {
             SettingsSaveManager.commitChanges(getContext());
+            // pick up Discord bridge changes immediately
+            net.kdt.pojavlaunch.discord.DiscordRpcManager.refreshConfig();
             LauncherPreferences.loadPreferences(getContext());
             mIsDirty = false;
         }
@@ -369,6 +371,23 @@ public class LauncherPreferenceFragment extends Fragment {
                     miscItems.add(new SettingItem("checkLibraries", SettingItem.TYPE_SWITCH, getString(R.string.mcl_setting_check_libraries), getString(R.string.mcl_setting_check_libraries_subtitle), true));
                     miscItems.add(new SettingItem("arc_capes", SettingItem.TYPE_SWITCH, getString(R.string.arc_capes_title), getString(R.string.arc_capes_desc), false));
                     miscItems.add(new SettingItem("zinkPreferSystemDriver", SettingItem.TYPE_SWITCH, getString(R.string.preference_vulkan_driver_system_title), getString(R.string.preference_vulkan_driver_system_description), false));
+                    // ── Discord Rich Presence ──────────────────────────────
+                    miscItems.add(new SettingItem("discordRpc", SettingItem.TYPE_SWITCH,
+                            "Discord Rich Presence",
+                            "Shows \"LUCIFER LAUNCHER\" + the version you are playing on your Discord profile. Start start-bridge.bat on your PC first.",
+                            false));
+                    miscItems.add(new SettingItem("discordRpcEndpoint", SettingItem.TYPE_INPUT,
+                            "Discord bridge address",
+                            "Leave \"auto\" to find the PC by itself, or type http://192.168.1.42:6464",
+                            "auto"));
+                    miscItems.add(new SettingItem("discordRpcToken", SettingItem.TYPE_INPUT,
+                            "Discord bridge token",
+                            "Value from bridge-token.txt (printed when the bridge starts)",
+                            ""));
+                    miscItems.add(new SettingItem("discordRpcTest", SettingItem.TYPE_ACTION,
+                            "Test Discord presence",
+                            "Sends a sample card so you can check the bridge connection",
+                            null).setAction(net.kdt.pojavlaunch.discord.DiscordRpcManager::sendTestPresence));
                     categories.add(new SettingCategory("Miscellaneous Settings", miscItems));
                     break;
             }
@@ -469,6 +488,8 @@ public class LauncherPreferenceFragment extends Fragment {
 
         // Commit modifications to main SharedPreferences
         SettingsSaveManager.commitChanges(context);
+        // Discord bridge settings take effect right away
+        net.kdt.pojavlaunch.discord.DiscordRpcManager.refreshConfig();
 
         // FORCE SAVE VERIFICATION
         boolean success = verifySavedSettings(context);
