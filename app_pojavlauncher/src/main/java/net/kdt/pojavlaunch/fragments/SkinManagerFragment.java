@@ -455,7 +455,8 @@ public class SkinManagerFragment extends Fragment {
     /**
      * 3D Player Model OpenGL Renderer
      */
-    private static class SkinRenderer implements GLSurfaceView.Renderer {
+    public static class SkinRenderer implements GLSurfaceView.Renderer {
+        private boolean mTransparent;
         private final Context mContext;
         
         public volatile float mAngleX = 0f;
@@ -519,17 +520,17 @@ public class SkinManagerFragment extends Fragment {
             "}\n";
 
         public SkinRenderer(Context context) {
+            this(context, false);
+        }
+
+        public SkinRenderer(Context context, boolean transparent) {
             this.mContext = context;
+            this.mTransparent = transparent;
         }
 
         public synchronized void setTexture(Bitmap skin, Bitmap cape) {
-            // Recycle old bitmaps before replacing to free native memory promptly
-            if (mPendingSkinBitmap != null && mPendingSkinBitmap != skin) {
-                mPendingSkinBitmap.recycle();
-            }
-            if (mPendingCapeBitmap != null && mPendingCapeBitmap != cape) {
-                mPendingCapeBitmap.recycle();
-            }
+            // The GL thread may still be reading the previous bitmap during a frame.
+            // Let GC reclaim it rather than recycling it underneath the renderer.
             this.mPendingSkinBitmap = skin;
             this.mPendingCapeBitmap = cape;
             this.mSkinTextureNeedsUpdate = true;
@@ -548,7 +549,15 @@ public class SkinManagerFragment extends Fragment {
 
         @Override
         public void onSurfaceCreated(javax.microedition.khronos.opengles.GL10 gl, javax.microedition.khronos.egl.EGLConfig config) {
-            GLES20.glClearColor(0.05f, 0.06f, 0.08f, 1.0f);
+            if (mTransparent) GLES20.glClearColor(0f, 0f, 0f, 0f);
+            else GLES20.glClearColor(0.05f, 0.06f, 0.08f, 1.0f);
+            // GL contexts can be lost on pause; textures must be uploaded again.
+            synchronized (this) {
+                mSkinTextureId = 0;
+                mCapeTextureId = 0;
+                mSkinTextureNeedsUpdate = mPendingSkinBitmap != null;
+                mCapeTextureNeedsUpdate = mPendingCapeBitmap != null;
+            }
             GLES20.glEnable(GLES20.GL_DEPTH_TEST);
             GLES20.glDepthFunc(GLES20.GL_LEQUAL);
             GLES20.glEnable(GLES20.GL_CULL_FACE);
@@ -584,7 +593,7 @@ public class SkinManagerFragment extends Fragment {
                         mTextureDeleteArray[0] = mSkinTextureId;
                         GLES20.glDeleteTextures(1, mTextureDeleteArray, 0);
                     }
-                    if (mPendingSkinBitmap != null) mSkinTextureId = loadGLTexture(mPendingSkinBitmap);
+                    mSkinTextureId = mPendingSkinBitmap != null ? loadGLTexture(mPendingSkinBitmap) : 0;
                     mSkinTextureNeedsUpdate = false;
                 }
                 if (mCapeTextureNeedsUpdate) {
@@ -592,7 +601,7 @@ public class SkinManagerFragment extends Fragment {
                         mTextureDeleteArray[0] = mCapeTextureId;
                         GLES20.glDeleteTextures(1, mTextureDeleteArray, 0);
                     }
-                    if (mPendingCapeBitmap != null) mCapeTextureId = loadGLTexture(mPendingCapeBitmap);
+                    mCapeTextureId = mPendingCapeBitmap != null ? loadGLTexture(mPendingCapeBitmap) : 0;
                     mCapeTextureNeedsUpdate = false;
                 }
             }

@@ -32,6 +32,17 @@ public class RightPaneHomeFragment extends Fragment {
     public static final String TAG = "RightPaneHomeFragment";
     public static final String CUSTOM_BG_PATH = Tools.DIR_DATA + "/custom_launcher_bg";
 
+    private int mSkinRequest;
+    private android.opengl.GLSurfaceView mHomeSkin;
+    private SkinManagerFragment.SkinRenderer mHomeRenderer;
+    private com.kdt.mcgui.mcVersionSpinner mHomeVersionSpinner;
+    private android.widget.TextView mHomeVersionId;
+    private final android.content.SharedPreferences.OnSharedPreferenceChangeListener mAccountListener =
+            (prefs, key) -> refreshHomeSkin();
+    private final android.content.SharedPreferences.OnSharedPreferenceChangeListener mProfileListener =
+            (prefs, key) -> {
+                if (LauncherPreferences.PREF_KEY_CURRENT_PROFILE.equals(key)) updateVersionLabel();
+            };
     private RecyclerView mRecyclerView;
     private HomeProfileAdapter mAdapter;
 
@@ -42,6 +53,11 @@ public class RightPaneHomeFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         loadCustomWallpaper(view);
+        mHomeSkin = view.findViewById(R.id.home_skin_surface);
+        if (mHomeSkin != null) {
+            setupLauncherHome(view);
+            return;
+        }
 
         mRecyclerView = view.findViewById(R.id.rv_home_profiles);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -91,7 +107,111 @@ public class RightPaneHomeFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        setupProfileAdapter();
+        if (mHomeSkin != null) {
+            mHomeSkin.onResume();
+            refreshHomeSkin();
+            mHomeVersionSpinner.reloadProfiles();
+            updateVersionLabel();
+        } else if (mRecyclerView != null) {
+            setupProfileAdapter();
+        }
+    }
+
+    @Override
+    public void onPause() {
+        if (mHomeSkin != null) mHomeSkin.onPause();
+        super.onPause();
+    }
+
+    @Override
+    public void onDestroyView() {
+        if (mHomeSkin != null) {
+            net.kdt.pojavlaunch.PojavProfile.getPrefs(requireContext()).unregisterOnSharedPreferenceChangeListener(mAccountListener);
+            LauncherPreferences.DEFAULT_PREF.unregisterOnSharedPreferenceChangeListener(mProfileListener);
+        }
+        mSkinRequest++;
+        mHomeSkin = null;
+        mHomeRenderer = null;
+        mHomeVersionSpinner = null;
+        mHomeVersionId = null;
+        mRecyclerView = null;
+        super.onDestroyView();
+    }
+
+    private void setupLauncherHome(View view) {
+        mHomeSkin.setEGLContextClientVersion(2);
+        mHomeSkin.setEGLConfigChooser(8, 8, 8, 8, 16, 0);
+        mHomeSkin.getHolder().setFormat(android.graphics.PixelFormat.TRANSLUCENT);
+        mHomeSkin.setZOrderOnTop(true);
+        mHomeRenderer = new SkinManagerFragment.SkinRenderer(requireContext(), true);
+        mHomeRenderer.mAngleX = -15f;
+        mHomeSkin.setRenderer(mHomeRenderer);
+        mHomeSkin.setRenderMode(android.opengl.GLSurfaceView.RENDERMODE_WHEN_DIRTY);
+        mHomeVersionSpinner = view.findViewById(R.id.home_version_spinner);
+        mHomeVersionId = view.findViewById(R.id.home_version_id);
+        mHomeVersionSpinner.setOnClickListener(v -> openHomePane(InstancePickerFragment.class, InstancePickerFragment.TAG));
+        view.findViewById(R.id.home_play_button).setOnClickListener(v -> ExtraCore.setValue(ExtraConstants.LAUNCH_GAME, true));
+        view.findViewById(R.id.home_edit_skin).setOnClickListener(v -> openHomePane(SkinManagerFragment.class, SkinManagerFragment.TAG));
+        net.kdt.pojavlaunch.PojavProfile.getPrefs(requireContext()).registerOnSharedPreferenceChangeListener(mAccountListener);
+        LauncherPreferences.DEFAULT_PREF.registerOnSharedPreferenceChangeListener(mProfileListener);
+        refreshHomeSkin();
+        updateVersionLabel();
+    }
+
+    private void openHomePane(Class<? extends Fragment> cls, String tag) {
+        Fragment parent = getParentFragment();
+        if (parent instanceof MainMenuFragment) ((MainMenuFragment) parent).openChildPane(cls, tag, null);
+        else Tools.swapFragment(requireActivity(), cls, tag, null);
+    }
+
+    private void updateVersionLabel() {
+        if (mHomeVersionId == null) return;
+        String key = LauncherPreferences.DEFAULT_PREF.getString(LauncherPreferences.PREF_KEY_CURRENT_PROFILE, "");
+        MinecraftProfile profile = LauncherProfiles.mainProfileJson != null && LauncherProfiles.mainProfileJson.profiles != null
+                ? LauncherProfiles.mainProfileJson.profiles.get(key) : null;
+        String version = profile == null ? null : profile.lastVersionId;
+        mHomeVersionId.setText(version == null || version.isEmpty() ? getString(R.string.lucifer_no_version) : version);
+    }
+
+    private void refreshHomeSkin() {
+        if (!isAdded() || mHomeRenderer == null || mHomeSkin == null) return;
+        String name = net.kdt.pojavlaunch.PojavProfile.getCurrentProfileName(requireContext());
+        int request = ++mSkinRequest;
+        // Local custom skins use the same files as the existing skin editor.
+        File skinFile = new File(Tools.DIR_DATA + "/skins", name + "_skin.png");
+        File metaFile = new File(Tools.DIR_DATA + "/skins", name + "_metadata.json");
+        android.graphics.Bitmap skin = skinFile.isFile() ? android.graphics.BitmapFactory.decodeFile(skinFile.getAbsolutePath()) : null;
+        if (skin == null) {
+            android.graphics.BitmapFactory.Options options = new android.graphics.BitmapFactory.Options();
+            options.inScaled = false;
+            skin = android.graphics.BitmapFactory.decodeResource(getResources(), R.drawable.ic_steve, options);
+        }
+        boolean slim = false;
+        if (metaFile.isFile()) {
+            try { slim = Tools.read(metaFile.getAbsolutePath()).contains("slim"); }
+            catch (Exception ignored) { }
+        }
+        mHomeRenderer.mIsSlim = slim;
+        mHomeRenderer.setTexture(skin, null);
+        mHomeSkin.requestRender();
+
+        // For Microsoft accounts, use the official full skin when no local override exists.
+        net.kdt.pojavlaunch.value.MinecraftAccount account =
+                net.kdt.pojavlaunch.PojavProfile.getCurrentProfileContent(requireContext(), null);
+        if (!skinFile.isFile() && account != null && account.isMicrosoft && account.profileId != null) {
+            String uuid = account.profileId;
+            android.os.Handler main = new android.os.Handler(android.os.Looper.getMainLooper());
+            net.kdt.pojavlaunch.PojavApplication.sExecutorService.execute(() -> {
+                HomeSkinLoader.Result result = HomeSkinLoader.load(uuid);
+                if (result == null) return;
+                main.post(() -> {
+                    if (!isAdded() || request != mSkinRequest || mHomeRenderer == null || mHomeSkin == null) return;
+                    mHomeRenderer.mIsSlim = result.slim;
+                    mHomeRenderer.setTexture(result.skin, null);
+                    mHomeSkin.requestRender();
+                });
+            });
+        }
     }
 
     public void reloadBackground() {
@@ -102,7 +222,7 @@ public class RightPaneHomeFragment extends Fragment {
     private void setupProfileAdapter() {
         // Load profiles on background thread to avoid blocking the UI thread on file I/O
         LauncherProfiles.loadAsync(() -> {
-            if (!isAdded() || getContext() == null) return;
+            if (!isAdded() || getContext() == null || mRecyclerView == null) return;
 
             Map<String, MinecraftProfile> profilesMap = LauncherProfiles.mainProfileJson != null
                     ? LauncherProfiles.mainProfileJson.profiles : null;

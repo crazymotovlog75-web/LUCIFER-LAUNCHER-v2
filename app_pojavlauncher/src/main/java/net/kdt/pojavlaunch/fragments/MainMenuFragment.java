@@ -397,7 +397,12 @@ public class MainMenuFragment extends Fragment {
         mPlayButton = null;
         mEditProfileButton = null;
         mBottomBar = null;
+    }
+
+    @Override
+    public void onDestroy() {
         getChildFragmentManager().removeOnBackStackChangedListener(mBackStackListener);
+        super.onDestroy();
     }
 
     @Override
@@ -428,6 +433,17 @@ public class MainMenuFragment extends Fragment {
     }
 
     // ─── Private helpers ────────────────────────────────────────────────────
+
+    /** Open the selected instance directory through the launcher's existing file flow. */
+    public void openGameDirectory() {
+        if (Tools.isDemoProfile(requireContext())) {
+            hasNoOnlineProfileDialog(requireActivity(), getString(R.string.demo_unsupported), getString(R.string.change_account));
+        } else if (!hasOnlineProfile()) {
+            hasNoOnlineProfileDialog(requireActivity());
+        } else {
+            openPath(requireContext(), getCurrentProfileDirectory(), false);
+        }
+    }
 
     private File getCurrentProfileDirectory() {
         String currentProfile = LauncherPreferences.DEFAULT_PREF

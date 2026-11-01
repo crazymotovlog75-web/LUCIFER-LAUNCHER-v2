@@ -1,0 +1,11 @@
+<resources>
+    <style name="LuciferRailButton">
+        <item name="android:layout_width">@dimen/_42sdp</item>
+        <item name="android:layout_height">@dimen/_42sdp</item>
+        <item name="android:layout_marginBottom">@dimen/_3sdp</item>
+        <item name="android:background">?android:attr/selectableItemBackground</item>
+        <item name="android:padding">@dimen/_10sdp</item>
+        <item name="android:scaleType">fitCenter</item>
+        <item name="android:tint">#DAD5EA</item>
+    </style>
+</resources>

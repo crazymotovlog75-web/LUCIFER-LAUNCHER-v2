@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent" android:layout_height="match_parent">
+    <ImageView android:id="@+id/right_pane_wallpaper" android:layout_width="match_parent"
+        android:layout_height="match_parent" android:visibility="gone" android:scaleType="centerCrop"
+        android:contentDescription="@null" />
+    <View android:layout_width="match_parent" android:layout_height="match_parent" android:background="#33040712" />
+    <androidx.constraintlayout.widget.Guideline android:id="@+id/panel_start" android:layout_width="0dp"
+        android:layout_height="0dp" android:orientation="vertical" app:layout_constraintGuide_percent="0.60" />
+    <android.opengl.GLSurfaceView android:id="@+id/home_skin_surface" android:layout_width="0dp" android:layout_height="0dp"
+        android:contentDescription="@string/lucifer_skin_preview"
+        app:layout_constraintStart_toStartOf="parent" app:layout_constraintEnd_toStartOf="@id/panel_start"
+        app:layout_constraintTop_toTopOf="parent" app:layout_constraintBottom_toBottomOf="parent" />
+    <LinearLayout android:id="@+id/home_launch_panel" android:layout_width="0dp" android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/_4sdp" android:layout_marginEnd="@dimen/_12sdp"
+        android:orientation="vertical" android:padding="@dimen/_8sdp" android:background="@drawable/bg_lucifer_panel"
+        app:layout_constraintStart_toEndOf="@id/panel_start" app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" app:layout_constraintBottom_toBottomOf="parent">
+        <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:text="@string/lucifer_selected_version" android:textColor="#BCB6D3"
+            android:letterSpacing="0.08" android:textSize="@dimen/_8ssp" android:paddingStart="@dimen/_8sdp" />
+        <com.kdt.mcgui.mcVersionSpinner android:id="@+id/home_version_spinner" android:layout_width="match_parent"
+            android:layout_height="@dimen/_34sdp" android:textColor="#FFFFFF" android:drawableEnd="@drawable/spinner_arrow"
+            android:contentDescription="@string/lucifer_versions" app:drawableStartSize="@dimen/_22sdp" />
+        <TextView android:id="@+id/home_version_id" android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:ellipsize="end" android:singleLine="true" android:paddingStart="@dimen/_8sdp"
+            android:paddingBottom="@dimen/_7sdp" android:textColor="#B7A9FF" android:textSize="@dimen/_9ssp"
+            android:text="@string/lucifer_no_version" />
+        <Button android:id="@+id/home_play_button" android:layout_width="match_parent" android:layout_height="@dimen/_48sdp"
+            android:background="@drawable/bg_lucifer_play" android:text="@string/lucifer_play" android:textColor="#FFFFFF"
+            android:textStyle="bold" android:textSize="@dimen/_19ssp" />
+    </LinearLayout>
+    <Button android:id="@+id/home_edit_skin" android:layout_width="wrap_content" android:layout_height="@dimen/_34sdp"
+        android:layout_margin="@dimen/_10sdp" android:background="@drawable/bg_lucifer_panel"
+        android:paddingHorizontal="@dimen/_12sdp" android:text="@string/lucifer_edit_skin" android:textAllCaps="false"
+        android:textColor="#FFFFFF" android:textSize="@dimen/_10ssp"
+        app:layout_constraintEnd_toEndOf="parent" app:layout_constraintBottom_toBottomOf="parent" />
+</androidx.constraintlayout.widget.ConstraintLayout>

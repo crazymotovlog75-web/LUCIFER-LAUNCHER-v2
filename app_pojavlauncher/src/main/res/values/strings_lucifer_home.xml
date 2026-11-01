@@ -1,0 +1,14 @@
+<resources>
+    <string name="lucifer_launcher">LUCIFER\nLAUNCHER</string>
+    <string name="lucifer_versions">Versions and profiles</string>
+    <string name="lucifer_add_account">Add or switch account</string>
+    <string name="lucifer_mods">Install mods</string>
+    <string name="lucifer_files">Open game folder</string>
+    <string name="lucifer_tools">More launcher tools</string>
+    <string name="lucifer_selected_version">SELECTED VERSION</string>
+    <string name="lucifer_no_version">No version selected</string>
+    <string name="lucifer_play">PLAY</string>
+    <string name="lucifer_edit_skin">Edit skin</string>
+    <string name="lucifer_skin_preview">Current player skin</string>
+    <string name="lucifer_settings">Settings</string>
+</resources>

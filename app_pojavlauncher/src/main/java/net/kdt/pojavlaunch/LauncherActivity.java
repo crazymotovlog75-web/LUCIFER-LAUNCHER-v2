@@ -115,7 +115,8 @@ public class LauncherActivity extends BaseActivity {
     private final FragmentManager.FragmentLifecycleCallbacks mFragmentCallbackListener = new FragmentManager.FragmentLifecycleCallbacks() {
         @Override
         public void onFragmentResumed(@NonNull FragmentManager fm, @NonNull Fragment f) {
-            mSettingsButton.setImageDrawable(ContextCompat.getDrawable(getBaseContext(), f instanceof MainMenuFragment
+            Fragment root = getSupportFragmentManager().findFragmentById(R.id.container_fragment);
+            mSettingsButton.setImageDrawable(ContextCompat.getDrawable(getBaseContext(), root instanceof MainMenuFragment
                     ? R.drawable.ic_menu_settings : R.drawable.ic_menu_home));
         }
     };
@@ -482,83 +483,64 @@ public class LauncherActivity extends BaseActivity {
 
     /** Stuff all the view boilerplate here */
 
-    /** Wire up the landscape header bar navigation buttons. */
+    /** Icon-only rail actions use the launcher's existing destinations. */
     private void setupNavButtons() {
-        View navModStore       = findViewById(R.id.nav_mod_store);
-        View navCustomControls  = findViewById(R.id.nav_custom_controls);
-        View navCursor          = findViewById(R.id.nav_cursor);
-        View navHome            = findViewById(R.id.nav_home);
-        View btnHomeLogo        = findViewById(R.id.btn_home_logo);
-        View tvLauncherTitle    = findViewById(R.id.tv_launcher_title);
-        final android.widget.Button btnClientFeatures = findViewById(R.id.btn_client_features);
-
-        View.OnClickListener homeListener = v -> {
-            // Always pop to ROOT when clicking home
+        View title = findViewById(R.id.tv_launcher_title);
+        if (title != null) title.setOnClickListener(v -> {
             getSupportFragmentManager().popBackStackImmediate("ROOT", 0);
-            Fragment frag = getVisibleFragment("ROOT");
-            if (frag instanceof MainMenuFragment) {
-                ((MainMenuFragment) frag).refreshHomeState();
-            }
-        };
-
-        if (navHome != null)         navHome.setOnClickListener(homeListener);
-        if (btnHomeLogo != null)     btnHomeLogo.setOnClickListener(homeListener);
-        if (tvLauncherTitle != null) tvLauncherTitle.setOnClickListener(homeListener);
-
-        if (btnClientFeatures != null) {
-            updateClientFeaturesButton(btnClientFeatures, mClientFeaturesManager.isEnabled());
-            btnClientFeatures.setOnClickListener(v -> {
-                Tools.swapFragment(this, ClientFeaturesFragment.class, ClientFeaturesFragment.TAG, null,
-                        R.anim.slide_in_right, R.anim.slide_out_left,
-                        R.anim.slide_in_left, R.anim.slide_out_right);
-            });
-            startPremiumButtonPulse(btnClientFeatures);
-        }
-
-        if (navModStore != null) {
-            navModStore.setOnClickListener(v -> {
-                Fragment frag = getVisibleFragment("ROOT");
-                if (frag instanceof MainMenuFragment) {
-                    ((MainMenuFragment) frag).openChildPane(
-                            ModsSearchFragment.class, ModsSearchFragment.TAG, null);
-                } else {
-                    Tools.swapFragment(this, ModsSearchFragment.class, ModsSearchFragment.TAG, null);
+            Fragment root = getVisibleFragment("ROOT");
+            if (root instanceof MainMenuFragment) ((MainMenuFragment) root).refreshHomeState();
+        });
+        View versions = findViewById(R.id.nav_versions);
+        if (versions != null) versions.setOnClickListener(v -> openLauncherPane(
+                net.kdt.pojavlaunch.fragments.InstancePickerFragment.class,
+                net.kdt.pojavlaunch.fragments.InstancePickerFragment.TAG));
+        View account = findViewById(R.id.nav_add_account);
+        if (account != null) account.setOnClickListener(v -> openLauncherPane(SelectAuthFragment.class, SelectAuthFragment.TAG));
+        View mods = findViewById(R.id.nav_mod_store);
+        if (mods != null) mods.setOnClickListener(v -> openLauncherPane(ModsSearchFragment.class, ModsSearchFragment.TAG));
+        View skin = findViewById(R.id.nav_skin);
+        if (skin != null) skin.setOnClickListener(v -> openLauncherPane(SkinManagerFragment.class, SkinManagerFragment.TAG));
+        View files = findViewById(R.id.nav_files);
+        if (files != null) files.setOnClickListener(v -> {
+            Fragment root = getSupportFragmentManager().findFragmentById(R.id.container_fragment);
+            if (root instanceof MainMenuFragment) ((MainMenuFragment) root).openGameDirectory();
+            else Tools.openPath(this, new java.io.File(Tools.DIR_GAME_NEW), false);
+        });
+        View tools = findViewById(R.id.nav_tools);
+        if (tools != null) tools.setOnClickListener(v -> {
+            android.widget.PopupMenu menu = new android.widget.PopupMenu(this, v);
+            menu.getMenu().add(0, 1, 0, R.string.mcl_option_customcontrol);
+            menu.getMenu().add(0, 2, 1, R.string.cursor_customization_title);
+            menu.getMenu().add(0, 3, 2, R.string.main_install_jar_file);
+            menu.getMenu().add(0, 4, 3, R.string.main_share_logs);
+            menu.getMenu().add(0, 5, 4, "Client Features");
+            menu.setOnMenuItemClickListener(item -> {
+                switch (item.getItemId()) {
+                    case 1: startActivity(new Intent(this, CustomControlsActivity.class)); break;
+                    case 2: Tools.swapFragment(this, CursorCustomizationFragment.class, CursorCustomizationFragment.TAG, null); break;
+                    case 3:
+                        Fragment root = getSupportFragmentManager().findFragmentById(R.id.container_fragment);
+                        if (root instanceof MainMenuFragment) ((MainMenuFragment) root).onNavInstanceToolsClick();
+                        break;
+                    case 4: Tools.shareLog(this); break;
+                    case 5: Tools.swapFragment(this, ClientFeaturesFragment.class, ClientFeaturesFragment.TAG, null); break;
+                    default: return false;
                 }
+                return true;
             });
-        }
+            menu.show();
+        });
+    }
 
-        if (navCustomControls != null) {
-            navCustomControls.setOnClickListener(v ->
-                    startActivity(new Intent(this, CustomControlsActivity.class)));
-        }
-
-        if (navCursor != null) {
-            navCursor.setOnClickListener(v ->
-                    Tools.swapFragment(this, CursorCustomizationFragment.class,
-                            CursorCustomizationFragment.TAG, null));
-        }
-
-        View navSkin = findViewById(R.id.nav_skin);
-        if (navSkin != null) {
-            navSkin.setOnClickListener(v -> {
-                Fragment frag = getVisibleFragment("ROOT");
-                if (frag instanceof MainMenuFragment) {
-                    ((MainMenuFragment) frag).openChildPane(
-                            SkinManagerFragment.class, SkinManagerFragment.TAG, null);
-                } else {
-                    Tools.swapFragment(this, SkinManagerFragment.class, SkinManagerFragment.TAG, null);
-                }
-            });
-        }
-        updateNavSkinIcon();
+    private void openLauncherPane(Class<? extends Fragment> destination, String tag) {
+        Fragment root = getSupportFragmentManager().findFragmentById(R.id.container_fragment);
+        if (root instanceof MainMenuFragment) ((MainMenuFragment) root).openChildPane(destination, tag, null);
+        else Tools.swapFragment(this, destination, tag, null);
     }
 
     public void updateNavSkinIcon() {
-        final ImageView navSkinIcon = findViewById(R.id.nav_skin_icon);
-        if (navSkinIcon != null) {
-            // Replaced live player model face with standard clean icon per user request
-            navSkinIcon.setImageResource(R.drawable.ic_manage_skin);
-        }
+        // The rail uses a fixed skin icon; the home screen renders the selected skin.
     }
 
     private void updateClientFeaturesButton(android.widget.Button btn, boolean enabled) {
